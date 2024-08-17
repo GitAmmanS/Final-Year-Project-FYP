@@ -5,7 +5,7 @@ const items = mongoose.Schema({
     picture:{type:String ,required:true},
     category_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"category",required:true},
     company_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"company",required:true},
-    spex_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"spex",required:true},
+    spex_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"spex",default: null,set: v => v === '' ? null : v},
     status_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"status",required:true},
     location_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"location",required:true},
     purchase_date: {type:String, required:true},

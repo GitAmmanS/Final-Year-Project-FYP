@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    if ((file.fieldname === "photo" && (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'))){
+    if ((file.fieldname === "picture" && (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'))){
         cb(null, true);
     } else {
         cb(null, false);
@@ -25,5 +25,5 @@ const fileFilter = (req, file, cb) => {
 
 module.exports = multer({
     storage: storage,
-    fileFilter: fileFilter
+    fileFilter:fileFilter
 });

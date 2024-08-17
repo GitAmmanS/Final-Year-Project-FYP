@@ -48,21 +48,6 @@ exports.spexdelete=async (req, resp) => {
 exports.spexpost=async (req, resp) => {
     const data = new spex(req.body);
     const res = await data.save();
-    if(res===true){
-        resp.send(
-            {success:true,
-             message:1 
-            }
-            
-        );
-    }
-    else{
-        resp.send(
-            {success:true,
-             message:0
-            }
-            
-        );
-    }
+    resp.send("Inserted Successfully");
     
 };

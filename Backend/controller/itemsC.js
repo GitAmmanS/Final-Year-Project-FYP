@@ -2,7 +2,7 @@ const items= require("../models/items");
 
 exports.itemsget=async (req, resp) => {
 
-    const data = await items.find({ name: {$regex:new RegExp(req.params.items_name,"i")} }); //i->ignore all cases
+    const data = await items.find({ number: req.params.items_number}); //i->ignore all cases
     if (data.length !== 0) {
         resp.send({
                 success: true,
@@ -15,7 +15,12 @@ exports.itemsget=async (req, resp) => {
 };
 exports.itemsupdate=async (req, resp) => {
 
-    const data = await items.updateOne({ name: req.params.items_name },{$set:req.body}); //i->ignore all cases{
+    try {
+        const path = req.file ? `public\\item_pic\\${req.file.filename}` : null;
+
+        const data = await items.updateOne({ _id: req.params.items_id },{$set:{
+            ...req.body
+        }});
         if (data.matchedCount === 0) {
             resp.send({
                 success: false,
@@ -27,6 +32,10 @@ exports.itemsupdate=async (req, resp) => {
                 message: data.matchedCount
             });
         }
+    } catch (error) {
+        console.error('Error fetching author data:', error);
+        resp.status(500).send("Internal Server Error");
+    }
 };
 exports.itemsdelete=async (req, resp) => {
 
@@ -46,23 +55,18 @@ exports.itemsdelete=async (req, resp) => {
 
 
 exports.itemspost=async (req, resp) => {
-    const data = new items(req.body);
-    const res = await data.save();
-    if(res===true){
-        resp.send(
-            {success:true,
-             message:1 
-            }
-            
-        );
+    try {
+        const path = req.file ? `public\\item-pic\\${req.file.filename}` : null;
+        if (!path) {
+            return resp.status(400).send("Picture is required");
+        }
+
+        const data = new items({ picture: path, ...req.body });
+        
+        await data.save();
+        resp.send("Inserted Successfully");
+    } catch (error) {
+        console.error('Error adding author:', error);
+        resp.status(500).send("Internal Server Error: " + error.message);
     }
-    else{
-        resp.send(
-            {success:true,
-             message:0
-            }
-            
-        );
-    }
-    
 };

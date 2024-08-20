@@ -2,7 +2,8 @@ const items= require("../models/items");
 
 exports.itemsget=async (req, resp) => {
 
-    const data = await items.find({ number: req.params.items_number}); //i->ignore all cases
+    const data = await items.find().populate('category_ID').populate('company_ID').populate('spex_ID')
+    .populate('status_ID').populate('users_ID').populate('location_ID'); 
     if (data.length !== 0) {
         resp.send({
                 success: true,
@@ -39,7 +40,7 @@ exports.itemsupdate=async (req, resp) => {
 };
 exports.itemsdelete=async (req, resp) => {
 
-    const data = await items.deleteOne({ name: req.params.items_name }); //i->ignore all cases{
+    const data = await items.deleteOne({  _id: req.params.items_id }); //i->ignore all cases{
         if (data.deletedCount === 0) {
             resp.send({
                 success: false,
@@ -56,7 +57,7 @@ exports.itemsdelete=async (req, resp) => {
 
 exports.itemspost=async (req, resp) => {
     try {
-        const path = req.file ? `public\\item-pic\\${req.file.filename}` : null;
+        const path = req.file ? `public\item-pic\\${req.file.filename}` : null;
         if (!path) {
             return resp.status(400).send("Picture is required");
         }

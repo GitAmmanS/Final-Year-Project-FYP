@@ -17,7 +17,7 @@ exports.itemsget=async (req, resp) => {
 exports.itemsupdate=async (req, resp) => {
 
     try {
-        const path = req.file ? `public\\item_pic\\${req.file.filename}` : null;
+        const path = req.file ? `item_pic/${req.file.filename}` : null;
 
         const data = await items.updateOne({ _id: req.params.items_id },{$set:{
             ...req.body
@@ -57,7 +57,7 @@ exports.itemsdelete=async (req, resp) => {
 
 exports.itemspost=async (req, resp) => {
     try {
-        const path = req.file ? `public\item-pic\\${req.file.filename}` : null;
+        const path = req.file ? `item_pic/${req.file.filename}` : null;
         if (!path) {
             return resp.status(400).send("Picture is required");
         }

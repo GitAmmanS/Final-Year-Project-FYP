@@ -32,7 +32,7 @@ exports.ramdelete=async (req, resp) => {
 };
 exports.ramTableget=async (req, resp) => {
     try {
-        const data = await ram.find();
+        const data = await ram.find().populate('ramType_ID');
         if (data.length != 0) {
             resp.send({
                 success: true,

@@ -36,7 +36,7 @@ const Items = () => {
     const fetchData = async () => {
       try {
         const [itemsRes, categoryRes, companyRes, statusRes, locationRes] = await Promise.all([
-          axios.get(`${BaseUrl}/items/:items_number`),
+          axios.get(`${BaseUrl}/items`),
           axios.get(`${BaseUrl}/category`),
           axios.get(`${BaseUrl}/company`),
           axios.get(`${BaseUrl}/status`),
@@ -181,8 +181,8 @@ const Items = () => {
         <table>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
-              <th>Number</th>
               <th>Category</th>
               <th>Company</th>
               <th>Location</th>
@@ -194,17 +194,19 @@ const Items = () => {
           </thead>
           <tbody>
             {itemsData.length > 0 ? (
-              itemsData.map((item, index) => (
+              itemsData.map((item, index) =>{ 
+                console.log(`${BaseUrl}/${item.picture}`);
+                return(
                 <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>{item.number || 'none'}</td>
+                  <td>{item.number ||'none'}</td>
+                  <td>{item.name || 'none'}</td>
                   <td>{item.category_ID.name || 'none'}</td>
                   <td>{item.company_ID.name || 'none'}</td>
                   <td>{item.location_ID.name || 'none'}</td>
                   <td>{item.purchase_date || 'none'}</td>
                   <td>{item.status_ID.name || 'none'}</td>
                   <td>
-                    {item.picture ? <img src={`${BaseUrl}//${item.picture}`} alt="item" width="50" /> : 'No image'}
+                    {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : 'No image'}
                   </td>
                   <td>
                     <button id='more'><FaSearchPlus /> More</button>
@@ -212,7 +214,7 @@ const Items = () => {
                     <button id='delete' onClick={() => handleDelete(item._id)}><AiOutlineDelete /> Delete</button>
                   </td>
                 </tr>
-              ))
+              )})
             ) : (
               <tr>
                 <td colSpan="9">No items available</td>

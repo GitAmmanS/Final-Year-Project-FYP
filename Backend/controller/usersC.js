@@ -44,7 +44,7 @@ exports.usersdelete=async (req, resp) => {
 }
 exports.usersTableget=async (req, resp) => {
     try {
-        const data = await users.find({});
+        const data = await users.find({}).polpulate('role_ID').polpulate('rank_ID');
         console.log(data);
         if (data.length != 0) {
             resp.send({

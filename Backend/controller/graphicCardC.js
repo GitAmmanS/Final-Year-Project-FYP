@@ -32,7 +32,7 @@ exports.graphicCarddelete=async (req, resp) => {
 };
 exports.graphicCardTableget=async (req, resp) => {
     try {
-        const data = await graphicCard.find();
+        const data = await graphicCard.find().populate("GCType_ID");
         if (data.length != 0) {
             resp.send({
                 success: true,

@@ -32,7 +32,7 @@ exports.locationdelete=async (req, resp) => {
 };
 exports.locationTableget=async (req, resp) => {
     try {
-        const data = await location.find();
+        const data = await location.find().populate('floor_ID');
         if (data.length != 0) {
             resp.send({
                 success: true,

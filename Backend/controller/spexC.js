@@ -2,7 +2,13 @@ const spex= require("../models/spex");
 
 exports.spexget=async (req, resp) => {
 
-    const data = await spex.find({ name: req.params.spex_id}); 
+    const data = await spex.find({ name: req.params.spex_id}).populate("OS_ID")
+    .populate('softwares_ID')
+    .populate('rom_ID')
+    .populate('ram_ID')
+    .populate('graphicCard_ID')
+    .populate('generation_ID')
+    .populate('cableType_ID'); 
     if (data.length !== 0) {
         resp.send({
                 success: true,

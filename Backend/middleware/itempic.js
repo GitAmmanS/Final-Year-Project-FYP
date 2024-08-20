@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         }
     },
     filename: function(req, file, cb) {
-        const name = Date.now() + '-' + file.originalname;
+        const name = Date.now() + '-' + file.originalname.replace(/\s/g, '');
         cb(null, name);
     }
 });

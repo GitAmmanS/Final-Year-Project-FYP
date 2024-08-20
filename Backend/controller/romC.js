@@ -32,7 +32,7 @@ exports.romdelete=async (req, resp) => {
 };
 exports.romTableget=async (req, resp) => {
     try {
-        const data = await rom.find();
+        const data = await rom.find().populate('romType_ID');
         if (data.length != 0) {
             resp.send({
                 success: true,

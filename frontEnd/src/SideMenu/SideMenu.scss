@@ -1,0 +1,60 @@
+.sidebar {
+    width: 15%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 29.4rem;
+    border: 2px solid #f0fffc;
+    border-radius: 0.5rem;
+    display: flex;
+    background-color: #D3D3D3; /* Dark Slate Gray background */
+    color: #000000; /* Black text */
+    ul {
+      margin: 1rem;
+      list-style: none;
+      li {
+        padding: 1rem;
+        font-weight: 800;
+        justify-content: space-between;
+        cursor: pointer;
+  
+        > div {
+          display: flex;
+          align-items: center;
+  
+          > svg {
+            margin-right: 0.6rem;
+            // margin-top: 0.3rem;
+            padding-top: 0.2rem;
+          }
+        }
+  
+        > ul {
+          display: none;
+          margin-top: 0.5rem;
+          padding-left: 1rem;
+          list-style: none;
+          transition: all 0.5s ease;
+          width: max-content;
+        font-weight: 700;
+        margin-bottom: -1rem;
+          li {
+            padding: 0.5rem 0;
+            font-weight: normal;
+            cursor: pointer;
+            
+            &:hover {
+              background-color: #f0f0f0;
+            }
+          }
+        }
+  
+        > ul.visible {
+          display: block;
+          opacity: 1;
+          max-height: 500px; // Adjust this value based on the number of submenu items
+          overflow: hidden;
+        }
+      }
+    }
+  }
+  

@@ -5,7 +5,15 @@
     padding: 0;
     box-sizing: border-box;
 
+    //border: 1px solid red;
+
 }
 .mainclass{
-    display: flex;
+    position: absolute;
+    top: 5rem;
+    left: 15%;
+    right: 0;
+    object-fit: contain;
+    overflow-x: hidden;
+    z-index: -100;
 }

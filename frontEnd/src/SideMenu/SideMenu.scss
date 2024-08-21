@@ -2,7 +2,10 @@
     width: 15%;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 29.4rem;
+    position: fixed;
+    top: 5rem;
+    left: 0;
+    height: 100%;
     border: 2px solid #f0fffc;
     border-radius: 0.5rem;
     display: flex;
@@ -16,11 +19,16 @@
         font-weight: 800;
         justify-content: space-between;
         cursor: pointer;
+        
   
         > div {
-          display: flex;
           align-items: center;
-  
+          &:hover{
+            cursor: pointer;
+            color: red;
+            margin-left: -4px;
+          }
+          
           > svg {
             margin-right: 0.6rem;
             // margin-top: 0.3rem;
@@ -43,7 +51,7 @@
             cursor: pointer;
             
             &:hover {
-              background-color: #f0f0f0;
+              color: red;
             }
           }
         }

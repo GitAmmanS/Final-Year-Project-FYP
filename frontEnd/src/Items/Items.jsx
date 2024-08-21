@@ -4,6 +4,7 @@ import {
   Button, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import './Items.scss';
+import moment from 'moment'
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
 import { AiOutlineDelete } from "react-icons/ai";
@@ -23,7 +24,7 @@ const Items = () => {
     location_ID: '',
     users_ID: '66c0fcad9735190ed9c0ff6a',
     spex_ID: '66c0f52bc098a7daf33fc527',
-    purchase_date: '8-18-2024 01:40',
+    purchase_date: moment().format('LLLL'),
     picture: null
   });
   const [itemsData, setItemsData] = useState([]);
@@ -72,7 +73,7 @@ const Items = () => {
       location_ID: '',
       users_ID: '66c0fcad9735190ed9c0ff6a',
       spex_ID: '66c0f52bc098a7daf33fc527',
-      purchase_date: '8-18-2024 01:40',
+      purchase_date: moment().format('LLLL'),
       picture: null
     });
     setEditId(null);
@@ -162,7 +163,7 @@ const Items = () => {
     try {
       await axios.delete(`${BaseUrl}/items/${id}`);
       alert('Item Deleted Successfully');
-      const itemsRes = await axios.get(`${BaseUrl}/items/:items_number`);
+      const itemsRes = await axios.get(`${BaseUrl}/items`);
       setItemsData(itemsRes.data.message);
     } catch (err) {
       alert('Error in deleting item');
@@ -195,7 +196,6 @@ const Items = () => {
           <tbody>
             {itemsData.length > 0 ? (
               itemsData.map((item, index) =>{ 
-                console.log(`${BaseUrl}/${item.picture}`);
                 return(
                 <tr key={index}>
                   <td>{item.number ||'none'}</td>

@@ -1,34 +1,52 @@
-header{
+header {
     width: 100%;
     height: 5rem;
     display: flex;
     justify-content: space-between;
     border-radius: 0.3rem;
-    background-color: #009B77; 
-    color: #000000; 
-    border-bottom: 2px solid #C0C0C0; 
-    .logo{
-        margin: 1.5rem;
+    background-color: #5331b7;
+    color: #FFFF;
+    border-bottom: 2px solid #C0C0C0;
+    position: fixed;
+    top: 0;
+
+    .logo {
         font-size: 1.5rem;
+        font-weight: 100;
         width: fit-content;
+        display: flex;
+        flex-direction: row;
+
+        h4 {
+            margin-top: 30px;
+            font-weight: 300;
+        }
+
+        img {
+            width: 100px;
+            margin-top: 5px;
+            height: 70px;
+        }
     }
-    .nav{
+
+    .nav {
         height: fit-content;
         margin: 1.5rem;
-       
-        >svg{
-           font-size: 1.3rem;
-           
+
+        >svg {
+            font-size: 1.3rem;
+
         }
-        >select{
-        cursor: pointer;
+
+        >select {
+            cursor: pointer;
             border: none;
             font-size: 0.8rem;
             border-radius: 2rem;
-            background-color:#009B77;
+            background-color: #009B77;
 
         }
-        
+
     }
 
 }

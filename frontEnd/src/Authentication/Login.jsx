@@ -1,54 +1,103 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import bcrypt from 'bcryptjs';
 import "./Login.scss"
-import { Slide } from 'react-slideshow-image';
-import 'react-slideshow-image/dist/styles.css'
-const Login = () => {
-    const spanStyle = {
-        padding: '20px',
-        background: '#efefef',
-        color: '#000000'
-      }
-      const divStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundSize: 'cover',
-        height: '400px'
-      }
-      const slideImages = [
-        {
-          url: 'https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80',
-          caption: 'Slide 1'
-        },
-        {
-          url: 'https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80',
-          caption: 'Slide 2'
-        },
-        {
-          url: 'https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80',
-          caption: 'Slide 3'
-        },
-      ];
-      
-  return (
-    <div className="super">
-        <div className="card">
-            <div className="child1">
-                <div className="child2">
-        <Slide>
-         {slideImages.map((slideImage, index)=> (
-            <div key={index}>
-              <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage.url})` }}>
-                <span style={spanStyle}>{slideImage.caption}</span>
-              </div>
-            </div>
-          ))} 
-        </Slide>
-                </div>
-            </div>
-        </div>
-    </div>
-  )
-}
+import loginLogo from '../Images/login logo.png'
+import { BaseUrl } from '../BaseUrl';
+import { useUser } from './UserContext'; // Adjust import path as needed
 
-export default Login
+const Login = () => {
+  const navigate = useNavigate();
+  const { setName } = useUser();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.get(`${BaseUrl}/users/datasingle/${email}`);
+      const users = response.data.message[0];
+      console.log("User Name set to:",response.data.message);
+
+      if (users) {
+        console.log("user name:",users.name);
+        console.log("user pass:",users.password);
+        const isPasswordMatch = await bcrypt.compare(password, users.password);
+        if (isPasswordMatch) {
+          setName(users.name);
+          console.log("User Name set to:", users.name);
+          alert("Login Successfully");
+          navigate("/item" ,{ state: { person:users }});
+        } else {
+          setErrorMessage("Invalid email or password");
+        }
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setErrorMessage("An error occurred during login. Please try again.");
+    }
+  };
+  const emailSubmit=(event)=>{
+    if(event.key==='Enter' ||event.type==='click'){
+      email.endsWith("@gmail.com")
+      ? setEmail(email)
+      : email.endsWith("@gmail.co")
+      ? setEmail(email + "m")
+      : email.endsWith("@gmail.c")
+      ? setEmail(email + "om")
+      : email.endsWith("@gmail.")
+      ? setEmail(email + "com")
+      : email.endsWith("@gmail")
+      ? setEmail(email + ".com")
+      : email.endsWith("@gmai")
+      ? setEmail(email + "l.com")
+      : email.endsWith("@gma")
+      ? setEmail(email + "il.com")
+      : email.endsWith("@gm")
+      ? setEmail(email + "ail.com")
+      : email.endsWith("@g")
+      ? setEmail(email + "mail.com")
+      : email.endsWith("@")
+      ? setEmail(email + "gmail.com")
+      : email.includes('@')&& !email.endsWith("gmail.com")?setEmail(''):setEmail(email+"@gmail.com");
+    }
+  }
+
+  return (
+    <div className='loginpage'>
+      <section className='login'>
+        <img src={loginLogo} alt="img"/>
+        <form onSubmit={submitHandler}>
+          <input 
+            type='email' 
+            placeholder='Enter Email' 
+            required 
+            onKeyDown={emailSubmit}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input 
+            type='password' 
+            placeholder='Enter Password' 
+            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {errorMessage && <p className='error'>{errorMessage}</p>}
+          <div className='buttons'>
+            <button type='submit'>Ok</button>
+            <button type='button' onClick={() => { navigate("/") }}>Cancel</button>
+          </div>
+        </form>
+        <div className='signupbutton' onClick={() => { navigate('/signup') }}>
+        No Account ,need to <span>signup?</span>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Login;

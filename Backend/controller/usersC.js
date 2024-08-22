@@ -44,7 +44,7 @@ exports.usersdelete=async (req, resp) => {
 }
 exports.usersTableget=async (req, resp) => {
     try {
-        const data = await users.find({}).polpulate('role_ID').polpulate('rank_ID');
+        const data = await users.find({}).populate('role_ID').populate('rank_ID');
         console.log(data);
         if (data.length != 0) {
             resp.send({
@@ -84,7 +84,7 @@ exports.usersUserget=async (req, resp) => {
 };
 exports.usersSingleget=async (req, resp) => {
     try {
-        const data = await users.find({name: req.params.name1});
+        const data = await users.find({email: req.params.email}).populate('rank_ID').populate('role_ID');
         console.log(data);
         if (data.length != 0) {
             resp.send({

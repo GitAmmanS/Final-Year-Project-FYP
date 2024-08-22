@@ -10,8 +10,12 @@ import axios from 'axios';
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaSearchPlus } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 const Items = () => {
+
+  const navigate =useNavigate();
+
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -34,6 +38,7 @@ const Items = () => {
   const [locationName, setLocationName] = useState([]);
 
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         const [itemsRes, categoryRes, companyRes, statusRes, locationRes] = await Promise.all([
@@ -158,6 +163,9 @@ const Items = () => {
     setEditId(item._id);
     setOpenEdit(true);
   };
+  const handleMoreInfo = (item) => {
+    navigate('/more',{state:{itemData:item}});
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -209,7 +217,7 @@ const Items = () => {
                     {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : 'No image'}
                   </td>
                   <td>
-                    <button id='more'><FaSearchPlus /> More</button>
+                    <button id='more' onClick={()=>handleMoreInfo(item)}><FaSearchPlus /> More</button>
                     <button id='edit' onClick={() => handleEdit(item)}><MdEdit /> Edit</button>
                     <button id='delete' onClick={() => handleDelete(item._id)}><AiOutlineDelete /> Delete</button>
                   </td>

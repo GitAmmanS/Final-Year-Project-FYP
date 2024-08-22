@@ -14,12 +14,21 @@
     ul {
       margin: 1rem;
       list-style: none;
+      
       li {
         padding: 1rem;
         font-weight: 800;
         justify-content: space-between;
         cursor: pointer;
-        
+        #name{
+          text-decoration: none;
+          color: white;
+          background-color: red;
+          border-radius: 10%;
+          &:hover{
+            background-color: #000000;
+          }
+        }
   
         > div {
           align-items: center;

@@ -1,32 +1,24 @@
 import React from 'react'
 import LogoImg from '../Images/LogoImage.png'
 import "./Header.scss"
-import { useUser } from '../Authentication/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { FaUser } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
 const Header = () => {
-  const { name } = useUser();
+
   const navigate = useNavigate();
-  var url;
-  console.log("Header Name:", name); // Debug log
-  if (name === "Dr Aqib") {
-      url = "/admin";
-  }
-  else {
-      url = "/";
-  }
+  
   return (
     <header>
       <div className="logo">
-        <img src={LogoImg} alt={'pic'} />
+        <img src={LogoImg} alt={'pic'} onClick={()=>{navigate('/')} }/>
         <h4>UIIT Smart Labs </h4>
       </div>
       <div className="nav">
-                    {
-                        name === null || name === "" ? <Link className='log' to="/login">LogIn</Link> : <Link className='log' to="/logout">LogOut</Link>
-                    }
+                    
+           <Link className='log' to="/login">LogOut</Link>
+                    
 
 
       </div>

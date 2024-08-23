@@ -5,7 +5,8 @@ const users = mongoose.Schema({
     email: {type:String, required:true},
     password: {type:String, required:true},
     role_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"role",required:true},
-    rank_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"rank",required:true}
+    rank_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"rank",required:true },
+    is_verified: { type: Boolean, default: false, required: true }
 })
 
 module.exports = mongoose.model("users", users);

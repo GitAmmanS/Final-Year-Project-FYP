@@ -83,8 +83,17 @@ const Items = () => {
     });
     setEditId(null);
   };
-
+  const logFormData = (formData) => {
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`${key}: [File] ${value.name}`);
+      } else {
+        console.log(`${key}: ${value}`);
+      }
+    }
+  };
   const handleAddItem = async () => {
+    console.log("this is real data",formData);
     const data = new FormData();
     data.append('name', formData.name);
     data.append('number', formData.number);
@@ -99,8 +108,9 @@ const Items = () => {
     if (formData.picture) {
       data.append('picture', formData.picture);
     }
-
+    logFormData(data);
     try {
+
       if (editId) {
         await axios.put(`${BaseUrl}/items/${editId}`, data).then((res)=>{
           console.log(res.data);
@@ -128,6 +138,7 @@ const Items = () => {
   };
 
   const handleFileChange = (event) => {
+    // formData.picture='null';
     setFormData({ ...formData, picture: event.target.files[0] });
   };
 
@@ -155,8 +166,8 @@ const Items = () => {
       company_ID: item.company_ID._id,
       status_ID: item.status_ID._id,
       location_ID: item.location_ID._id,
-      users_ID: item.users_ID,
-      spex_ID: item.spex_ID,
+      users_ID: item.users_ID._id,
+      spex_ID: item.spex_ID._id,
       purchase_date: item.purchase_date,
       picture: item.picture
     });
@@ -333,7 +344,7 @@ const Items = () => {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddItem} color="primary">
+          <Button onClick={handleAddItem } color="primary">
             {editId ? 'Update' : 'Add'}
           </Button>
         </DialogActions>

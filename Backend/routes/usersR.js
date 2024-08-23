@@ -2,7 +2,7 @@ const express=require("express");
 const router=express.Router();
 
 const usersC=require("../controller/usersC");
-
+router.get('/verify',usersC.verifyMail)
 router.get("/",usersC.usersTableget);
 router.post("/",usersC.userspost);
 router.delete("/:email",usersC.usersdelete);

@@ -12,9 +12,9 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [address, setAdress] = useState('');
   const [phone, setPhone] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -27,21 +27,18 @@ const Signup = () => {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       console.log(hashedPassword);
-      const response = await axios.post(`${BaseUrl}/users`, {
-        name,
-        email,
+      const response = await axios.post(`${BaseUrl}/users/`, {
+        name:name,
+        email:email,
         password:hashedPassword,
-        role_ID:"user",
-        rank_ID: address,
+        role_ID:"66c0ea1de8af93572258aeae",
+        rank_ID: '66c0ea6be8af93572258aeb2',
         phone:phone
       });
-
-      if (response) {
-        alert('SignUp Successfully');
-        navigate('/login');
-      } else {
-        setErrorMessage('An error occurred during signup. Please try again.');
-      }
+      if (response.status === 200) {  
+        setSuccessMessage('Verification email has been sent to your account.Please Check your email.');
+        setErrorMessage('');  
+    }
     } catch (error) {
       console.error('Error during signup:', error);
       setErrorMessage('An error occurred during signup. Please try again.');
@@ -89,10 +86,10 @@ const Signup = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
-
+          {successMessage && <div className='message'>{successMessage}</div>}
           {errorMessage && <p className='error'>{errorMessage}</p>}
           <div className='buttons'>
-            <button type='submit'>Submit</button>
+            <button type='submit' >Submit</button>
             <button type='button' onClick={() => { navigate("/login") }}>Cancel</button>
           </div>
         </form>

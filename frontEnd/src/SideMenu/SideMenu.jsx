@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import "./SideMenu.scss";
-import { useUser } from '../Authentication/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { SideMenuData } from './SideMenuData';
 import { Link } from 'react-router-dom';
 
 const SideMenu = () => {
 
-    const { name } = useUser();
+    // const { name } = useUser();
     const navigate = useNavigate();
-    var url;
-    console.log("Header Name:", name); // Debug log
-    if (name === "Dr Aqib") {
-        url = "/admin";
-    }
-    else {
-        url = "/";
-    }
+    // var url;
+    // console.log("Header Name:", name); // Debug log
+    // if (name === "Dr Aqib") {
+    //     url = "/admin";
+    // }
+    // else {
+    //     url = "/";
+    // }
 
 
     const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -34,11 +33,11 @@ const SideMenu = () => {
 
         <div className="sidebar">
             <ul>
-                <li>
+                {/* <li>
                     {
                         name ? <Link id='name'>{name}</Link> : ""
                     }
-                </li>
+                </li> */}
 
                 {
 

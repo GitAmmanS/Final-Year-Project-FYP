@@ -5,11 +5,11 @@ import bcrypt from 'bcryptjs';
 import "./Login.scss"
 import loginLogo from '../Images/login logo.png'
 import { BaseUrl } from '../BaseUrl';
-import { useUser } from './UserContext'; // Adjust import path as needed
+// import { useUser } from './UserContext'; // Adjust import path as needed
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setName } = useUser();
+  // const { setName } = useUser();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,19 +18,19 @@ const Login = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.get(`${BaseUrl}/users/datasingle/${email}`);
+      const response = await axios.get(`${BaseUrl}/users/datasingle/${email}`)
+      console.log(response.data.message[0]);
       const users = response.data.message[0];
-      console.log("User Name set to:",response.data.message);
-
       if (users) {
         console.log("user name:",users.name);
         console.log("user pass:",users.password);
+        const verified = users.is_verified;
         const isPasswordMatch = await bcrypt.compare(password, users.password);
-        if (isPasswordMatch) {
-          setName(users.name);
+        if (isPasswordMatch && verified) {
+          // setName(users.name);
           console.log("User Name set to:", users.name);
           alert("Login Successfully");
-          navigate("/item" ,{ state: { person:users }});
+          navigate("/item");
         } else {
           setErrorMessage("Invalid email or password");
         }

@@ -6,30 +6,30 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Items from './Items/Items';
 import More from './Items/More';
 import Login from './Authentication/Login';
-import Logout from './Authentication/Logout';
 import Signup from './Authentication/Signup';
-import ProtectedAdmin from './Authentication/ProtectedAdmin'
-import ProtectedUser from './Authentication/ProtectedUser'
-import { UserProvider } from './Authentication/UserContext';
+import ShowSomeTimes from "./ShowSomeTimes"
+
 function App() {
   return (
-    <UserProvider>
     <Router>
+      <ShowSomeTimes>
       <Header />
+      </ShowSomeTimes>
       <div className='mainclass'>
+      <ShowSomeTimes>
         <SideMenu />
-
+    </ShowSomeTimes>
         <Routes>
           <Route path='/' element={<Home/>} /> 
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          <Route path='/item' element={<ProtectedAdmin Component={Items}/>} />
-          <Route path='/logout' element={<Logout/>} />
-          <Route path='/more' element={<ProtectedUser Component={More}/>} />
+          <Route path='/item' element={<Items />} />
+          <Route path='/more' element={<More/>} />
+          
         </Routes>
       </div>
     </Router>
-    </UserProvider>
+
   );
 }
 

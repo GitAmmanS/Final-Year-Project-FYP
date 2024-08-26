@@ -40,7 +40,7 @@ exports.itemsget = async (req, resp) => {
                 path: 'location_ID'
             });
 
-        if (data && data.length > 0) {
+        if (data || !data) {
             resp.status(200).send({
                 success: true,
                 message: data

@@ -26,7 +26,7 @@ const Items = () => {
     company_ID: '',
     status_ID: '',
     location_ID: '',
-    users_ID: '66c0fcad9735190ed9c0ff6a',
+    users_ID: '66cb2befb9113c1db9306533',
     spex_ID: '66c0f52bc098a7daf33fc527',
     purchase_date: moment().format('LLLL'),
     picture: null
@@ -54,6 +54,7 @@ const Items = () => {
         setCompanyName(companyRes.data.message);
         setStatusName(statusRes.data.message);
         setLocationName(locationRes.data.message);
+        console.log(categoryRes);
       } catch (err) {
         console.log(err);
       }
@@ -76,7 +77,7 @@ const Items = () => {
       company_ID: '',
       status_ID: '',
       location_ID: '',
-      users_ID: '66c0fcad9735190ed9c0ff6a',
+      users_ID: '66cb2befb9113c1db9306533',
       spex_ID: '66c0f52bc098a7daf33fc527',
       purchase_date: moment().format('LLLL'),
       picture: null

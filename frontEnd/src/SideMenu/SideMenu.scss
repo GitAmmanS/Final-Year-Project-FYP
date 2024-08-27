@@ -1,6 +1,7 @@
 *{
   font-family: 'Zefani', serif;
 }
+
 .sidebar {
     width: 15%;
     overflow-y: auto;
@@ -13,8 +14,15 @@
     border-radius: 0.5rem;
     display: flex;
     font-size: 1.0001rem;
-    background-color: #2F4F4F; /* Dark Slate Gray background */
-    color: #FFFFFF; /* Black text */
+    background-color: #2F4F4F;
+    color: #FFFFFF; 
+  .username{
+    background-color: white;
+   text-align: center;
+    >P{
+      color: #000000;
+    }
+  }
     ul {
       margin: 2rem 0 0 0.3rem;
       list-style: none;

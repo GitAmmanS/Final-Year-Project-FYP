@@ -5,17 +5,10 @@ import { SideMenuData } from './SideMenuData';
 import { Link } from 'react-router-dom';
 
 const SideMenu = () => {
-
+    const userName=JSON.parse(localStorage.getItem('userName'));
     // const { name } = useUser();
     const navigate = useNavigate();
-    // var url;
-    // console.log("Header Name:", name); // Debug log
-    // if (name === "Dr Aqib") {
-    //     url = "/admin";
-    // }
-    // else {
-    //     url = "/";
-    // }
+    
 
 
     const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -33,14 +26,12 @@ const SideMenu = () => {
 
         <div className="sidebar">
             <ul>
-                {/* <li>
-                    {
-                        name ? <Link id='name'>{name}</Link> : ""
-                    }
-                </li> */}
-
+            
+                    <div className="username">
+        <p>{userName}</p>
+        </div>
                 {
-
+                         
                     SideMenuData.map((res, index) => (
                         <li key={index}>
                             <div onClick={() => handleSubMenuToggle(index, res)} >

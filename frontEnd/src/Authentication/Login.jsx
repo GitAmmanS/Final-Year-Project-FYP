@@ -9,8 +9,7 @@ import { BaseUrl } from '../BaseUrl';
 
 const Login = () => {
   const navigate = useNavigate();
-  // const { setName } = useUser();
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -29,6 +28,9 @@ const Login = () => {
         if (isPasswordMatch && verified) {
           // setName(users.name);
           console.log("User Name set to:", users.name);
+          const userName=users.name;
+          console.log(userName);
+          localStorage.setItem('userName', JSON.stringify(userName));
           alert("Login Successfully");
           navigate("/item");
         } else {

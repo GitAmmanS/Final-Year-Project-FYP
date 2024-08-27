@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const items = mongoose.Schema({
-    number:{type:String ,required:true},
+    quantity:{type:Number ,required:true},
     name:{type:String ,required:true},
     picture:{type:String ,required:true},
     category_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"category",required:true},

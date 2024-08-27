@@ -4,7 +4,7 @@ import {
   Button, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import './Items.scss';
-import moment from 'moment'
+import moment from 'moment';
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
 import { AiOutlineDelete } from "react-icons/ai";
@@ -13,15 +13,16 @@ import { MdEdit } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 
 const Items = () => {
-
-  const navigate =useNavigate();
-
+  const navigate = useNavigate();
+  const [categoryOrCompanyName, setCategoryOrCompanyName] = useState('');
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [isCategory, setIsCategory] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
-    number: '',
+    quantity: null,
     category_ID: '',
     company_ID: '',
     status_ID: '',
@@ -38,7 +39,6 @@ const Items = () => {
   const [locationName, setLocationName] = useState([]);
 
   useEffect(() => {
-    
     const fetchData = async () => {
       try {
         const [itemsRes, categoryRes, companyRes, statusRes, locationRes] = await Promise.all([
@@ -70,9 +70,10 @@ const Items = () => {
   const handleClose = () => {
     setOpen(false);
     setOpenEdit(false);
+    setOpenDialog(false);
     setFormData({
       name: '',
-      number: '',
+      quantity: 0,
       category_ID: '',
       company_ID: '',
       status_ID: '',
@@ -83,21 +84,14 @@ const Items = () => {
       picture: null
     });
     setEditId(null);
+    setCategoryOrCompanyName('');
   };
-  const logFormData = (formData) => {
-    for (let [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        console.log(`${key}: [File] ${value.name}`);
-      } else {
-        console.log(`${key}: ${value}`);
-      }
-    }
-  };
+
   const handleAddItem = async () => {
-    console.log("this is real data",formData);
+    console.log("this is real data", formData);
     const data = new FormData();
     data.append('name', formData.name);
-    data.append('number', formData.number);
+    data.append('quantity', formData.quantity);
     data.append('category_ID', formData.category_ID);
     data.append('company_ID', formData.company_ID);
     data.append('status_ID', formData.status_ID);
@@ -109,11 +103,10 @@ const Items = () => {
     if (formData.picture) {
       data.append('picture', formData.picture);
     }
-    logFormData(data);
     try {
 
       if (editId) {
-        await axios.put(`${BaseUrl}/items/${editId}`, data).then((res)=>{
+        await axios.put(`${BaseUrl}/items/${editId}`, data).then((res) => {
           console.log(res.data);
         });
 
@@ -123,7 +116,6 @@ const Items = () => {
         alert('Item Added Successfully');
       }
 
-      
       const itemsRes = await axios.get(`${BaseUrl}/items`);
       setItemsData(itemsRes.data.message);
       handleClose();
@@ -139,7 +131,6 @@ const Items = () => {
   };
 
   const handleFileChange = (event) => {
-    // formData.picture='null';
     setFormData({ ...formData, picture: event.target.files[0] });
   };
 
@@ -162,7 +153,7 @@ const Items = () => {
   const handleEdit = (item) => {
     setFormData({
       name: item.name,
-      number: item.number,
+      quantity: item.quantity,
       category_ID: item.category_ID._id,
       company_ID: item.company_ID._id,
       status_ID: item.status_ID._id,
@@ -175,8 +166,9 @@ const Items = () => {
     setEditId(item._id);
     setOpenEdit(true);
   };
+
   const handleMoreInfo = (item) => {
-    navigate('/more',{state:{itemData:item}});
+    navigate('/more', { state: { itemData: item } });
   };
 
   const handleDelete = async (id) => {
@@ -191,53 +183,81 @@ const Items = () => {
     }
   };
 
+  const handleAddCategoryOrCompany = () => {
+    const url = isCategory ? `${BaseUrl}/category` : `${BaseUrl}/company`;
+    axios.post(url, { name: categoryOrCompanyName })
+      .then((res) => {
+        console.log(res.data);
+        handleClose();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    alert(isCategory ? 'Category Added Successfully' : 'Company Added Successfully');
+  };
+
+  const handleCategory = () => {
+    setIsCategory(true);
+    setOpenDialog(true);
+  };
+
+  const handleCompany = () => {
+    setIsCategory(false);
+    setOpenDialog(true);
+  };
+
   return (
     <div className="maincontainer">
       <div className='heading'>
-        Items
-        <button onClick={handleClickOpen}>Add Items +</button>
+        <p>Items</p>
+        <div className="buttons">
+          <button onClick={handleClickOpen}>Add Items</button>
+          <button onClick={handleCategory}>Add Category</button>
+          <button onClick={handleCompany}>Add Company</button>
+        </div>
       </div>
 
       <div className="table">
         <table>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
+              <th>Image</th>
               <th>Category</th>
               <th>Company</th>
               <th>Location</th>
+              <th>Quantity</th>
               <th>Purchase Date</th>
               <th>Status</th>
-              <th>Image</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {itemsData.length > 0 ? (
-              itemsData.map((item, index) =>{ 
-                return(
+              itemsData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.number ||'none'}</td>
                   <td>{item.name || 'none'}</td>
-                  <td>{item.category_ID.name || 'none'}</td>
-                  <td>{item.company_ID.name || 'none'}</td>
-                  <td>{item.location_ID.name || 'none'}</td>
-                  <td>{item.purchase_date || 'none'}</td>
-                  <td>{item.status_ID.name || 'none'}</td>
                   <td>
                     {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : 'No image'}
                   </td>
+                  <td>{item.category_ID.name || 'none'}</td>
+                  <td>{item.company_ID.name || 'none'}</td>
+                  <td>{item.location_ID.name || 'none'}</td>
+                  <td>{item.quantity || 'none'}</td>
+                  <td>{item.purchase_date || 'none'}</td>
+                  <td>{item.status_ID.name || 'none'}</td>
                   <td>
-                    <button id='more' onClick={()=>handleMoreInfo(item)}><FaSearchPlus /> More</button>
-                    <button id='edit' onClick={() => handleEdit(item)}><MdEdit /> Edit</button>
-                    <button id='delete' onClick={() => handleDelete(item._id)}><AiOutlineDelete /> Delete</button>
+                    <div className='options'>
+                      <button id='more' onClick={() => handleMoreInfo(item)}><FaSearchPlus /> </button>
+                      <button id='edit' onClick={() => handleEdit(item)}><MdEdit /> </button>
+                      <button id='delete' onClick={() => handleDelete(item._id)}><AiOutlineDelete /> </button>
+                    </div>
                   </td>
                 </tr>
-              )})
+              ))
             ) : (
               <tr>
-                <td colSpan="9">No items available</td>
+                <td colSpan="8">No items found</td>
               </tr>
             )}
           </tbody>
@@ -245,38 +265,31 @@ const Items = () => {
       </div>
 
       <Dialog open={open || openEdit} onClose={handleClose}>
-        <DialogTitle>{editId ? 'Edit Item' : 'Add New Item'}</DialogTitle>
+        <DialogTitle>{editId ? 'Update Item' : 'Add Item'}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Please fill out the details for the item.
-          </DialogContentText>
+          <DialogContentText>Please fill the form below.</DialogContentText>
           <TextField
-            autoFocus
             margin="dense"
-            label="Name"
-            fullWidth
             name="name"
+            label="Name"
             value={formData.name}
             onChange={handleInputChange}
+            fullWidth
           />
           <TextField
             margin="dense"
-            label="Number"
-            fullWidth
-            name="number"
-            value={formData.number}
+            name="quantity"
+            label="Quantity"
+            type="number"
+            value={formData.quantity}
             onChange={handleInputChange}
+            fullWidth
           />
           <FormControl fullWidth margin="dense">
             <InputLabel>Category</InputLabel>
-            <Select
-              value={formData.category_ID}
-              onChange={handleCategoryChange}
-              label="Category"
-              name="category_ID"
-            >
-              {categoryName.map((category, index) => (
-                <MenuItem key={index} value={category._id}>
+            <Select value={formData.category_ID} onChange={handleCategoryChange}>
+              {categoryName.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
                   {category.name}
                 </MenuItem>
               ))}
@@ -284,14 +297,9 @@ const Items = () => {
           </FormControl>
           <FormControl fullWidth margin="dense">
             <InputLabel>Company</InputLabel>
-            <Select
-              value={formData.company_ID}
-              onChange={handleCompanyChange}
-              label="Company"
-              name="company_ID"
-            >
-              {companyName.map((company, index) => (
-                <MenuItem key={index} value={company._id}>
+            <Select value={formData.company_ID} onChange={handleCompanyChange}>
+              {companyName.map((company) => (
+                <MenuItem key={company._id} value={company._id}>
                   {company.name}
                 </MenuItem>
               ))}
@@ -299,14 +307,9 @@ const Items = () => {
           </FormControl>
           <FormControl fullWidth margin="dense">
             <InputLabel>Status</InputLabel>
-            <Select
-              value={formData.status_ID}
-              onChange={handleStatusChange}
-              label="Status"
-              name="status_ID"
-            >
-              {statusName.map((status, index) => (
-                <MenuItem key={index} value={status._id}>
+            <Select value={formData.status_ID} onChange={handleStatusChange}>
+              {statusName.map((status) => (
+                <MenuItem key={status._id} value={status._id}>
                   {status.name}
                 </MenuItem>
               ))}
@@ -314,40 +317,45 @@ const Items = () => {
           </FormControl>
           <FormControl fullWidth margin="dense">
             <InputLabel>Location</InputLabel>
-            <Select
-              value={formData.location_ID}
-              onChange={handleLocationChange}
-              label="Location"
-              name="location_ID"
-            >
-              {locationName.map((location, index) => (
-                <MenuItem key={index} value={location._id}>
+            <Select value={formData.location_ID} onChange={handleLocationChange}>
+              {locationName.map((location) => (
+                <MenuItem key={location._id} value={location._id}>
                   {location.name}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-          <TextField
-            margin="dense"
-            label="Purchase Date"
-            fullWidth
-            name="purchase_date"
-            value={formData.purchase_date}
-            onChange={handleInputChange}
-          />
           <input
             type="file"
-            name="picture"
+            accept="image/*"
             onChange={handleFileChange}
+            style={{ marginTop: '10px' }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleAddItem } color="primary">
-            {editId ? 'Update' : 'Add'}
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAddItem}>{editId ? 'Update' : 'Add'}</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>Add {isCategory ? 'Category' : 'Company'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please enter the name of the {isCategory ? 'category' : 'company'} you want to add.
+          </DialogContentText>
+          <TextField
+            margin="dense"
+            name="categoryOrCompanyName"
+            label={isCategory ? 'Category Name' : 'Company Name'}
+            value={categoryOrCompanyName}
+            onChange={(e) => setCategoryOrCompanyName(e.target.value)}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAddCategoryOrCompany}>Add</Button>
         </DialogActions>
       </Dialog>
     </div>

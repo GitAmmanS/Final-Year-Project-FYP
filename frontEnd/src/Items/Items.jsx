@@ -207,57 +207,57 @@ const Items = () => {
   };
 
   return (
-    <div className="maincontainer">
-      <div className='heading'>
-        <p>Items</p>
-        <div className="buttons">
-          <button onClick={handleClickOpen}>Add Items</button>
-          <button onClick={handleCategory}>Add Category</button>
-          <button onClick={handleCompany}>Add Company</button>
+    <div className="bg-slate-50 h-sceen mt-2 ">
+      <div className='flex p-2 text-xl text-slate-600 justify-between'>
+        <p className='text-center font-bold cursor-pointer hover:text-slate-500'>Items</p>
+        <div className='bg-none text-base '>
+          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md'onClick={handleClickOpen}>Add Items</button>
+          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md'onClick={handleCategory}>Add Category</button>
+          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md'onClick={handleCompany}>Add Company</button>
         </div>
       </div>
 
-      <div className="table">
-        <table>
-          <thead>
+      <div className='mt-3 p-2 '>
+        <table className=' w-full'>
+          <thead className='border border-black w-full'>
             <tr>
-              <th>Name</th>
-              <th>Image</th>
-              <th>Category</th>
-              <th>Company</th>
-              <th>Location</th>
-              <th>Quantity</th>
-              <th>Purchase Date</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th className='border-2 border-slate-700'>Name</th>
+              <th className='border-2 border-slate-700'>Image</th>
+              <th className='border-2 border-slate-700'>Category</th>
+              <th className='border-2 border-slate-700'>Company</th>
+              <th className='border-2 border-slate-700'>Location</th>
+              <th className='border-2 border-slate-700'>Quantity</th>
+              <th className='border-2 border-slate-700'>Purchase Date</th>
+              <th className='border-2 border-slate-700'>Status</th>
+              <th className='border-2 border-slate-700'>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='text-center mt-2 '>
             {itemsData.length > 0 ? (
               itemsData.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.name || 'none'}</td>
-                  <td>
+                  <td className='pt-3'>{item.name || 'none'}</td>
+                  <td className='pl-4 pt-3'>
                     {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : 'No image'}
                   </td>
-                  <td>{item.category_ID.name || 'none'}</td>
-                  <td>{item.company_ID.name || 'none'}</td>
-                  <td>{item.location_ID.name || 'none'}</td>
-                  <td>{item.quantity || 'none'}</td>
-                  <td>{item.purchase_date || 'none'}</td>
-                  <td>{item.status_ID.name || 'none'}</td>
+                  <td className='pt-3'>{item.category_ID.name || 'none'}</td>
+                  <td className='pt-3'>{item.company_ID.name || 'none'}</td>
+                  <td className='pt-3'>{item.location_ID.name || 'none'}</td>
+                  <td className='pt-3'>{item.quantity || 'none'}</td>
+                  <td className='pt-3'>{item.purchase_date || 'none'}</td>
+                  <td className='pt-3'>{item.status_ID.name || 'none'}</td>
                   <td>
-                    <div className='options'>
-                      <button id='more' onClick={() => handleMoreInfo(item)}><FaSearchPlus /> </button>
-                      <button id='edit' onClick={() => handleEdit(item)}><MdEdit /> </button>
-                      <button id='delete' onClick={() => handleDelete(item._id)}><AiOutlineDelete /> </button>
+                    <div className='pt-3 text-center px-2'>
+                      <button className='bg-green-400 border-2 border-black w-6 h-7 text-center hover:bg-green-600 rounded-md' onClick={() => handleMoreInfo(item)}><FaSearchPlus /> </button>
+                      <button  className='bg-blue-600 border-2 border-black w-6 h-7 text-center hover:bg-blue-900 rounded-md'onClick={() => handleEdit(item)}><MdEdit /> </button>
+                      <button  className='bg-red-600 border-2 border-black w-6 h-7 text-center hover:bg-red-900 rounded-md'onClick={() => handleDelete(item._id)}><AiOutlineDelete /> </button>
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="8">No items found</td>
+                <td colSpan="9">No items found</td>
               </tr>
             )}
           </tbody>

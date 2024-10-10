@@ -1,7 +1,8 @@
-const mongoose = require("mongoose");
-const ram = mongoose.Schema({
-    size:{type:String ,required:true},
-    ramType_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"ramType",required:true},
-})
+const mongoose= require('mongoose')
 
-module.exports = mongoose.model("ram", ram);
+const ramSchema = mongoose.Schema({
+    capacity: { type: mongoose.Schema.Types.ObjectId, ref: "capacities" },
+    type: { type: mongoose.Schema.Types.ObjectId, ref: "type" },
+    status: { type: mongoose.Schema.Types.ObjectId, ref: "status" }
+});
+module.exports= mongoose.model("ram",ramSchema);

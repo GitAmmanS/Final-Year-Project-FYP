@@ -1,13 +1,17 @@
-const express=require("express");
-const router=express.Router();
+const express = require("express");
+const router = express.Router();
+const companyC = require("../controller/companyC");
 
-const companyC=require("../controller/companyC");
+router.get("/", companyC.getCompanies);
 
-router.get("/",companyC.companiesTableget);
-router.post("/",companyC.companiespost);
-router.delete("/:company_name",companyC.companiesdelete);
-router.put("/:company_name",companyC.companiesupdate);
-router.get("/:company_name",companyC.companiesget);
-router.get("/single/:company_name",companyC.companiesSingleget);
+router.post("/", companyC.createCompany);
 
-module.exports=router;
+router.delete("/:company_name", companyC.deleteCompany);
+
+router.put("/:company_name", companyC.updateCompany);
+
+router.get("/:company_name", companyC.getSingleCompany);
+
+router.get("/items/:company_name", companyC.getCompanyItems);
+
+module.exports = router;

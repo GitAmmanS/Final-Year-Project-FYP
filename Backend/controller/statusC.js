@@ -1,85 +1,30 @@
-const status= require("../models/status");
-const items= require("../models/items");
+const Status = require("../models/status");
 
-exports.statusget=async (req, resp) => {
-
-    const data = await status.find({ name: {$regex:new RegExp(req.params.status_name,"i")} }); //i->ignore all cases
-    if (data.length !== 0) {
-        const c_id = data[0]._id;
-        const bdata = await items.find({ status_ID: c_id }).populate("status_ID");
-        if (bdata.length !== 0) {
-            resp.send({
-                success: true,
-                message: bdata
+exports.statusTableGet = async (req, resp) => {
+    try {
+        const data = await Status.find();
+        resp.status(200).json({
+            success: true,
+            data: data
         });
-        } else {
-            resp.send({
-                success:false,
-                message:"No items found for this status"
-            });
-        }
-    } else {
-        resp.send("status not found");
+    } catch (error) {
+        console.error(error);
+        resp.status(500).send("Internal Server Error");
     }
 };
-exports.statusSingleget=async (req, resp) => {
 
-    const data = await status.find({ name:req.params.status_name}); //i->ignore all cases
-    if (data.length !== 0) {
-            resp.send({
-                success: true,
-                message: data
-        });
-    } else {
-            resp.send({
-                success:false,
-                message:"No status found for this status"
-            });
-        }
-   
-};
-exports.statusupdate=async (req, resp) => {
-
-    const data = await status.updateOne({ name: req.params.status_name },{$set:req.body}); //i->ignore all cases{
-        if (data.matchedCount === 0) {
-            resp.send({
-                success: false,
-                message: data.matchedCount
-            });
-        } else {
-            resp.send({
-                success: true,
-                message: data.matchedCount
-            });
-        }
-};
-exports.statusdelete=async (req, resp) => {
-
-    const data = await status.deleteOne({ name: req.params.status_name }); //i->ignore all cases{
-        if (data.deletedCount === 0) {
-            resp.send({
-                success: false,
-                message: data.deletedCount
-            });
-        } else {
-            resp.send({
-                success: true,
-                message: data.deletedCount
-            });
-        }
-};
-exports.statusTableget=async (req, resp) => {
+exports.statusGet = async (req, resp) => {
     try {
-        const data = await status.find();
-        if (data.length != 0) {
-            resp.send({
+        const data = await Status.findOne({ name: req.params.status_name }); 
+        if (data) {
+            resp.status(200).send({
                 success: true,
                 message: data
             });
         } else {
-            resp.send({
+            resp.status(404).send({
                 success: false,
-                message: "No menuitem found for this status"
+                message: "Status not found"
             });
         }
     } catch (error) {
@@ -88,8 +33,53 @@ exports.statusTableget=async (req, resp) => {
     }
 };
 
-exports.statuspost=async (req, resp) => {
-    const data = new status(req.body);
-    const res = await data.save();
-    resp.send("Inserted Successfully");
+exports.statusPost = async (req, resp) => {
+    try {
+        const newStatus = new Status(req.body);
+        await newStatus.save();
+        resp.status(201).send({ success: true, message: "Inserted Successfully" });
+    } catch (error) {
+        console.error(error);
+        resp.status(500).send("Internal Server Error");
+    }
+};
+
+exports.statusUpdate = async (req, resp) => {
+    try {
+        const data = await Status.updateOne({ name: req.params.status_name }, { $set: req.body }); 
+        if (data.matchedCount === 0) {
+            resp.status(404).send({
+                success: false,
+                message: "No status found to update"
+            });
+        } else {
+            resp.status(200).send({
+                success: true,
+                message: "Status updated successfully"
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        resp.status(500).send("Internal Server Error");
+    }
+};
+
+exports.statusDelete = async (req, resp) => {
+    try {
+        const data = await Status.deleteOne({ name: req.params.status_name }); 
+        if (data.deletedCount === 0) {
+            resp.status(404).send({
+                success: false,
+                message: "No status found to delete"
+            });
+        } else {
+            resp.status(200).send({
+                success: true,
+                message: "Status deleted successfully"
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        resp.status(500).send("Internal Server Error");
+    }
 };

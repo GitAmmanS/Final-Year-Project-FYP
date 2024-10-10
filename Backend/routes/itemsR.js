@@ -1,12 +1,13 @@
-const express=require("express");
+const express=require('express')
 const router=express.Router();
 
 const itemsC=require("../controller/itemsC");
 const itempic=require("../middleware/itempic");
 
-router.get("/",itemsC.itemsget);
-router.post("/",itempic.single("picture"),itemsC.itemspost);
-router.delete("/:items_id",itemsC.itemsdelete);
-router.put("/:items_id",itempic.single("picture"),itemsC.itemsupdate);
+router.get("/",itemsC.getItems);
+router.post("/post",itempic.single("picture"),itemsC.itemsPost);
+router.post("/postBulk",itempic.single("picture"),itemsC.itemsPostBulk);
+router.delete("/:items_id",itemsC.itemsDelete);
+router.put("/:items_id",itempic.single("picture"),itemsC.itemsUpdate);
 
 module.exports=router;

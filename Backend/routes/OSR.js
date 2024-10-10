@@ -1,11 +1,9 @@
-const express=require("express");
-const router=express.Router();
+const express = require("express");
+const router = express.Router();
 
-const OSC=require("../controller/OSC");
+const osC= require('../controller/osC')
 
-router.get("/",OSC.OSTableget);
-router.post("/",OSC.OSpost);
-router.delete("/:OS_name",OSC.OSdelete);
-router.put("/:OS_name",OSC.OSupdate);
+router.post('/post', osC.postOs);
+router.get('/', osC.getOs);
 
-module.exports=router;
+module.exports = router;

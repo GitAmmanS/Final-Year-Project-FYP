@@ -5,8 +5,6 @@ import bcrypt from 'bcryptjs';
 import "./Login.scss"
 import loginLogo from '../Images/login logo.png'
 import { BaseUrl } from '../BaseUrl';
-// import { useUser } from './UserContext'; // Adjust import path as needed
-
 const Login = () => {
   const navigate = useNavigate();
   

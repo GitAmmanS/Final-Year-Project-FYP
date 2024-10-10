@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
-const OS = mongoose.Schema({
-    name:{type:String ,required:true}
-})
+const mongoose= require('mongoose')
 
-module.exports = mongoose.model("OS", OS);
+const os = new mongoose.Schema({
+    name:{type: String}
+});
+
+module.exports= mongoose.model("os",os);

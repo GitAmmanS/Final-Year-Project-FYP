@@ -4,6 +4,8 @@ const generator = require('generate-serial-number');
 const QRCode = require('qrcode')
 const Ram=require('../models/ram')
 const Hdd=require('../models/hdd')
+const mongoose = require('mongoose');
+
 exports.getItems = async (req, res) => {
     try {
         const data = await items.find()
@@ -21,49 +23,103 @@ exports.getItems = async (req, res) => {
         });
     }
 }
+exports.getItemById = async (req, res) => {
+    try {
+        const data = await items.findOne({_id: req.params._id})
+        .populate('category_ID')
+        .populate('company_ID')
+        .populate('specs.cpu')
+        .populate('specs.os')
+        .populate('specs.otherspecs')
+        .populate('labId')
+        .populate('roomId')
+        .populate('status_ID')
+        .populate({
+          path: 'specs.ram',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' } ,
+            { path: 'status', model: 'status' }               // Populate type from type schema
+          ]
+        })
+        .populate({
+          path: 'specs.hdd',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' },
+            { path: 'status', model: 'status' }                 // Populate type from type schema
+          ]
+        });
+   res.status(200).json({
+            success: true,
+            data: data
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+}
+
 exports.itemsPost = async (req, res) => {
     try {
-        let specs;
+        let specs = null;
         console.log("Request body:", req.body);
         const { cpu, otherspecs, os, ram, hdd } = req.body;
-       
         const ram_id = await Promise.all(
             (ram || []).map(async (ramSpec) => {
-                const newRam = new Ram(ramSpec);
-                const savedRam = await newRam.save();
-                return savedRam._id;
+                if (mongoose.Types.ObjectId.isValid(ramSpec.capacity) &&
+                    mongoose.Types.ObjectId.isValid(ramSpec.type) &&
+                    mongoose.Types.ObjectId.isValid(ramSpec.status)) {
+                    const newRam = new Ram(ramSpec);
+                    const savedRam = await newRam.save();
+                    return savedRam._id;
+                }
+                return null;
             })
-        );
+        ).then(ids => ids.filter(id => id !== null));  
         const hdd_id = await Promise.all(
             (hdd || []).map(async (hddSpec) => {
-                const newHdd = new Hdd(hddSpec);
-                const savedHdd = await newHdd.save();
-                return savedHdd._id;
+                if (mongoose.Types.ObjectId.isValid(hddSpec.capacity) &&
+                    mongoose.Types.ObjectId.isValid(hddSpec.type) &&
+                    mongoose.Types.ObjectId.isValid(hddSpec.status)) {
+                    const newHdd = new Hdd(hddSpec);
+                    const savedHdd = await newHdd.save();
+                    return savedHdd._id;
+                }
+                return null;
             })
-        );
+        ).then(ids => ids.filter(id => id !== null));  
+
         const path = req.file ? `${req.file.filename}` : null;
         if (!path) {
             return res.status(400).send('Picture is required');
         }
+
         const serialNumber = generator.generate(14);
         const qrCode = await QRCode.toDataURL(serialNumber);
-         specs = {
-            cpu,
-            otherspecs,
-            os,
-            ram: ram_id,
-            hdd: hdd_id
-        };
-        if (!cpu || !otherspecs || !os) {
-            specs=null;
+
+        if (cpu || otherspecs || os || ram_id.length || hdd_id.length) {
+            specs = {
+                cpu,
+                otherspecs,
+                os,
+                ram: ram_id,
+                hdd: hdd_id
+            };
         }
+
         const data = new items({
             picture: path,
-            serialNumber: serialNumber,
-            qrCode: qrCode,
-            specs: specs,
+            serialNumber,
+            qrCode,
+            specs,
             ...req.body
         });
+
         console.log("Item data to be saved:", data);
         await data.save();
         res.status(200).send("Inserted Successfully");
@@ -74,27 +130,39 @@ exports.itemsPost = async (req, res) => {
     }
 };
 
+
 exports.itemsPostBulk = async (req, res) => {
     try {
-        let specs;
+        let specs = null;
+        console.log("Request body:", req.body);
         const { cpu, otherspecs, os, ram, hdd } = req.body;
         const ram_id = await Promise.all(
             (ram || []).map(async (ramSpec) => {
-                const newRam = new Ram(ramSpec);
-                const savedRam = await newRam.save();
-                return savedRam._id;
+                if (mongoose.Types.ObjectId.isValid(ramSpec.capacity) &&
+                    mongoose.Types.ObjectId.isValid(ramSpec.type) &&
+                    mongoose.Types.ObjectId.isValid(ramSpec.status)) {
+                    const newRam = new Ram(ramSpec);
+                    const savedRam = await newRam.save();
+                    return savedRam._id;
+                }
+                return null;
             })
-        );
+        ).then(ids => ids.filter(id => id !== null));  
         const hdd_id = await Promise.all(
             (hdd || []).map(async (hddSpec) => {
-                const newHdd = new Hdd(hddSpec);
-                const savedHdd = await newHdd.save();
-                return savedHdd._id;
+                if (mongoose.Types.ObjectId.isValid(hddSpec.capacity) &&
+                    mongoose.Types.ObjectId.isValid(hddSpec.type) &&
+                    mongoose.Types.ObjectId.isValid(hddSpec.status)) {
+                    const newHdd = new Hdd(hddSpec);
+                    const savedHdd = await newHdd.save();
+                    return savedHdd._id;
+                }
+                return null;
             })
-        );
+        ).then(ids => ids.filter(id => id !== null));  
         const path = req.file ? `${req.file.filename}` : null;
         if (!path) {
-            return res.status(500).send('Picture is required');
+            return res.status(400).send('Picture is required');
         }
 
         let {quantity}=req.body; 
@@ -102,16 +170,16 @@ exports.itemsPostBulk = async (req, res) => {
             return res.status(400).send('Invalid quantity');
         }
         const itemsToSave = [];
-         specs = {
-            cpu,
-            otherspecs,
-            os,
-            ram: ram_id,
-            hdd: hdd_id
-        };
-        if (!cpu || !otherspecs || !os) {
-            specs=null;
+        if (cpu || otherspecs || os || ram_id.length || hdd_id.length) {
+            specs = {
+                cpu,
+                otherspecs,
+                os,
+                ram: ram_id,
+                hdd: hdd_id
+            };
         }
+        const newquantity = 1;
         for (let i = 0; i < quantity; i++) {
             const serialNumber = generator.generate(14);
             const qrCode = await QRCode.toDataURL(serialNumber);
@@ -120,7 +188,7 @@ exports.itemsPostBulk = async (req, res) => {
                 serialNumber: serialNumber,
                 qrCode: qrCode,
                 specs: specs,
-                quantity:1,
+                quantity:newquantity,
                 ...req.body
             });
 

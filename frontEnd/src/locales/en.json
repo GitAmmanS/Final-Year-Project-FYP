@@ -10,13 +10,15 @@
     },
     "buttons": {
       "addItem": "Add Items",
+      "add": "Add",
       "addCategory": "Add Category",
       "addCompany": "Add Company",
       "save": "Save",
       "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
-      "moreInfo": "More Info"
+      "moreInfo": "More Info",
+      "update": "Update"
     },
     "labels": {
       "items": "Items",
@@ -29,7 +31,8 @@
       "actions": "Actions",
       "picture": "Picture",
       "noItemsFound": "No items found",
-      "noImage": "No image"
+      "noImage": "No image",
+    "qrcode" : "QR Code"
     },
     "messages": {
       "itemAdded": "Item Added Successfully",
@@ -37,7 +40,12 @@
       "itemDeleted": "Item Deleted Successfully",
       "addCategorySuccess": "Category Added Successfully",
       "addCompanySuccess": "Company Added Successfully",
-      "deleteConfirmation": "Are you sure you want to delete this item?"
+      "deleteConfirmation": "Are you sure you want to delete this item?",
+      "errorMessage" : "Error Fetching Data",
+      "errorMessage2" : "Error in processing request",
+      "errorMessage3" : "Error in deleting item",
+      "companyAndCategory": "Please enter the name of ",
+      "companyAndCategory2": "you want to add."
     },
     "placeholders": {
       "name": "Enter item name",
@@ -45,7 +53,16 @@
       "company": "Select company",
       "status": "Select status",
       "room": "Select room",
-      "lab": "Select lab"
+      "lab": "Select lab",
+      "cpu": "Select cpu",
+      "os": "Select operating system",
+      "otherspecs": "Select otherspecs",
+      "ramCapacity": "Select ram capacity",
+      "ramType": "Select ram type",
+      "ramStatus": "Select ram status",
+      "hddCapacity": "Select hard disk capacity",
+      "hddType": "Select hard disk type",
+      "hddStatus": "Select hard disk status"
     }
   }
   

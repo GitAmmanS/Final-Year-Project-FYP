@@ -4,6 +4,7 @@ import {
   Button, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
 import './Items.scss';
+import { QRCodeSVG } from 'qrcode.react';
 import moment from 'moment';
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
@@ -21,23 +22,21 @@ const Items = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [editId, setEditId] = useState(null);
   const [isCategory, setIsCategory] = useState(true);
+  const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     quantity: 1,
     category_ID: '',
     company_ID: '',
     status_ID: '',
-    specs:{
-      cpu:'',
-      otherspecs:'',
-      os:'',
-      ram:[{ capacity: '67078e186409c96dd98efef2', type: '67078df86409c96dd98efeee', status: '66febbc22f68e6fc56b8c7e5' }],
-      hdd:[{ capacity: '67078e226409c96dd98efef4', type: '67078e036409c96dd98efef0', status: '66febbc22f68e6fc56b8c7e5' }]
-    },
+    cpu: '',
+    otherspecs: '',
+    os: '',
+    ram: [{ capacity: '', type: '', status: '' }],
+    hdd: [{ capacity: '', type: '', status: '' }],
     installDate: moment().format('LLLL'),
-    picture: null,
-    roomId:'',
-    labId:''
+    roomId: '',
+    labId: ''
   });
   const [itemsData, setItemsData] = useState([]);
   const [categoryName, setCategoryName] = useState([]);
@@ -48,13 +47,13 @@ const Items = () => {
   const [osName, setOsName] = useState([]);
   const [otherSpecs, setOtherSpecs] = useState([]);
   const [cpuName, setCpuName] = useState([]);
-  const [ramData, setramData] = useState([]);
-  const [hddData, setHddData] = useState([]);
+  const [capacitySize, setCapacitySize] = useState([]);
+  const [typeName, setTypeName] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [categoriesResponse, companiesResponse, itemsResponse, statusResponse, roomResponse, labResponse , osResponse , otherSpecsResponse , cpuResponse, ramResponse, hddResponse] = await Promise.all([
+        const [categoriesResponse, companiesResponse, itemsResponse, statusResponse, roomResponse, labResponse, osResponse, otherSpecsResponse, cpuResponse, capacityResponse, typeResponse] = await Promise.all([
           axios.get(`${BaseUrl}/category`),
           axios.get(`${BaseUrl}/company`),
           axios.get(`${BaseUrl}/items`),
@@ -64,8 +63,8 @@ const Items = () => {
           axios.get(`${BaseUrl}/os`),
           axios.get(`${BaseUrl}/otherspecs`),
           axios.get(`${BaseUrl}/cpu`),
-          axios.get(`${BaseUrl}/ram`),
-          axios.get(`${BaseUrl}/hdd`),
+          axios.get(`${BaseUrl}/ramAndHddOptions/capacity`),
+          axios.get(`${BaseUrl}/ramAndHddOptions/type`),
         ]);
         setCategoryName(categoriesResponse.data.data);
         setCompanyName(companiesResponse.data.data);
@@ -76,39 +75,35 @@ const Items = () => {
         setOsName(osResponse.data.data);
         setOtherSpecs(otherSpecsResponse.data.data);
         setCpuName(cpuResponse.data.data);
-        setramData(ramResponse.data.data);
-        setHddData(hddResponse.data.data)
-        console.log(ramResponse.data.data);
-        console.log(hddResponse.data.data);
+        setCapacitySize(capacityResponse.data.data);
+        setTypeName(typeResponse.data.data);
       } catch (err) {
-        console.error('Error fetching data:', err);
+        console.error(locales.messages.errorMessage, err);
       }
     };
 
     fetchData();
-  },[]);
+  }, [itemsData]);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const resetFormData=()=>{
+  const resetFormData = () => {
     setFormData({
       name: '',
       quantity: 1,
       category_ID: '',
       company_ID: '',
-      specs:{
-        cpu:'',
-        otherspecs:'',
-        os:'',
-        ram:[{ capacity: '67078e186409c96dd98efef2', type: '67078df86409c96dd98efeee', status: '66febbc22f68e6fc56b8c7e5' }],
-        hdd:[{ capacity: '67078e226409c96dd98efef4', type: '67078e036409c96dd98efef0', status: '66febbc22f68e6fc56b8c7e5' }]
-      },
+      cpu: '',
+      otherspecs: '',
+      os: '',
+
+      ram: [{ capacity: '', type: '', status: '' }, { capacity: '', type: '', status: '' }],
+      hdd: [{ capacity: '', type: '', status: '' }, { capacity: '', type: '', status: '' }],
       installDate: moment().format('LLLL'),
-      picture: null,
-      roomId:'',
-      labId:'',
-      status_ID:''
+      roomId: '',
+      labId: '',
+      status_ID: ''
     });
   }
   const handleClose = () => {
@@ -123,78 +118,81 @@ const Items = () => {
   const handleAddItem = async () => {
     console.log("this is real data", formData);
     const data = new FormData();
-   
-    data.append('name', formData.name);
-    data.append('quantity', formData.quantity);
-    data.append('category_ID', formData.category_ID);
-    data.append('company_ID', formData.company_ID);
-    data.append('status_ID', formData.status_ID);
-    data.append('installDate', formData.installDate);
-    data.append('roomId', formData.roomId);
-    data.append('labId', formData.labId);
-    data.append('cpu', formData.specs.cpu);
-    data.append('os', formData.specs.os);
-    data.append('otherspecs', formData.specs.otherspecs);
-    
-    formData.specs.ram.forEach((ram, index) => {
-        data.append(`ram[${index}][capacity]`, ram.capacity);
-        data.append(`ram[${index}][type]`, ram.type);
-        data.append(`ram[${index}][status]`, ram.status);
-    });
 
-    formData.specs.hdd.forEach((hdd, index) => {
-        data.append(`hdd[${index}][capacity]`, hdd.capacity);
-        data.append(`hdd[${index}][type]`, hdd.type);
-        data.append(`hdd[${index}][status]`, hdd.status);
-    });
+    for (const [key, value] of Object.entries(formData)) {
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          for (const [itemKey, itemValue] of Object.entries(item)) {
+            data.append(`${key}[${index}][${itemKey}]`, itemValue);
+          }
+        });
+      } else {
+        data.append(key, value);
+      }
+    }
 
-    if (formData.picture) {
-        data.append('picture', formData.picture);
+    if (file) {
+      data.append('picture', file);
     }
     try {
       const route = formData.quantity > 1 ? `${BaseUrl}/items/postBulk` : `${BaseUrl}/items/post`;
       if (editId) {
         await axios.put(`${BaseUrl}/items/${editId}`, data, {
-          headers: { 'Content-Type': 'multipart/form-data' },}).then((res) => {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }).then((res) => {
           console.log(res.data);
         });
 
-        alert('Item Updated Successfully');
+        alert(locales.messages.itemUpdated);
       }
-       else {
+      else {
         const response = await axios.post(route, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        alert('Item Added Successfully');
+        alert(locales.messages.itemAdded);
       }
-      console.log("working correctly")
       handleClose();
     } catch (err) {
-      alert('Error in processing request');
+      alert(locales.messages.errorMessage2);
       console.log(err);
     }
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-   
-    setFormData({ ...formData, [name]: value });
-      };
-      
-  const handleSpecChange = (event) => {
-        const { name, value } = event.target;
-        setFormData(prevData => ({
-          ...prevData,
-          specs: {
-            ...prevData.specs,
-            [name]: value 
-          }
-        }));
-      };
-      
 
-  const handleFileChange = (event) => {
-    setFormData({ ...formData, picture: event.target.files[0] });
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleRamChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedRam = [...formData.ram];
+    updatedRam[index][name] = value;
+    setFormData({ ...formData, ram: updatedRam });
+    console.log("Updated RAM:", updatedRam);
+  };
+  const handleHddChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedHdd = [...formData.hdd];
+    updatedHdd[index][name] = value;
+    setFormData({ ...formData, hdd: updatedHdd });
+    console.log("Updated hdd:", updatedHdd);
+  };
+
+
+  const addRamField = () => {
+    if (formData.ram.length < 2) {
+      setFormData({ ...formData, ram: [...formData.ram, { capacity: '', type: '', status: '' }] });
+    }
+  };
+
+  const addHddField = () => {
+    if (formData.hdd.length < 2) {
+      setFormData({ ...formData, hdd: [...formData.hdd, { capacity: '', type: '', status: '' }] });
+    }
+  };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   const handleCategoryChange = (event) => {
@@ -206,7 +204,7 @@ const Items = () => {
   const handleLabChange = (event) => {
     setFormData({ ...formData, labId: event.target.value });
   };
-  
+
   const handleCompanyChange = (event) => {
     setFormData({ ...formData, company_ID: event.target.value });
   };
@@ -222,28 +220,31 @@ const Items = () => {
       category_ID: item.category_ID._id,
       company_ID: item.company_ID._id,
       status_ID: item.status_ID._id,
-      specs: item.specs,
+      cpu: item.cpu?._id,
+      os: item.os?._id,
+      otherspecs: item?.otherspecs?._id,
+      ram: [{ capacity: item.ram?.capacity?._id, type: item.ram?.type?._id, status: item.ram?.type?._id }],
+      hdd: [{ capacity: item.hdd?.capacity?._id, type: item.hdd?.type?._id, status: item.hdd?.type?._id }],
       installDate: moment(item.installDate).format('YYYY-MM-DD'),
       roomId: item.roomId._id,
       labId: item.labId._id,
       picture: item.picture
     });
+    console.log("from edit section" + formData.ram);
     setEditId(item._id);
     setOpenEdit(true);
   };
 
   const handleMoreInfo = (item) => {
-    navigate('/more', { state: { itemData: item } });
+    navigate(`/more/${item._id}`);
   };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${BaseUrl}/items/${id}`);
-      alert('Item Deleted Successfully');
-      // const itemsRes = await axios.get(`${BaseUrl}/items`);
-      // setItemsData(itemsRes.data.message);
+      alert(locales.messages.itemDeleted);
     } catch (err) {
-      alert('Error in deleting item');
+      alert(locales.messages.errorMessage3);
       console.log(err);
     }
   };
@@ -274,11 +275,11 @@ const Items = () => {
   return (
     <div className="bg-slate-50 h-sceen mt-2 ">
       <div className='flex p-2 text-xl text-slate-600 justify-between'>
-        <p className='text-center font-bold cursor-pointer hover:text-slate-500'>Items</p>
+        <p className='text-center font-bold cursor-pointer hover:text-slate-500'>{locales.labels.items}</p>
         <div className='bg-none text-base '>
-          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md'onClick={handleClickOpen}>Add Items</button>
-          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md'onClick={handleCategory}>Add Category</button>
-          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md'onClick={handleCompany}>Add Company</button>
+          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md' onClick={handleClickOpen}>{locales.buttons.addItem}</button>
+          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md' onClick={handleCategory}>{locales.buttons.addCategory}</button>
+          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md' onClick={handleCompany}>{locales.buttons.addCompany}</button>
         </div>
       </div>
 
@@ -286,56 +287,58 @@ const Items = () => {
         <table className=' w-full'>
           <thead className='border border-black w-full'>
             <tr>
-            <th className='border-2 border-slate-700'>Picture</th>
-            <th className='border-2 border-slate-700'>Name</th>
-              <th className='border-2 border-slate-700'>Category</th>
-              <th className='border-2 border-slate-700'>Company</th>
-              <th className='border-2 border-slate-700'>Quantity</th>
-              <th className='border-2 border-slate-700'>Serial Number</th>
-              <th className='border-2 border-slate-700'>Status</th>
-              <th className='border-2 border-slate-700'>Actions</th>
+              <th className='border-2 border-slate-700'>{locales.labels.picture}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.name}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.category}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.company}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.quantity}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.serialNumber}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.status}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.qrcode}</th>
+              <th className='border-2 border-slate-700'>{locales.labels.actions}</th>
             </tr>
           </thead>
           <tbody className='text-center mt-2 '>
-          {itemsData.length > 0 ? (
-  itemsData.map((item, index) => (
-    <tr key={index}>
-      <td className='pl-4 pt-3'>
-        {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : 'No image'}
-      </td>
-      <td className='pt-3'>{item?.name || 'none'}</td>
-      <td className='pt-3'>{item.category_ID?.name || 'none'}</td>
-      <td className='pt-3'>{item.company_ID?.name || 'none'}</td>
-      <td className='pt-3'>{item?.quantity || 'none'}</td>
-      <td className='pt-3'>{item?.serialNumber || 'none'}</td>
-      <td className='pt-3'>{item.status_ID?.name || 'none'}</td>
-      <td>
-        <div className='pt-3 text-center px-2'>
-          <button className='bg-green-400 border-2 border-black w-6 h-7 text-center hover:bg-green-600 rounded-md' onClick={() => handleMoreInfo(item)}><FaSearchPlus /></button>
-          <button className='bg-blue-600 border-2 border-black w-6 h-7 text-center hover:bg-blue-900 rounded-md' onClick={() => handleEdit(item)}><MdEdit /></button>
-          <button className='bg-red-600 border-2 border-black w-6 h-7 text-center hover:bg-red-900 rounded-md' onClick={() => handleDelete(item._id)}><AiOutlineDelete /></button>
-        </div>
-      </td>
-    </tr>
-  ))
-) : (
-  <tr>
-    <td colSpan="9">No items found</td>
-  </tr>
-)}
+            {itemsData.length > 0 ? (
+              itemsData.map((item, index) => (
+                <tr key={index}>
+                  <td className='pl-4 pt-3'>
+                    {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : locales.labels.noImage}
+                  </td>
+                  <td className='pt-3'>{item?.name || 'none'}</td>
+                  <td className='pt-3'>{item.category_ID?.name || 'none'}</td>
+                  <td className='pt-3'>{item.company_ID?.name || 'none'}</td>
+                  <td className='pt-3'>{item?.quantity || 'none'}</td>
+                  <td className='pt-3'>{item?.serialNumber || 'none'}</td>
+                  <td className='pt-3'>{item.status_ID?.name || 'none'}</td>
+                  <td className='pt-3 flex justify-center'> <QRCodeSVG value={item.qrCode} size={80} /> </td>
+                  <td>
+                    <div className=' flex justify-center items-center'>
+                      <button className='bg-green-400 border-2  border-black w-6 h-7 text-center hover:bg-green-600 rounded-md' onClick={() => handleMoreInfo(item)}><FaSearchPlus /></button>
+                      <button className='bg-blue-600 border-2 border-black w-6 h-7 text-center hover:bg-blue-900 rounded-md' onClick={() => handleEdit(item)}><MdEdit /></button>
+                      <button className='bg-red-600 border-2 border-black w-6 h-7 text-center hover:bg-red-900 rounded-md' onClick={() => handleDelete(item._id)}><AiOutlineDelete /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9">{locales.labels.noItemsFound}</td>
+              </tr>
+            )}
 
           </tbody>
         </table>
       </div>
 
       <Dialog open={open || openEdit} onClose={handleClose}>
-        <DialogTitle>{editId ? 'Update Item' : 'Add Item'}</DialogTitle>
+        <DialogTitle>{editId ? `${locales.dialog.title.updateItem}` : `${locales.dialog.title.addItem}`}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please fill the form below.</DialogContentText>
+          <DialogContentText>{locales.dialog.contentText.addItemText}</DialogContentText>
           <TextField
             margin="dense"
             name="name"
-            label="Name"
+            label={locales.labels.name}
             value={formData.name}
             onChange={handleInputChange}
             fullWidth
@@ -343,14 +346,14 @@ const Items = () => {
           <TextField
             margin="dense"
             name="quantity"
-            label="Quantity"
+            label={locales.labels.quantity}
             type="number"
             value={formData.quantity}
             onChange={handleInputChange}
             fullWidth
           />
           <FormControl fullWidth margin="dense">
-            <InputLabel>Room</InputLabel>
+            <InputLabel>{locales.placeholders.room}</InputLabel>
             <Select name='room' value={formData.roomId} onChange={handleRoomChange}>
               {roomName.map((room) => (
                 <MenuItem key={room._id} value={room._id}>
@@ -360,7 +363,7 @@ const Items = () => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="dense">
-            <InputLabel>Lab</InputLabel>
+            <InputLabel>{locales.placeholders.lab}</InputLabel>
             <Select name='lab' value={formData.labId} onChange={handleLabChange}>
               {labName.map((lab) => (
                 <MenuItem key={lab._id} value={lab._id}>
@@ -370,7 +373,7 @@ const Items = () => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="dense">
-            <InputLabel>Category</InputLabel>
+            <InputLabel>{locales.placeholders.category}</InputLabel>
             <Select name='category' value={formData.category_ID} onChange={handleCategoryChange}>
               {categoryName.map((category) => (
                 <MenuItem key={category._id} value={category._id}>
@@ -380,7 +383,7 @@ const Items = () => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="dense">
-            <InputLabel>Company</InputLabel>
+            <InputLabel>{locales.placeholders.company}</InputLabel>
             <Select name='company' value={formData.company_ID} onChange={handleCompanyChange}>
               {companyName.map((company) => (
                 <MenuItem key={company._id} value={company._id}>
@@ -390,7 +393,7 @@ const Items = () => {
             </Select>
           </FormControl>
           <FormControl fullWidth margin="dense">
-            <InputLabel>Status</InputLabel>
+            <InputLabel>{locales.placeholders.status}</InputLabel>
             <Select value={formData.status_ID} onChange={handleStatusChange}>
               {statusName.map((status) => (
                 <MenuItem key={status._id} value={status._id}>
@@ -401,81 +404,174 @@ const Items = () => {
           </FormControl>
           <input
             type="file"
+            name="picture"
             accept="image/*"
             onChange={handleFileChange}
             style={{ marginTop: '10px' }}
           />
-          {/* <TextField
-            margin="dense"
-            name="specs"
-            label={formData.name.toUpperCase() + ' '+ 'SPECS' }
-            type="text"
-            value={formData.specs.otherspecs}
-            onChange={handleSpecChange}
-            fullWidth
-          /> */}
           {
             isPC && (
               <>
-               <FormControl fullWidth margin="dense">
-            <InputLabel>CPU</InputLabel>
-            <Select name='cpu' value={formData.specs.cpu} onChange={handleSpecChange}>
-              {cpuName.map((cpu) => (
-                <MenuItem key={cpu._id} value={cpu._id}>
-                  {cpu.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Operating System</InputLabel>
-            <Select name='os' value={formData.specs.os} onChange={handleSpecChange}>
-              {osName.map((os) => (
-                <MenuItem key={os._id} value={os._id}>
-                  {os.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="dense">
-            <InputLabel>OtherSpecs</InputLabel>
-            <Select name='otherspecs' value={formData.specs.otherspecs} onChange={handleSpecChange}>
-              {otherSpecs.map((otherSpec) => (
-                <MenuItem key={otherSpec._id} value={otherSpec._id}>
-                  {otherSpec.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>{locales.placeholders.cpu}</InputLabel>
+                  <Select name='cpu' value={formData.cpu} onChange={handleInputChange}>
+                    {cpuName.map((cpu) => (
+                      <MenuItem key={cpu._id} value={cpu._id}>
+                        {cpu.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>{locales.placeholders.os}</InputLabel>
+                  <Select name='os' value={formData.os} onChange={handleInputChange}>
+                    {osName.map((os) => (
+                      <MenuItem key={os._id} value={os._id}>
+                        {os.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>{locales.placeholders.otherspecs}</InputLabel>
+                  <Select name='otherspecs' value={formData.otherspecs} onChange={handleInputChange}>
+                    {otherSpecs.map((otherSpec) => (
+                      <MenuItem key={otherSpec._id} value={otherSpec._id}>
+                        {otherSpec.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {formData.ram.map((ram, index) => (
+                  <div key={index}>
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel>{locales.placeholders.ramCapacity}</InputLabel>
+                      <Select
+                        name="capacity"
+                        value={ram.capacity || ''}
+                        onChange={(e) => handleRamChange(index, e)}
+                      >
+                        {capacitySize.map((capacity) => (
+                          <MenuItem key={capacity._id} value={capacity._id}>
+                            {capacity.size}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel>{locales.placeholders.ramType}</InputLabel>
+                      <Select
+                        name="type"
+                        value={ram.type || ''}
+                        onChange={(e) => handleRamChange(index, e)}
+                      >
+                        {typeName.map((type) => (
+                          <MenuItem key={type._id} value={type._id}>
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel>{locales.placeholders.ramStatus}</InputLabel>
+                      <Select
+                        name="status"
+                        value={ram.status || ''}
+                        onChange={(e) => handleRamChange(index, e)}
+                      >
+                        {statusName.map((status) => (
+                          <MenuItem key={status._id} value={status._id}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+                ))}
+                <Button onClick={addRamField}>Add More RAM</Button>
+                {/* {console.log(formData.ram.length())} */}
+
+                {formData.hdd.map((hdd, index) => (
+                  <div key={index}>
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel>{locales.placeholders.hddCapacity}</InputLabel>
+                      <Select
+                        name="capacity"
+                        value={hdd.capacity || ''}
+                        onChange={(e) => handleHddChange(index, e)}
+                      >
+                        {capacitySize.map((capacity) => (
+                          <MenuItem key={capacity._id} value={capacity._id}>
+                            {capacity.size}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel>{locales.placeholders.hddType}</InputLabel>
+                      <Select
+                        name="type"
+                        value={hdd.type || ''}
+                        onChange={(e) => handleHddChange(index, e)}
+                      >
+                        {typeName.map((type) => (
+                          <MenuItem key={type._id} value={type._id}>
+                            {type.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth margin="dense">
+                      <InputLabel>{locales.placeholders.hddStatus}</InputLabel>
+                      <Select
+                        name="status"
+                        value={hdd.status || ''}
+                        onChange={(e) => handleHddChange(index, e)}
+                      >
+                        {statusName.map((status) => (
+                          <MenuItem key={status._id} value={status._id}>
+                            {status.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </div>
+                ))}
+                <Button onClick={addHddField}>Add More HarDisk</Button>
+
               </>
-              
+
             )
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddItem}>{editId ? 'Update' : 'Add'}</Button>
+          <Button onClick={handleClose}>{locales.buttons.cancel}</Button>
+          <Button onClick={handleAddItem}>{editId ? `${locales.buttons.update}` : `${locales.buttons.add}`}</Button>
         </DialogActions>
       </Dialog>
 
       <Dialog open={openDialog} onClose={handleClose}>
-        <DialogTitle>Add {isCategory ? 'Category' : 'Company'}</DialogTitle>
+        <DialogTitle>Add {isCategory ? `${locales.labels.category}` : `${locales.labels.company}`}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please enter the name of the {isCategory ? 'category' : 'company'} you want to add.
+            {locales.messages.companyAndCategory} {isCategory ? `${locales.labels.category}` : `${locales.labels.company}`} {locales.messages.companyAndCategory2}
           </DialogContentText>
           <TextField
             margin="dense"
             name="categoryOrCompanyName"
-            label={isCategory ? 'Category Name' : 'Company Name'}
+            label={isCategory ? `${locales.labels.category}` : `${locales.labels.company}`}
             value={categoryOrCompanyName}
             onChange={(e) => setCategoryOrCompanyName(e.target.value)}
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddCategoryOrCompany}>Add</Button>
+          <Button onClick={handleClose}>{locales.buttons.cancel}</Button>
+          <Button onClick={handleAddCategoryOrCompany}>{locales.buttons.add}</Button>
         </DialogActions>
       </Dialog>
     </div>

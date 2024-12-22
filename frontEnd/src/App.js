@@ -1,6 +1,4 @@
 import Home from './Home/Home'
-import Header from './Header/Header'
-import SideMenu from './SideMenu/SideMenu';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Items from './Items/Items';
 import More from './Items/More';

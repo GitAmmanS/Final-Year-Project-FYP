@@ -1,13 +1,9 @@
 import React from 'react';
-import Header from './Header/Header'
 import SideMenu from './SideMenu/SideMenu';
 import ShowSomeTimes from './ShowSomeTimes';
 const Layout = ({children}) => {
   return (
-    <div className='flex flex-col h-screen bg-amber-50 '>
-        <ShowSomeTimes>
-      <Header />
-      </ShowSomeTimes>
+    <div className='flex flex-col h-screen bg-white '>
       <div className='flex flex-1  overflow-y-hidden '>
       <ShowSomeTimes>
         <SideMenu />
@@ -16,7 +12,6 @@ const Layout = ({children}) => {
           {children}
         </main>
       </div>
-      {/* <Footer /> */}
     </div>
   )
 }

@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useMemo } from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   Button, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
+
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { PieChart } from '@mui/x-charts/PieChart';
+
 import './Items.scss';
 import { QRCodeSVG } from 'qrcode.react';
-import moment from 'moment';
+import moment, { locale } from 'moment';
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
 import { AiOutlineDelete } from "react-icons/ai";
@@ -23,6 +27,16 @@ const Items = () => {
   const [editId, setEditId] = useState(null);
   const [isCategory, setIsCategory] = useState(true);
   const [file, setFile] = useState(null);
+  const [TotalItems, setTotalItems] = useState(0);
+  const [statusItems, setStatusItem] = useState({
+    New: 0,
+    Old: 0,
+    Damaged: 0,
+    Pending: 0,
+    Repaired: 0,
+    Faulty: 0,
+    Used: 0,
+  })
   const [formData, setFormData] = useState({
     name: '',
     quantity: 1,
@@ -69,6 +83,9 @@ const Items = () => {
         setCategoryName(categoriesResponse.data.data);
         setCompanyName(companiesResponse.data.data);
         setItemsData(itemsResponse.data.data);
+
+        setTotalItems(itemsData.length);
+
         setStatusName(statusResponse.data.data);
         setRoomName(roomResponse.data.data);
         setLabName(labResponse.data.data);
@@ -84,6 +101,28 @@ const Items = () => {
 
     fetchData();
   }, [itemsData]);
+  useEffect(() => {
+
+    const initialStatusItems = {
+      New: 0,
+      Old: 0,
+      Damaged: 0,
+      Pending: 0,
+      Repaired: 0,
+      Faulty: 0,
+      Used: 0,
+    };
+
+    itemsData.forEach((item) => {
+      if (item.status_ID && item.status_ID.name && initialStatusItems[item.status_ID.name] !== undefined) {
+        initialStatusItems[item.status_ID.name] += 1;
+      }
+    });
+
+    setStatusItem(initialStatusItems);
+  }, [itemsData]);
+
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -214,6 +253,7 @@ const Items = () => {
   };
 
   const handleEdit = (item) => {
+    console.log(item);
     setFormData({
       name: item.name,
       quantity: item.quantity,
@@ -243,6 +283,8 @@ const Items = () => {
     try {
       await axios.delete(`${BaseUrl}/items/${id}`);
       alert(locales.messages.itemDeleted);
+      const itemsData1= await axios.get(`${BaseUrl}/items`);
+      setItemsData(itemsData1.data.data);
     } catch (err) {
       alert(locales.messages.errorMessage3);
       console.log(err);
@@ -271,65 +313,176 @@ const Items = () => {
     setIsCategory(false);
     setOpenDialog(true);
   };
+  const transformedData = useMemo(() => 
+    itemsData.map(item => ({
+      Picture: <img src={`${BaseUrl}/${item.picture}`} alt="item" style={{ width: 50, height: 50 }} />,
+      Name: item.name || "N/A",
+      Category: item.category_ID?.name || "N/A",
+      Company: item.company_ID?.name || "N/A",
+      Quantity: item.quantity || 0,
+      Serial_Number: item.serialNumber || "N/A",
+      Status: item.status_ID?.name || "N/A",
+      QR_Code: <QRCodeSVG value={item.qrCode || "N/A"} size={50} />,
+      Actions: (
+        <div className='space-x-[5px] '>
+          <button className='bg-[#6E5DB9] border-2  border-black w-6 h-7 text-center text-white  hover:transition-all font-extrabold hover:bg-blue-900 rounded-md' onClick={() => handleEdit(item)}><MdEdit /></button>
+          <button className='bg-[#E80F12] border-2 border-black w-6 h-7 text-center text-white  hover:transition-all hover:bg-red-700 rounded-md' onClick={() => handleDelete(item._id)}><AiOutlineDelete /></button>
+          <button className='bg-[#5DB963] border-2  border-black w-6 h-7 text-center text-white  hover:transition-all hover:bg-green-600 rounded-md' onClick={() => handleMoreInfo(item)}><FaSearchPlus /></button>
+        </div>
+      ),
+    })), 
+    [itemsData]
+  );
+  
+  
+
+  const [columns] = useState([
+    {
+      accessorKey: 'Picture',
+      header: 'Picture',
+      size: 150,
+    },
+    {
+      accessorKey: 'Name',
+      header: 'Name',
+      size: 150,
+    },
+    {
+      accessorKey: 'Category',
+      header: 'Category',
+      size: 150,
+    },
+    {
+      accessorKey: 'Company',
+      header: 'Company',
+      size: 150,
+    },
+    {
+      accessorKey: 'Quantity',
+      header: 'Quantity',
+      size: 150,
+    },
+    {
+      accessorKey: 'Serial_Number',
+      header: 'Serial Number',
+      size: 150,
+    },
+    {
+      accessorKey: 'Status',
+      header: 'Status',
+      size: 150,
+    },
+    {
+      accessorKey: 'QR_Code',
+      header: 'QR Code',
+      size: 150,
+    },
+    {
+      accessorKey: 'Actions',
+      header: 'Actions',
+      size: 150,
+    }
+  ]);
+  const table = useMaterialReactTable({
+    columns,
+    data:transformedData,
+  });
   const isPC = pattern.test(formData.name);
   return (
     <div className="bg-slate-50 h-sceen mt-2 ">
-      <div className='flex p-2 text-xl text-slate-600 justify-between'>
-        <p className='text-center font-bold cursor-pointer hover:text-slate-500'>{locales.labels.items}</p>
-        <div className='bg-none text-base '>
-          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md' onClick={handleClickOpen}>{locales.buttons.addItem}</button>
-          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md' onClick={handleCategory}>{locales.buttons.addCategory}</button>
-          <button className='px-2 text-center hover:border hover:bg-slate-200 hover:border-black rounded-md' onClick={handleCompany}>{locales.buttons.addCompany}</button>
+      <div className='flex flex-row'>
+        <div className='relative w-[350px] h-[300px]  z-[1] ml-[20%]  flex justify-center items-center'>
+          <PieChart
+            series={[
+              {
+                data: [
+                  { title: "new", value: (statusItems.New/TotalItems)*100, color: '#5DB963' },
+                  { title: 'old', value: (statusItems.Old/TotalItems)*100, color: '#6E5DB9' },
+                  { title: 'damaged', value: (statusItems.Damaged/TotalItems)*100, color: '#E80F12' },
+                  { title: 'pending', value: (statusItems.Pending/TotalItems)*100, color: '#B95D8B' },
+                  { title: 'repaired', value: (statusItems.Repaired/TotalItems)*100, color: '#D3AB34' },
+                  { title: 'faulty', value: (statusItems.Faulty/TotalItems)*100, color: '#E8DA0F' },
+                  { title: 'used', value: (statusItems.Used/TotalItems)*100, color: '#17C2AB' },
+                ],
+                highlightScope: { fade: 'global', highlight: 'item' },
+                faded: { innerRadius: 40, additionalRadius: -20, color: 'gray' },
+                innerRadius: 55,
+              },
+            ]}
+            height={200}
+          />
+          <div className='absolute top-[42%] left-[24%] w-[90px] h-[50px] text-[22px] flex flex-col justify-center items-center'>
+            {TotalItems}
+            <span className='text-[#000000] opacity-[60%] text-[16px]'>Total Items</span>
+          </div>
+        </div>
+        <div className='ml-[10px] my-[30px] grid grid-rows-3 grid-cols-3 w-[400px]  '>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#5DB963]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.New}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>New</span>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#6E5DB9]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.Old}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>Old</span>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#E80F12]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.Damaged}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>Damaged</span>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#B95D8B]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.Pending}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>Pending</span>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#D3AB34]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.Repaired}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>Repaired</span>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#E8DA0F]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.Faulty}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>Faulty</span>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center items-center space-x-3">
+            <div className='w-6 h-6 rounded-[50%] bg-[#17C2AB]'></div>
+            <div className='w-[90px] h-[50px] text-[20px] flex flex-col justify-center items-start'>
+              {statusItems.Used}
+              <span className='text-[#000000] opacity-[60%] text-[14px]'>Used</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className='mt-3 p-2 '>
-        <table className=' w-full'>
-          <thead className='border border-black w-full'>
-            <tr>
-              <th className='border-2 border-slate-700'>{locales.labels.picture}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.name}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.category}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.company}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.quantity}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.serialNumber}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.status}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.qrcode}</th>
-              <th className='border-2 border-slate-700'>{locales.labels.actions}</th>
-            </tr>
-          </thead>
-          <tbody className='text-center mt-2 '>
-            {itemsData.length > 0 ? (
-              itemsData.map((item, index) => (
-                <tr key={index}>
-                  <td className='pl-4 pt-3'>
-                    {item.picture ? <img src={`${BaseUrl}/${item.picture}`} alt="item" width="50" /> : locales.labels.noImage}
-                  </td>
-                  <td className='pt-3'>{item?.name || 'none'}</td>
-                  <td className='pt-3'>{item.category_ID?.name || 'none'}</td>
-                  <td className='pt-3'>{item.company_ID?.name || 'none'}</td>
-                  <td className='pt-3'>{item?.quantity || 'none'}</td>
-                  <td className='pt-3'>{item?.serialNumber || 'none'}</td>
-                  <td className='pt-3'>{item.status_ID?.name || 'none'}</td>
-                  <td className='pt-3 flex justify-center'> <QRCodeSVG value={item.qrCode} size={80} /> </td>
-                  <td>
-                    <div className=' flex justify-center items-center'>
-                      <button className='bg-green-400 border-2  border-black w-6 h-7 text-center hover:bg-green-600 rounded-md' onClick={() => handleMoreInfo(item)}><FaSearchPlus /></button>
-                      <button className='bg-blue-600 border-2 border-black w-6 h-7 text-center hover:bg-blue-900 rounded-md' onClick={() => handleEdit(item)}><MdEdit /></button>
-                      <button className='bg-red-600 border-2 border-black w-6 h-7 text-center hover:bg-red-900 rounded-md' onClick={() => handleDelete(item._id)}><AiOutlineDelete /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="9">{locales.labels.noItemsFound}</td>
-              </tr>
-            )}
 
-          </tbody>
-        </table>
+
+      <div className='flex p-2 text-xl text-black justify-between'>
+        <p className='text-center font-bold cursor-pointer'>{locales.labels.AllocateItems}</p>
+        <div className='bg-none text-base space-x-[10px] '>
+          <button className='px-2 text-center border bg-[#AFD0AE]  border-black hover:bg-[#5eb05b] hover:text-white hover:transition-all rounded-md' onClick={handleClickOpen}>{locales.buttons.addItem}</button>
+          <button className='px-2 text-center border bg-[#AFD0AE]  border-black hover:bg-[#5eb05b] hover:text-white hover:transition-all rounded-md' onClick={handleCategory}>{locales.buttons.addCategory}</button>
+          <button className='px-2 text-center border bg-[#AFD0AE]  border-black hover:bg-[#5eb05b] hover:text-white hover:transition-all rounded-md' onClick={handleCompany}>{locales.buttons.addCompany}</button>
+        </div>
       </div>
+
+      <div className='flex flex-col'>
+          <div> <MaterialReactTable table={table} /></div>
+        </div>
 
       <Dialog open={open || openEdit} onClose={handleClose}>
         <DialogTitle>{editId ? `${locales.dialog.title.updateItem}` : `${locales.dialog.title.addItem}`}</DialogTitle>

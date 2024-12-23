@@ -22,6 +22,7 @@
     },
     "labels": {
       "items": "Items",
+      "AllocateItems":"Allocated Items",
       "name": "Name",
       "quantity": "Quantity",
       "category": "Category",

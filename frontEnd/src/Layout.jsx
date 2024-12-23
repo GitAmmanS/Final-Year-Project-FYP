@@ -4,7 +4,7 @@ import ShowSomeTimes from './ShowSomeTimes';
 const Layout = ({children}) => {
   return (
     <div className='flex flex-col h-screen bg-white '>
-      <div className='flex flex-1  overflow-y-hidden '>
+      <div className='flex flex-0  overflow-y-hidden '>
       <ShowSomeTimes>
         <SideMenu />
         </ShowSomeTimes>

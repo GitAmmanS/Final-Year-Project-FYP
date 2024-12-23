@@ -12,12 +12,12 @@ export const SideMenuData=
             link:"/"
         },
         {
-            title:"Item",
+            title:"Inventory",
             icon:<MdOutlineInventory2 />,
             link:"/item"
         },
         {
-            title:"Inventory",
+            title:"Items",
             icon:<MdOutlineInventory2 />,
             link:"/inventory"
         },

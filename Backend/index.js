@@ -1,12 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-
+const path = require('path');
+const cookieParser = require('cookie-parser');
 dotenv.config();
 
 require("./config/config1");
-
 
 const usersR = require("./routes/usersR");
 const itemsR = require("./routes/itemsR");
@@ -24,13 +23,15 @@ const osR = require("./routes/osR");
 const otherSpecsR = require("./routes/otherSpecsR");
 const cpuR = require("./routes/cpuR");
 const ramHddOptions = require('./routes/ramAndHddR');
+
 const app = express();
 
 
 app.use(cors());
-app.use(express.static('./public')); 
-app.use(bodyParser.json());
-
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(express.static(path.join(__dirname,'public'))); 
+app.use(cookieParser());
 
 app.use("/users", usersR);
 app.use("/items", itemsR);

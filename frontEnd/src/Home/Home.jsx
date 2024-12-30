@@ -4,10 +4,8 @@ import { useState } from 'react';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { MdOutlineInventory } from "react-icons/md";
 import { BiCategoryAlt } from "react-icons/bi";
-import whatsapplogo from '../Images/Whatsapp.jpg'
 import {CircularProgressbar,buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { colors } from '@mui/material';
 const data = [
   {
     itemId: '12345',
@@ -73,20 +71,36 @@ const Home = () => {
   return (
     <>
       
-      <div className='flex flex-wrap justify-between mt-9 px-5 text-white'>
-        <div className='bg-custom-purple w-60  h-40 rounded-md ' >
-          <p className='text-base p-1'>Total Complaints</p>
-          <div className='flex flex-row mt-3 space-x-1'>
+      <div className='flex flex-wrap justify-between gap-2 mt-9 px-5   text-white'>
+      <div className='bg-slate-900 w-60 h-40 rounded-md'>
+          <p className='text-base p-1'>Active Labs</p>
+          <div className='flex flex-row mt-3'>
           <div className='m-2'>
-            <ProgressBar percentage={100}/>
+            <ProgressBar percentage={90}/>
             </div>
 
             <div className='flex flex-col ml-5'>
-              <p className='pl-20 mt-9 text-2xl'>100</p>
-              <p className='pl-[30px] mt-2  text-xs'>Last One Week</p>
+              <p className='pl-20 mt-9 text-2xl'>07</p>
+              <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
             </div>
           </div>
         </div>
+        
+        <div className='bg-pink-900 w-60 h-40 rounded-md'>
+          <p className='text-base p-1'>Active Rooms</p>
+          <div className='flex flex-row mt-3'>
+          <div className='m-2'>
+            <ProgressBar percentage={88}/>
+            </div>
+
+            <div className='flex flex-col ml-5'>
+              <p className='pl-20 mt-9 text-2xl'>22</p>
+              <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
+            </div>
+          </div>
+        </div>
+        
+       
         <div className='bg-green-500 w-60 h-40 rounded-md'>
           <p className='text-base p-1'>Resolved</p>
           <div className='flex flex-row mt-3'>
@@ -95,7 +109,7 @@ const Home = () => {
             </div>
 
             <div className='flex flex-col ml-5'>
-              <p className='pl-20 mt-9 text-2xl'>40</p>
+              <p className='pl-20 mt-9 text-2xl'>60</p>
               <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
             </div>
           </div>
@@ -108,11 +122,12 @@ const Home = () => {
             </div>
 
             <div className='flex flex-col ml-5'>
-              <p className='pl-20 mt-9 text-2xl'>60</p>
+              <p className='pl-20 mt-9 text-2xl'>40</p>
               <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
             </div>
           </div>
         </div>
+       
       </div>
       <div className='flex justify-between'>
         <div className='flex flex-col'>

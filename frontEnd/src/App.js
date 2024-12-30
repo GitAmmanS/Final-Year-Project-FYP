@@ -6,18 +6,22 @@ import Header from './Header/Header';
 import Login from './Authentication/Login';
 import Signup from './Authentication/Signup';
 import Layout from './Layout';
+import ShowSomeTimes from './ShowSomeTimes';
+import LabResource from './Resources/labResource';
 function App() {
   return (
     <Router>
-      
       <Layout>
+        <ShowSomeTimes>
       <Header/>
+      </ShowSomeTimes>
         <Routes>
           <Route path='/' element={<Home/>} /> 
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/item' element={<Items />} />
           <Route path='/more/:_id' element={<More/>} />
+          <Route path='/labs' element={<LabResource/>} />
         </Routes>
       </Layout>
     </Router>

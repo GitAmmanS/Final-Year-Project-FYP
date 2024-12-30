@@ -4,6 +4,8 @@ import { MdOutlineInventory2 } from "react-icons/md";
 import { CiSettings } from "react-icons/ci";
 import { FaAngleDown } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
+import { LuDoorOpen } from "react-icons/lu";
+import { GoDotFill } from "react-icons/go";
 export const SideMenuData= 
     [
         {
@@ -17,9 +19,41 @@ export const SideMenuData=
             link:"/item"
         },
         {
-            title:"Items",
-            icon:<MdOutlineInventory2 />,
-            link:"/inventory"
+            title:"Resource",
+            icon:<LuDoorOpen />,
+            subItems:[
+                {
+                title:"Computer Lab",
+                icon:<GoDotFill />,
+                link:"/labs"
+                },
+                {
+                    title:"Class Room",
+                    icon:<GoDotFill />,
+                    link:"/Cl"
+                 },
+                 {
+                    title:"Lecture Theatre",
+                    icon:<GoDotFill />,
+                    link:"/Lt"
+                 },
+                 {
+                    title:"Faculty Room",
+                    icon:<GoDotFill />,
+                    link:"/Fr"
+                 },
+                 {
+                    title:"Saminar Room",
+                    icon:<GoDotFill />,
+                    link:"/Sr"
+                 },
+                 {
+                    title:"Inventory Room",
+                    icon:<GoDotFill />,
+                    link:"/Ir"
+                 }
+            ]
+            
         },
         {
             title:"User",
@@ -32,10 +66,12 @@ export const SideMenuData=
             subItems:[
                 {
                 title:"Reservations",
+                icon:<GoDotFill />,
                 link:"/reservation"
                 },
                 {
                     title:"Issue Items",
+                    icon:<GoDotFill />,
                     link:"/issueitem"
                  }
             ]

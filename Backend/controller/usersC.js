@@ -2,27 +2,86 @@ const { response } = require("express");
 const users = require("../models/users");
 const nodemailer = require("nodemailer")
 const dotenv = require("dotenv");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 dotenv.config();
 exports.userspost = async (req, resp) => {
     try {
-        const data = new users(req.body);
+        const myPlaintextPassword = req.body.password;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashedPassword = await bcrypt.hash(myPlaintextPassword, salt);
+
+        const data = new users({
+            ...req.body, 
+            password: hashedPassword, 
+        });
+        console.log(data)
         await data.save();
         sendVerifyMail(req.body.name, req.body.email, data._id);
-        // console.log(req.body.name,req.body.email,data._id);
         resp.status(200).send("Inserted successfully");
     } catch (error) {
         console.error('Error in the post:', error);
         resp.status(500).send("Error in the post");
     }
 };
+exports.userspostAuthentication = async (req, resp) => {
+    try {
+        const { email, password } = req.body;
 
+        const user = await users.findOne({ email });
+
+        if (!user) {
+            return resp.status(404).json({ message: "Something Went Wrong" });
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        let token = jwt.sign({email},"secret");
+        if (!isPasswordValid) {
+            return resp.status(401).json({ message: "Something Went Wrong" });
+        }
+
+        if (!user.is_verified) {
+            return resp.status(403).json({ message: "Something Went Wrong.Not Verified" });
+        }
+        const { password: hashedPassword, ...userWithoutPassword } = user._doc; 
+        resp.cookie("token",token);
+         resp.status(200).json({
+            message: "Login successful",
+            user: userWithoutPassword,
+        });
+
+    } catch (error) {
+        console.error('Error during authentication:', error);
+        resp.status(500).json({ message: "An error occurred during authentication" });
+    }
+};
+exports.userLogout = async (req, resp) => {
+    try {
+        const name = req.body.name;
+
+        const user = await users.findOne({ name });
+
+        if (!user) {
+            return resp.status(404).json({ message: "Something Went Wrong" });
+        }
+
+        resp.cookie("token",'');
+         resp.status(200).json({
+            message: "Logout successful"
+        });
+
+    } catch (error) {
+        console.error('Error during authentication:', error);
+        resp.status(500).json({ message: "An error occurred during authentication" });
+    }
+};
 //for mail sending
 const sendVerifyMail = async (name, email, user_id) => {
     try {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: '465',
-            secure: true, //true for ssl and port 465
+            secure: true, 
             auth: {
                 user: process.env.EMAIL,
                 pass: process.env.PASSWORD

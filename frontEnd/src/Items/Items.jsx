@@ -1,14 +1,10 @@
 import React, { useState, useEffect,useMemo } from 'react';
-//hello from amman
 import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   Button, TextField, Select, MenuItem, FormControl, InputLabel
 } from '@mui/material';
-
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { PieChart } from '@mui/x-charts/PieChart';
-
-import './Items.scss';
 import { QRCodeSVG } from 'qrcode.react';
 import moment, { locale } from 'moment';
 import { BaseUrl } from '../BaseUrl';
@@ -326,9 +322,9 @@ const Items = () => {
       QR_Code: <QRCodeSVG value={item.qrCode || "N/A"} size={50} />,
       Actions: (
         <div className='space-x-[5px] '>
-          <button className='bg-[#6E5DB9] border-2  border-black w-6 h-7 text-center text-white  hover:transition-all font-extrabold hover:bg-blue-900 rounded-md' onClick={() => handleEdit(item)}><MdEdit /></button>
-          <button className='bg-[#E80F12] border-2 border-black w-6 h-7 text-center text-white  hover:transition-all hover:bg-red-700 rounded-md' onClick={() => handleDelete(item._id)}><AiOutlineDelete /></button>
-          <button className='bg-[#5DB963] border-2  border-black w-6 h-7 text-center text-white  hover:transition-all hover:bg-green-600 rounded-md' onClick={() => handleMoreInfo(item)}><FaSearchPlus /></button>
+          <button className='text-xl hover:text-slate-600' onClick={() => handleEdit(item)}><MdEdit /></button>
+          <button className='text-xl hover:text-red-600' onClick={() => handleDelete(item._id)}><AiOutlineDelete /></button>
+          <button className='text-xl hover:text-green-700' onClick={() => handleMoreInfo(item)}><FaSearchPlus /></button>
         </div>
       ),
     })), 
@@ -341,47 +337,47 @@ const Items = () => {
     {
       accessorKey: 'Picture',
       header: 'Picture',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Name',
       header: 'Name',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Category',
       header: 'Category',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Company',
       header: 'Company',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Quantity',
       header: 'Quantity',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Serial_Number',
       header: 'Serial Number',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Status',
       header: 'Status',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'QR_Code',
       header: 'QR Code',
-      size: 150,
+      size: 100,
     },
     {
       accessorKey: 'Actions',
       header: 'Actions',
-      size: 150,
+      size: 100,
     }
   ]);
   const table = useMaterialReactTable({
@@ -481,7 +477,7 @@ const Items = () => {
         </div>
       </div>
 
-      <div className='flex flex-col'>
+      <div className='flex flex-col w-screen'>
           <div> <MaterialReactTable table={table} /></div>
         </div>
 
@@ -724,7 +720,7 @@ const Items = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>{locales.buttons.cancel}</Button>
+          <Button onClick={handleClose}></Button>
           <Button onClick={handleAddCategoryOrCompany}>{locales.buttons.add}</Button>
         </DialogActions>
       </Dialog>

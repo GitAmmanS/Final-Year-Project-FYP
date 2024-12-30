@@ -16,9 +16,9 @@ const SideMenu = () => {
     };
 
     return (
-        <aside className='h-screen w-48 bg-custom-green flex flex-col  items-center '>
-            <div className='mt-3 mr-1'>
-            <img src={logo} className='bg-no-repeat bg-cover h-16 w-16 ' alt="no logo" />
+        <aside className='h-screen w-48 bg-custom-green flex flex-col  items-center overflow-y-auto '>
+            <div className='mt-3 mr-1 cursor-pointer'>
+            <img src={logo} className='bg-no-repeat bg-cover h-16 w-16 ' alt="no logo" onClick={()=>navigate('/')}/>
             </div>
             <div className='font-headings mt-1 px-2 text-lg font-semibold'>
                 <h1>UIIT LAB XPERTS</h1>
@@ -36,17 +36,20 @@ const SideMenu = () => {
 
                         {res.subItems && res.subItems.length > 0 && (
                             <ul
-                                className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                                    openSubMenu === index ? 'max-h-40' : 'max-h-0'
+                                className={`transition-all duration-300 ease-in-out overflow-hidden  ${
+                                    openSubMenu === index ? 'h-auto' : 'max-h-0'
                                 }`}
                             >
                                 {res.subItems.map((result, subIndex) => (
                                     <li
                                         key={subIndex}
-                                        className='cursor-pointer p-2 pl-6 ml-5  hover:bg-green-800 hover:text-green-50 rounded-md'
+                                        className=' cursor-pointer p-2    ml-3 hover:bg-green-800 hover:text-green-50 text-sm rounded-md '
                                         onClick={() => navigate(result.link)}
                                     >
-                                        {result.title}
+                                        <div className='flex'>
+                                         <span className='pt-1 text-xs' >  {result.icon} </span>
+                                      <span>  {result.title} </span>
+                                      </div>
                                     </li>
                                 ))}
                             </ul>

@@ -1,103 +1,91 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import bcrypt from 'bcryptjs';
-import "./Login.scss"
-import loginLogo from '../Images/login logo.png'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BaseUrl } from '../BaseUrl';
 const Login = () => {
-  const navigate = useNavigate();
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.get(`${BaseUrl}/users/datasingle/${email}`)
-      console.log(response.data.message[0]);
-      const users = response.data.message[0];
-      if (users) {
-        console.log("user name:",users.name);
-        console.log("user pass:",users.password);
-        const verified = users.is_verified;
-        const isPasswordMatch = await bcrypt.compare(password, users.password);
-        if (isPasswordMatch && verified) {
-          // setName(users.name);
-          console.log("User Name set to:", users.name);
-          const userName=users.name;
-          console.log(userName);
-          localStorage.setItem('userName', JSON.stringify(userName));
-          alert("Login Successfully");
-          navigate("/item");
-        } else {
-          setErrorMessage("Invalid email or password");
+    const submitHandler = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post(`${BaseUrl}/users/authenticate`, {
+                email,
+                password,
+            });
+            const user = response.data.user;
+            if (user) {
+                localStorage.setItem('userName', JSON.stringify(user.name));
+                alert("Login Successful");
+                navigate("/");
+            } else {
+                setErrorMessage("Invalid email or password");
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            setErrorMessage("An error occurred during login. Please try again.");
         }
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      setErrorMessage("An error occurred during login. Please try again.");
-    }
-  };
-  const emailSubmit=(event)=>{
-    if(event.key==='Enter' ||event.type==='click'){
-      email.endsWith("@gmail.com")
-      ? setEmail(email)
-      : email.endsWith("@gmail.co")
-      ? setEmail(email + "m")
-      : email.endsWith("@gmail.c")
-      ? setEmail(email + "om")
-      : email.endsWith("@gmail.")
-      ? setEmail(email + "com")
-      : email.endsWith("@gmail")
-      ? setEmail(email + ".com")
-      : email.endsWith("@gmai")
-      ? setEmail(email + "l.com")
-      : email.endsWith("@gma")
-      ? setEmail(email + "il.com")
-      : email.endsWith("@gm")
-      ? setEmail(email + "ail.com")
-      : email.endsWith("@g")
-      ? setEmail(email + "mail.com")
-      : email.endsWith("@")
-      ? setEmail(email + "gmail.com")
-      : email.includes('@')&& !email.endsWith("gmail.com")?setEmail(''):setEmail(email+"@gmail.com");
-    }
-  }
+    };
 
-  return (
-    <div className='loginpage'>
-      <section className='login'>
-        <img src={loginLogo} alt="img"/>
-        <form onSubmit={submitHandler}>
-          <input 
-            type='email' 
-            placeholder='Enter Email' 
-            required 
-            onKeyDown={emailSubmit}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input 
-            type='password' 
-            placeholder='Enter Password' 
-            required 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errorMessage && <p className='error'>{errorMessage}</p>}
-          <div className='buttons'>
-            <button type='submit'>Ok</button>
-            <button type='button' onClick={() => { navigate("/") }}>Cancel</button>
-          </div>
-        </form>
-        <div className='signupbutton' onClick={() => { navigate('/signup') }}>
-        No Account ,need to <span>signup?</span>
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <form
+                onSubmit={submitHandler}
+                className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg"
+            >
+                <h2 className="text-2xl font-bold mb-4 text-center text-gray-700">
+                    Login
+                </h2>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">
+                        Email:
+                    </label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-medium mb-2">
+                        Password:
+                    </label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                </div>
+                <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm text-gray-600">
+                        Not signed up yet?{" "}
+                        <button
+                            type="button"
+                            onClick={() => navigate('/signup')}
+                            className="text-blue-500 hover:underline"
+                        >
+                            Signup
+                        </button>
+                    </p>
+                </div>
+                {errorMessage && (
+                    <p className="mb-4 text-sm text-red-500">{errorMessage}</p>
+                )}
+                <button
+                    type="submit"
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg focus:outline-none"
+                >
+                    Login
+                </button>
+            </form>
         </div>
-      </section>
-    </div>
-  );
+    );
 };
 
 export default Login;

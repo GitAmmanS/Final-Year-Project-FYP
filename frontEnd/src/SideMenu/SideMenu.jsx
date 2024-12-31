@@ -16,7 +16,7 @@ const SideMenu = () => {
     };
 
     return (
-        <aside className='h-screen w-48 bg-custom-green flex flex-col  items-center overflow-y-auto '>
+        <aside className='h-screen w-48 bg-[#AFD0AE] flex flex-col  items-center overflow-y-auto  '>
             <div className='mt-3 mr-1 cursor-pointer'>
             <img src={logo} className='bg-no-repeat bg-cover h-16 w-16 ' alt="no logo" onClick={()=>navigate('/')}/>
             </div>

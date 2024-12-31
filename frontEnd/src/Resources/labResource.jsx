@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { RiAddCircleLine } from "react-icons/ri";
 import { BaseUrl } from '../BaseUrl';
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-  Button, TextField, Select, MenuItem, FormControl, InputLabel
+  Dialog, DialogActions, DialogContent, DialogTitle,
+  Button, TextField
 } from '@mui/material';
 import axios from 'axios'
-import { response } from 'express';
-const LabResource = () => {
+ const LabResource = () => {
   const[labsData,setLabsData] = useState([]);
   const [open, setOpen] = useState(false);
   const [labName,setLabName] = useState('');

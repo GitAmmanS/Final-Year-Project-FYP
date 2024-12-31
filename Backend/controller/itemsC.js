@@ -63,6 +63,126 @@ exports.getItemById = async (req, res) => {
         });
     }
 }
+exports.getItemByLabName = async (req, res) => {
+    try {
+        const data = await items.find({labId: req.params.LabID})
+        .populate('category_ID')
+        .populate('company_ID')
+        .populate('specs.cpu')
+        .populate('specs.os')
+        .populate('specs.otherspecs')
+        .populate('labId')
+        .populate('roomId')
+        .populate('status_ID')
+        .populate({
+          path: 'specs.ram',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' } ,
+            { path: 'status', model: 'status' }               // Populate type from type schema
+          ]
+        })
+        .populate({
+          path: 'specs.hdd',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' },
+            { path: 'status', model: 'status' }                 // Populate type from type schema
+          ]
+        });
+   res.status(200).json({
+            success: true,
+            data: data
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+}
+exports.getItemByCLName = async (req, res) => {
+    try {
+        const data = await items.find({roomId: req.params.roomID})
+        .populate('category_ID')
+        .populate('company_ID')
+        .populate('specs.cpu')
+        .populate('specs.os')
+        .populate('specs.otherspecs')
+        .populate('labId')
+        .populate('roomId')
+        .populate('status_ID')
+        .populate({
+          path: 'specs.ram',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' } ,
+            { path: 'status', model: 'status' }               // Populate type from type schema
+          ]
+        })
+        .populate({
+          path: 'specs.hdd',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' },
+            { path: 'status', model: 'status' }                 // Populate type from type schema
+          ]
+        });
+   res.status(200).json({
+            success: true,
+            data: data
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+}
+exports.getItemById = async (req, res) => {
+    try {
+        const data = await items.findOne({_id: req.params._id})
+        .populate('category_ID')
+        .populate('company_ID')
+        .populate('specs.cpu')
+        .populate('specs.os')
+        .populate('specs.otherspecs')
+        .populate('labId')
+        .populate('roomId')
+        .populate('status_ID')
+        .populate({
+          path: 'specs.ram',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' } ,
+            { path: 'status', model: 'status' }               // Populate type from type schema
+          ]
+        })
+        .populate({
+          path: 'specs.hdd',
+          populate: [
+            { path: 'capacity', model: 'capacities' },  // Populate capacity from capacities schema
+            { path: 'type', model: 'type' },
+            { path: 'status', model: 'status' }                 // Populate type from type schema
+          ]
+        });
+   res.status(200).json({
+            success: true,
+            data: data
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+}
 
 exports.itemsPost = async (req, res) => {
     try {

@@ -8,7 +8,8 @@ import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
 const Header = () => {
   const navigate = useNavigate();
-  const name = JSON.parse(localStorage.getItem('userName'));
+  
+  const name = "Amman"  //JSON.parse(localStorage.getItem('userName'));
   const [isOpen,setIsOpen]=useState(false)
   console.log(name)
   const toggleDropdown = () => {

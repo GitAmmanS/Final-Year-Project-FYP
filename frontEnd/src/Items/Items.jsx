@@ -14,11 +14,14 @@ import { FaSearchPlus } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import locales from '../locales/en.json'
+import Loading from '../Loading/loading';
+
 const Items = () => {
   const pattern = /\b(pc|personal computer)\b/i;
   const navigate = useNavigate();
   const [categoryOrCompanyName, setCategoryOrCompanyName] = useState('');
   const [open, setOpen] = useState(false);
+  const [Loader, setLoader] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -82,6 +85,7 @@ const Items = () => {
         setItemsData(itemsResponse.data.data);
 
         setTotalItems(itemsData.length);
+        itemsData.length>0 &&(setLoader(true));
 
         setStatusName(statusResponse.data.data);
         setRoomName(roomResponse.data.data);
@@ -476,10 +480,16 @@ const Items = () => {
           <button className='px-2 text-center border bg-[#AFD0AE]  border-black hover:bg-[#5eb05b] hover:text-white hover:transition-all rounded-md' onClick={handleCompany}>{locales.buttons.addCompany}</button>
         </div>
       </div>
+      {
+        Loader ?
+        <div className='flex flex-col w-full'>
+        <div> <MaterialReactTable table={table} /></div>
+      </div> :
+          <div className="loading-container flex justify-center items-center min-h-60 min-w-60">
+            <Loading type="spin" color="#3498db" />
+          </div>
+      }
 
-      <div className='flex flex-col w-screen'>
-          <div> <MaterialReactTable table={table} /></div>
-        </div>
 
       <Dialog open={open || openEdit} onClose={handleClose}>
         <DialogTitle>{editId ? `${locales.dialog.title.updateItem}` : `${locales.dialog.title.addItem}`}</DialogTitle>

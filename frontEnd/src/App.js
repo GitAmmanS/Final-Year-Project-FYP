@@ -8,6 +8,7 @@ import Signup from './Authentication/Signup';
 import Layout from './Layout';
 import ShowSomeTimes from './ShowSomeTimes';
 import LabResource from './Resources/labResource';
+import ClassRoomResource from "./Resources/clRescource"
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
           <Route path='/item' element={<Items />} />
           <Route path='/more/:_id' element={<More/>} />
           <Route path='/labs' element={<LabResource/>} />
+          <Route path='/Cl' element={<ClassRoomResource/>} />
         </Routes>
       </Layout>
     </Router>

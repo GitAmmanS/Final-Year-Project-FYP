@@ -1,8 +1,15 @@
 import React from 'react'
+import ResourceModule from './ResourceModule'
 
 const clRescource = () => {
   return (
-    <div>clRescource</div>
+    <div>
+      <ResourceModule
+        apiEndpoint="room"
+        title="Available Classrooms"
+        dialogTitle="Add Classrooms"
+      />
+    </div>
   )
 }
 

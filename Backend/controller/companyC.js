@@ -1,5 +1,4 @@
 const companies = require("../models/company");
-const items = require("../models/items");
 
 exports.getCompanies = async (req, resp) => {
     try {

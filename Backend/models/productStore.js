@@ -1,0 +1,15 @@
+const mongoose = require('mongoose');
+
+const ProductStore = new mongoose.Schema({
+    items:[{
+    product_ID: { type: mongoose.Schema.Types.ObjectId, ref: "products", required: true },
+    serialNumber: { type: String }, 
+    qrCode: { type: String }
+    }],
+    store_ID: { type: mongoose.Schema.Types.ObjectId, ref: "store", required: true },
+    lab_ID: { type: mongoose.Schema.Types.ObjectId, ref: "labs", required: true },
+    remarks: { type: String },
+
+},{timestamps:true});
+
+module.exports = mongoose.model("productStore",ProductStore);

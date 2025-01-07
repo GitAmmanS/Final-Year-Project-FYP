@@ -1,15 +1,8 @@
 const mongoose=require('mongoose')
 
 const labs=mongoose.Schema({
-    name:{type:String},
-    location:{type:String},
-    lab_incharge:{type:String},
-    /*
-    items:[{
-        item_id:{type:mongoose.Schema.Types.ObjectId}
-    }],
-    status:{type:String},
-    assigned_tech:{type:mongoose.Schema.Types.ObjectId , ref:'technicians'}
-*/
-})
+    labIncarge:{type:mongoose.Schema.Types.ObjectId , ref:"users",required:true},
+    type:{type:String,enum:["lab","room"],default:"lab"},
+    status:{type:String,enum:["active","inactive"],default:"active"}
+},{timestamps:true});
 module.exports = mongoose.model('labs', labs);

@@ -1,13 +1,10 @@
 const mongoose=require('mongoose')
 
-const items = mongoose.Schema({
+const Products = mongoose.Schema({
     name:{type:String , required:true},
     category_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"category",required:true},
     company_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"company",required:true},
     picture:{type:String },
-    quantity:{type:Number},
-    serialNumber:{type:String},
-    qrCode:{type:String},
     specs:{
         cpu: { type: mongoose.Schema.Types.ObjectId , ref : "cpu" },
         ram: [{type : mongoose.Schema.Types.ObjectId , ref : "ram"}],
@@ -15,10 +12,7 @@ const items = mongoose.Schema({
         os: { type: mongoose.Schema.Types.ObjectId , ref : "os" },
         otherspecs:{type:mongoose.Schema.Types.ObjectId , ref : "otherSpecs"}
      },
-    installDate:{type:Date},
-    labId:{type:mongoose.Schema.Types.ObjectId,ref:'labs'},
-    roomId:{type:mongoose.Schema.Types.ObjectId,ref:'rooms'},
-    status_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"status",required:true},
-})
+     model:{type:String,required : true}
+},{timestamps:true})
 
-module.exports=mongoose.model("items",items);
+module.exports=mongoose.model("products",Products);

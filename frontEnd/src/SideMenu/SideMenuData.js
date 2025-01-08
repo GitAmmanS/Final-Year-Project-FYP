@@ -14,9 +14,9 @@ export const SideMenuData=
             link:"/"
         },
         {
-            title:"Inventory",
+            title:"Products",
             icon:<MdOutlineInventory2 />,
-            link:"/item"
+            link:"/product"
         },
         {
             title:"Resource",

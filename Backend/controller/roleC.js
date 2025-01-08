@@ -32,7 +32,7 @@ exports.roledelete=async (req, resp) => {
 };
 exports.roleTableget=async (req, resp) => {
     try {
-        const data = await role.find();
+        const data = await role.find().populate('permissions.Permission_ID');
         if (data.length != 0) {
             resp.send({
                 success: true,

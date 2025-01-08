@@ -37,22 +37,3 @@ exports.postType = async (req, res) => {
         res.status(500).send({ success: false, message: 'Error saving type', error: err.message });
     }
 };
-
-// exports.getStatus = async (req, res) => {
-//     try {
-//         const data = await Status.find();
-//         res.status(200).json({ success: true, data });
-//     } catch (err) {
-//         res.status(500).json({ success: false, message: 'Error fetching statuses', error: err.message });
-//     }
-// };
-
-// exports.postStatus = async (req, res) => {
-//     try {
-//         const status = new Status({ status: req.body.status });
-//         const savedStatus = await status.save();
-//         res.status(201).json({ success: true, data: savedStatus });
-//     } catch (err) {
-//         res.status(500).json({ success: false, message: 'Error saving status', error: err.message });
-//     }
-// };

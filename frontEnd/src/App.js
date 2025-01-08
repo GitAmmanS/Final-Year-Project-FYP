@@ -9,6 +9,7 @@ import Layout from './Layout';
 import ShowSomeTimes from './ShowSomeTimes';
 import LabResource from './Resources/labResource';
 import ClassRoomResource from "./Resources/clRescource"
+import Product from './Products/Product';
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
           <Route path='/more/:_id' element={<More/>} />
           <Route path='/labs' element={<LabResource/>} />
           <Route path='/Cl' element={<ClassRoomResource/>} />
+          <Route path='/product' element={<Product/>} />
         </Routes>
       </Layout>
     </Router>

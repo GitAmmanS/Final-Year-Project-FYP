@@ -1,23 +1,34 @@
 const Store = require('../models/store');
-exports.getStore = async (req,res)=>{
-    try{
-    const data =await Store.find().populate('product_ID').populate('status_ID');
+exports.getStore = async (req, res) => {
+    try {
+        const data = await Store.find()
+            .populate({
+                path: 'product_ID',
+                populate: [
+                    { path: 'category_ID', select: 'name' },
+                    { path: 'company_ID', select: 'name' },
+                ]
+            })
+            .populate({
+                path: 'status_ID',
+                select: 'name'
+            });;
         res.status(200).json({
-            success:true,
-            data:data
+            success: true,
+            data: data
         })
-    }catch(err){
+    } catch (err) {
         res.status(500).json({
-            success:false,
-            message:err.message
+            success: false,
+            message: err.message
         });
     }
 }
 
-exports.postStore = async (req,res)=>{
+exports.postStore = async (req, res) => {
     try {
         const data = new Store({
-           ...req.body
+            ...req.body
         });
 
         console.log("Store data to be saved:", data);
@@ -25,13 +36,13 @@ exports.postStore = async (req,res)=>{
         res.status(200).send("Inserted Successfully");
 
     } catch (err) {
-        console.error("Error in itemsPost:", err);  
+        console.error("Error in itemsPost:", err);
         res.status(500).send("Internal Server Error: " + err.message);
     }
 }
 exports.deleteStore = async (req, res) => {
 
-    const data = await Store.deleteOne({ _id: req.params.store_id }); 
+    const data = await Store.deleteOne({ _id: req.params.store_id });
     if (data.deletedCount === 0) {
         res.send({
             success: false,
@@ -46,7 +57,7 @@ exports.deleteStore = async (req, res) => {
 };
 exports.updateStore = async (req, res) => {
     try {
-        
+
         const data = await Store.updateOne(
             { _id: req.params.store_id },
             { $set: { ...req.body } }

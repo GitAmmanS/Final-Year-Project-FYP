@@ -27,6 +27,7 @@ const handleProfile = () => {
     navigate('/login'); 
 };
   return (
+    
     <div className='h-[80px] z-[50] sticky top-0 right-0  pt-[10px] bg-[white]'>
         <div className='flex justify-between mt-3 px-3' >
         <div className=''>

@@ -9,7 +9,7 @@
       }
     },
     "buttons": {
-      "addItem": "Add Items",
+      "addProduct": "Add Product",
       "add": "Add",
       "addCategory": "Add Category",
       "addCompany": "Add Company",
@@ -23,6 +23,7 @@
     "labels": {
       "items": "Items",
       "AllocateItems":"Allocated Items",
+      "StoreItems":"Store Room",
       "name": "Name",
       "quantity": "Quantity",
       "category": "Category",

@@ -3,7 +3,7 @@ const Hdd=require('../models/hdd')
 const Products = require('../models/product');
 exports.getProducts = async (req,res)=>{
     try{
-    const data =await Products.find().populate('category_ID').populate('company_ID').populate('specs');
+    const data =await Products.find({}).populate('category_ID').populate('company_ID').populate('specs');
         res.status(200).json({
             success:true,
             data:data

@@ -21,7 +21,7 @@ const Items = () => {
   const navigate = useNavigate();
   const [categoryOrCompanyName, setCategoryOrCompanyName] = useState('');
   const [open, setOpen] = useState(false);
-  const [Loader, setLoader] = useState(false);
+  const [Loader, setLoader] = useState(true);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -84,8 +84,9 @@ const Items = () => {
         setCompanyName(companiesResponse.data.data);
         setItemsData(itemsResponse.data.data);
 
+        console.log(itemsResponse.data.data);
         setTotalItems(itemsData.length);
-        itemsData.length>0 &&(setLoader(true));
+        itemsData.length>0 &&(setLoader(false));
 
         setStatusName(statusResponse.data.data);
         setRoomName(roomResponse.data.data);

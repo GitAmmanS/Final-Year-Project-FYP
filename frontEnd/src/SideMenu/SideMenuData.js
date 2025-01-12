@@ -6,12 +6,18 @@ import { FaAngleDown } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { LuDoorOpen } from "react-icons/lu";
 import { GoDotFill } from "react-icons/go";
+import { GrProductHunt } from "react-icons/gr";
 export const SideMenuData= 
     [
         {
             title:"DashBoard",
             icon:<RxDashboard />,
             link:"/"
+        },
+        {
+            title:"Product",
+            icon:<GrProductHunt />,
+            link:"/product"
         },
         {
             title:"Store",

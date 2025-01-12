@@ -10,6 +10,8 @@ import ShowSomeTimes from './ShowSomeTimes';
 import LabResource from './Resources/labResource';
 import ClassRoomResource from "./Resources/clRescource"
 import Store from './Store/Store';
+import Product from './Products/Product'
+import MoreInformation from './Products/MoreInformation';
 function App() {
   return (
     <Router>
@@ -26,6 +28,8 @@ function App() {
           <Route path='/labs' element={<LabResource/>} />
           <Route path='/Cl' element={<ClassRoomResource/>} />
           <Route path='/store' element={<Store/>} />
+          <Route path='/product' element={<Product/>} />
+          <Route path='/product/moreInfo' element={<MoreInformation/>} />
         </Routes>
       </Layout>
     </Router>

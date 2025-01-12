@@ -10,7 +10,7 @@ const Products = mongoose.Schema({
         ram: [{type : mongoose.Schema.Types.ObjectId , ref : "ram"}],
         hdd: [{type : mongoose.Schema.Types.ObjectId , ref : "hdd"}],
         os: { type: mongoose.Schema.Types.ObjectId , ref : "os" },
-        otherspecs:{type:mongoose.Schema.Types.ObjectId , ref : "otherSpecs"}
+        otherspecs:{type : String}
      },
      model:{type:String,required : true}
 },{timestamps:true})

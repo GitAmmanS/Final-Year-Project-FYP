@@ -4,7 +4,7 @@ const companyC = require("../controller/companyC");
 
 router.get("/", companyC.getCompanies);
 
-router.post("/", companyC.createCompany);
+router.post("/post", companyC.createCompany);
 
 router.delete("/:company_name", companyC.deleteCompany);
 

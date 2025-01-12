@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { PiHandWaving } from "react-icons/pi";
-import { FaArrowDown } from "react-icons/fa6";
+import { FaArrowDown,FaArrowUp } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,9 +9,8 @@ import { BaseUrl } from '../BaseUrl';
 const Header = () => {
   const navigate = useNavigate();
   
-  const name = "Amman"  //JSON.parse(localStorage.getItem('userName'));
+ let name=JSON.parse(localStorage.getItem('userName'));
   const [isOpen,setIsOpen]=useState(false)
-  console.log(name)
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
 };
@@ -51,9 +50,15 @@ const handleProfile = () => {
             <p className='text-sm'>{name}</p>
             <p className='text-xs text-gray-400 '>Admin</p>
           </div>
-          <p className='mt-4 ml-3 cursor-pointer ' onClick={toggleDropdown}><FaArrowDown /> </p>
+          <p className="mt-4 ml-3 cursor-pointer" onClick={toggleDropdown}>
+            {isOpen ? (
+              <FaArrowUp className="transition-transform duration-300" />
+            ) : (
+              <FaArrowDown className="transition-transform duration-300" />
+            )}
+          </p>
           {isOpen && (
-                <div className="absolute right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg w-40">
+                <div className="absolute right-0 mt-9 bg-white border border-gray-300 rounded-2xl  shadow-2xl  w-40">
                     <ul className="py-2">
                         <li
                             className="px-4 py-2 text-sm cursor-pointer hover:bg-gray-200"

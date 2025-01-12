@@ -9,10 +9,6 @@ exports.getStore = async (req, res) => {
                     { path: 'company_ID', select: 'name' },
                 ]
             })
-            .populate({
-                path: 'status_ID',
-                select: 'name'
-            });;
         res.status(200).json({
             success: true,
             data: data
@@ -57,12 +53,14 @@ exports.deleteStore = async (req, res) => {
 };
 exports.updateStore = async (req, res) => {
     try {
-
+        const {quantity} = req.body;
+        const store_id = req.params.store_id;
+        const product = await Store.findOne({ _id:store_id});
+        const newQuantity = product.quantity+parseInt(quantity);
         const data = await Store.updateOne(
             { _id: req.params.store_id },
-            { $set: { ...req.body } }
+            { $set: { quantity:newQuantity} }
         );
-
         if (data.matchedCount === 0) {
             res.status(404).send({
                 success: false,

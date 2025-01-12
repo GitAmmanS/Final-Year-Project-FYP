@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SideMenuData } from './SideMenuData';
 import logo from '../Images/Unilogo.png';
-import { CgMoreO } from "react-icons/cg";
-
+import { CiMenuBurger } from "react-icons/ci";
 const SideMenu = () => {
     const userName = JSON.parse(localStorage.getItem('userName'));
     const navigate = useNavigate();
@@ -24,11 +23,11 @@ const SideMenu = () => {
 
     return (
         <aside
-            className={`h-screen bg-[#AFD0AE] flex flex-col items-center overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'w-48' : 'w-12'
+            className={`h-screen bg-green-500 flex flex-col items-center overflow-y-auto transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-48' : 'w-10 bg-white' 
                 }`}
         >
-            <CgMoreO
-                className={`absolute top-4 left-4 text-2xl hover:opacity-50 hover:cursor-pointer transition-transform ${isSidebarOpen ? 'rotate-0' : 'rotate-180'
+            <CiMenuBurger
+                className={`absolute top-6 left-2 text-2xl hover:opacity-50 hover:cursor-pointer duration-400 scroll-smooth  transition-transform   ${isSidebarOpen ? 'rotate-0' : 'rotate-180' 
                     }`}
                 onClick={toggleSidebar}
             />

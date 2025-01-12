@@ -19,10 +19,13 @@ const Login = () => {
             if (user) {
                 localStorage.setItem('userName', JSON.stringify(user.name));
                 alert("Login Successful");
+                setEmail("");
+                setPassword("");
                 navigate("/");
             } else {
                 setErrorMessage("Invalid email or password");
             }
+            
         } catch (error) {
             console.error('Error during login:', error);
             setErrorMessage("An error occurred during login. Please try again.");
@@ -30,7 +33,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center justify-center min-h-screen bg-green-100">
             <form
                 onSubmit={submitHandler}
                 className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg"

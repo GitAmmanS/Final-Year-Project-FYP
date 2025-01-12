@@ -7,8 +7,8 @@ import { BaseUrl } from '../BaseUrl';
 const Signup = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [initialEmail, setInitialEmail] = useState('');
+  const [initialPassword, setInitialPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -17,7 +17,7 @@ const Signup = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (initialPassword !== confirmPassword) {
       setErrorMessage('Passwords do not match');
       return;
     }
@@ -25,8 +25,8 @@ const Signup = () => {
     try {
       const response = await axios.post(`${BaseUrl}/users/`, {
         name:name,
-        email:email,
-        password:password,
+        email:initialEmail,
+        password:initialPassword,
         role_ID:"66c0ea1de8af93572258aeae",
         rank_ID: '66c0ea6be8af93572258aeb2',
         phone:phone
@@ -42,11 +42,10 @@ const Signup = () => {
   };
 
   return (
-    <div className='flex justify-center items-center w-screen h-screen bg-white '>
-      
+    <div className='flex justify-center items-center w-screen h-screen bg-green-100 '>
         <form onSubmit={submitHandler}
-        className='flex flex-col '>
-          <h2 className='flex justify-center mb-8 text-2xl font-bold text-gray-600 '>Sign Up</h2>
+         className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg">
+          <h2 className='flex justify-center mb-8 text-2xl font-bold text-gray-600 w-30 '>Sign Up</h2>
           <div className="mb-4">
           <input 
             type='text' 
@@ -54,7 +53,7 @@ const Signup = () => {
             required 
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-96 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           </div>
           <div className='mb-4'>
@@ -62,8 +61,8 @@ const Signup = () => {
             type='email' 
             placeholder='Enter Email' 
             required 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={initialEmail}
+            onChange={(e) => setInitialEmail(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           </div>
@@ -82,8 +81,8 @@ const Signup = () => {
             type='password' 
             placeholder='Enter Password' 
             required 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={initialPassword}
+            onChange={(e) => setInitialPassword(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
 
           />
@@ -100,7 +99,7 @@ const Signup = () => {
           />
           </div>
 
-          {successMessage && <div className='message'>{successMessage}</div>}
+          {successMessage && <div className='message '>{successMessage}</div>}
           {errorMessage && <p className='error'>{errorMessage}</p>}
           <div className='flex justify-between px-5 mt-2 text-white'>
             <button className=' hover:bg-blue-600 bg-blue-500 rounded-md w-20 h-10' type='submit' >Submit</button>

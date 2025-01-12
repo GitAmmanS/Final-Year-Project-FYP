@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    Button, TextField, Select, MenuItem, FormControl, InputLabel
+    Button, TextField
 } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { PieChart } from '@mui/x-charts/PieChart';
-import { QRCodeSVG } from 'qrcode.react';
-import moment, { locale } from 'moment';
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
-import { AiOutlineDelete } from "react-icons/ai";
-import { FaSearchPlus } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
 import locales from '../locales/en.json'
 import Loading from '../Loading/loading';
 
@@ -43,20 +37,18 @@ const Store = () => {
     }, [storeData]);
     const handleEdit = (item) => {
         setEditId(item._id);
-        setStoreQuantity(item.quantity);
         setOpenEdit(true);
     };
 
     const handleClose = () => {
         setOpenEdit(false);
         setEditId(null);
-        setStoreQuantity('');
       };
 
       const handleEditQuantity = () => {
         const url = `${BaseUrl}/store/update/${editId}`;
         axios
-          .put(url, { quantity: StoreQuantity })
+          .put(url, { quantity: StoreQuantity})
           .then((res) => {
             console.log(res.data);
             alert('Quantity Updated Successfully'); 
@@ -75,11 +67,11 @@ const Store = () => {
             Company: item.product_ID.company_ID?.name || "N/A",
             Model: item.product_ID.model || "N/A",
             Quantity: item.quantity || 0,
-            Status: item.status_ID?.name || "N/A",
+            Status: item.status || "N/A",
             Picture: <img src={`${BaseUrl}/${item.product_ID.picture}`} alt="item" style={{ width: 50, height: 50 }} />,
             Actions: (
                 <div className='space-x-[5px] '>
-                    <button className='text-xl hover:text-slate-600 text-red-600' onClick={() => { handleEdit(item) }}><MdEdit /></button>
+                    <button className='text-xl hover:text-slate-600' onClick={() => { handleEdit(item) }}><MdEdit /></button>
                 </div>
             ),
         })),
@@ -146,14 +138,14 @@ const Store = () => {
                     <div> <MaterialReactTable table={table} /></div>
                 </div> :
                 <div className="loading-container flex justify-center items-center min-h-60 min-w-60">
-                    <Loading type="spin" color="#3498db" />
+                    <Loading type="spin" color="#2C6B38" />
                 </div>
         }
         <Dialog open={openEdit} onClose={handleClose}>
-            <DialogTitle>Edit Quantity</DialogTitle>
+            <DialogTitle>Add Quantity</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Please Enter Quantity to change
+                    Please Enter Quantity 
                 </DialogContentText>
                 <TextField
                     margin="dense"
@@ -165,8 +157,8 @@ const Store = () => {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>{locales.buttons.cancel}</Button>
-                <Button onClick={handleEditQuantity}>{locales.buttons.update}</Button>
+                <Button color='error' onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleEditQuantity}>Add </Button>
             </DialogActions>
         </Dialog>
     </div>

@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
 const Demand = new mongoose.Schema({
-    requester: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
-    Number: { type: Number, unique: true, required: true },
+    requester: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+    number: { type : Number, unique:true },
     description: { type: String },
     items: [{
-        product_Id: { type: mongoose.Schema.Types.ObjectId, ref: "product", required: true },
+        product_Id: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
         quantityDemanded: { type: Number, required: true },
         quantityReceived: { type: Number, default: 0 },
-        status: { type: String }
+        status: { type: String,enum:["pending","rejected","resolved"] ,default:"pending"}
     }],
     demandStatus: {
         type: String,

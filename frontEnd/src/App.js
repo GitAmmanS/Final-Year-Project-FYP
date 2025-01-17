@@ -12,6 +12,11 @@ import ClassRoomResource from "./Resources/clRescource"
 import Store from './Store/Store';
 import Product from './Products/Product'
 import MoreInformation from './Products/MoreInformation';
+import AddStore from './Store/AddStore';
+import IssueItems from './Demands/IssueItems';
+import DemandNotification from './Notifications/DemandNotification';
+import DemandDetails from './Notifications/DemandDetails';
+import ProtectedRouting from './utils/ProtectedRouting';
 function App() {
   return (
     <Router>
@@ -20,9 +25,10 @@ function App() {
       <Header/>
       </ShowSomeTimes>
         <Routes>
-          <Route path='/' element={<Home/>} /> 
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+          <Route  element={<ProtectedRouting/>} >
+          <Route path='/' element={<Home/>} /> 
           <Route path='/item' element={<Items />} />
           <Route path='/more/:_id' element={<More/>} />
           <Route path='/labs' element={<LabResource/>} />
@@ -30,6 +36,11 @@ function App() {
           <Route path='/store' element={<Store/>} />
           <Route path='/product' element={<Product/>} />
           <Route path='/product/moreInfo' element={<MoreInformation/>} />
+          <Route path='/store/storeAdd' element={<AddStore/>} />
+          <Route path='/issueItem' element={<IssueItems/>} />
+          <Route path='/demandsList' element={<DemandNotification/>} />
+          <Route path='/demandDetails' element={<DemandDetails/>} />
+          </Route>
         </Routes>
       </Layout>
     </Router>

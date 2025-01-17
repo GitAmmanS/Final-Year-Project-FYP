@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { SideMenuData } from './SideMenuData';
 import logo from '../Images/Unilogo.png';
 import { CiMenuBurger } from "react-icons/ci";
+import { FaAngleUp } from "react-icons/fa";
 const SideMenu = () => {
     const userName = JSON.parse(localStorage.getItem('userName'));
     const navigate = useNavigate();
     const [openSubMenu, setOpenSubMenu] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+    const [open, setOpen] = useState(false);
     const handleSubMenuToggle = (index, res) => {
         if (res.subItems && res.subItems.length > 0) {
             setOpenSubMenu(openSubMenu === index ? null : index);
@@ -23,15 +24,15 @@ const SideMenu = () => {
 
     return (
         <aside
-            className={`h-screen bg-green-500 flex flex-col items-center overflow-y-auto transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-48' : 'w-10 bg-white' 
+            className={`h-screen bg-green-500 flex flex-col items-center overflow-y-auto transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-48' : 'w-10 bg-white'
                 }`}
         >
             <CiMenuBurger
-                className={`absolute top-6 left-2 text-2xl hover:opacity-50 hover:cursor-pointer duration-400 scroll-smooth  transition-transform   ${isSidebarOpen ? 'rotate-0' : 'rotate-180' 
+                className={`absolute top-6 left-2 text-2xl hover:opacity-50 hover:cursor-pointer duration-400 scroll-smooth  transition-transform   ${isSidebarOpen ? 'rotate-0' : 'rotate-180'
                     }`}
                 onClick={toggleSidebar}
             />
-            {isSidebarOpen ? 
+            {isSidebarOpen ?
                 <>
                     <div className='mt-3 mr-1 cursor-pointer'>
                         <img
@@ -47,13 +48,20 @@ const SideMenu = () => {
 
                     <ul className='mt-6 w-full'>
                         {SideMenuData.map((res, index) => (
-                            <li key={index} className='mt-2 px-4'>
+                            <li key={index} className='mt-2 px-4'  onClick={() => {
+                                if (res.title === "Demand") {
+                                    setOpen(!open);
+                                }}}>
                                 <div
                                     className='cursor-pointer w-full flex items-center p-2 hover:bg-green-800 hover:text-green-50 rounded-md'
                                     onClick={() => handleSubMenuToggle(index, res)}
                                 >
-                                    <span className='mr-2'>{res.icon}</span>
+
+                                    <span className="mr-2" 
+                                    
+                                    > {open && res.title==="Demand"? <FaAngleUp /> : res.icon} </span>
                                     {isSidebarOpen && <span>{res.title}</span>}
+
                                 </div>
                                 {res.subItems && res.subItems.length > 0 && isSidebarOpen && (
                                     <ul

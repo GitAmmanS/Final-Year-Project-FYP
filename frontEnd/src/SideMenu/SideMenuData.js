@@ -67,7 +67,7 @@ export const SideMenuData=
             link:"/user"
         },
         {
-            title:"Transaction",
+            title:"Demand",
             icon:<FaAngleDown />,
             subItems:[
                 {

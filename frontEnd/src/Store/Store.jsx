@@ -9,6 +9,7 @@ import axios from 'axios';
 import { MdEdit } from "react-icons/md";
 import locales from '../locales/en.json'
 import Loading from '../Loading/loading';
+import { useNavigate } from 'react-router-dom';
 
 const Store = () => {
     const [Loader, setLoader] = useState(false);
@@ -16,20 +17,19 @@ const Store = () => {
     const [StoreQuantity, setStoreQuantity] = useState('');
     const [openEdit, setOpenEdit] = useState(false);
     const [editId, setEditId] = useState(null);
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const storeResponse = await axios.get(`${BaseUrl}/store`);
                 setStoreData(storeResponse.data.data);
-                console.log(storeResponse.data.data);
-
             } catch (err) {
                 console.error(locales.messages.errorMessage, err);
             }
         };
 
         fetchData();
-    }, [storeData]);
+    }, []);
     useEffect(() => {
         if (storeData.length > 0) {
             setLoader(true);
@@ -126,11 +126,14 @@ const Store = () => {
         columns,
         data: transformedData,
     });
-    
+    const handleAddStore =()=>{
+        navigate('/store/storeAdd');
+    }
 
     return (<div className="bg-slate-50 h-sceen mt-2 ">
-        <div className='flex p-2 text-2xl mt-4 text-black justify-between'>
-            <p className='text-center font-bold cursor-pointer'>{locales.labels.StoreItems}</p>
+        <div className='flex  justify-between'>
+            <p className='text-xl font-semibold mt-5 ml-2 flex gap-2 items-center'>{locales.labels.StoreItems}</p>
+            <button className=' text-sm px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl  'onClick={handleAddStore} >Add Item +</button>
         </div>
         {
             Loader ?

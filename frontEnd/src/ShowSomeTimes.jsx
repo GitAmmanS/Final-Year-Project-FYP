@@ -5,7 +5,7 @@ const ShowSomeTimes = ({ children }) => {
     const [showNavBar, setShowNavBar] = useState(false);
     const location = useLocation();
     useEffect(() => {
-        if (location.pathname === '/login' || location.pathname ==='/signup') {
+        if (location.pathname === '/login'|| location.pathname ==='/signup') {
             setShowNavBar(false);
         }
         else {

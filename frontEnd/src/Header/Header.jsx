@@ -1,16 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { PiHandWaving } from "react-icons/pi";
 import { FaArrowDown,FaArrowUp } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
-import { Navigate, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
+import { IoNotificationsOutline } from "react-icons/io5"
 const Header = () => {
   const navigate = useNavigate();
-  
+  const [totalDemands,setTotalDemands] = useState(null)
  let name=JSON.parse(localStorage.getItem('userName'));
   const [isOpen,setIsOpen]=useState(false)
+  useEffect(()=>{
+    axios.get((`${BaseUrl}/demand/getByStatus`)).then((response)=>{
+      console.log(response.data.data);
+      setTotalDemands(response.data.data);
+    })
+  })
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
 };
@@ -43,8 +50,18 @@ const handleProfile = () => {
             <p className='text-2xl'><CiSearch /></p>
             <input className='w-full outline-none' type="text" placeholder='Search' />
           </div>
+          
         </div>
+       
         <div className='flex mr-3 justify-normal'>
+       <div onClick={()=>navigate('/demandsList')}>
+        <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
+        </p>
+        {totalDemands? (
+        <span className='text-xs bg-red-600 border-2 border-red-950 w-4 text-center top-[1.2rem] ml-6 absolute  text-white font-bold rounded-full  '>{totalDemands}</span> 
+        
+      ):null}
+      </div>
           <p className='text-5xl '> <CgProfile /></p>
           <div className='flex flex-col mt-2'>
             <p className='text-sm'>{name}</p>

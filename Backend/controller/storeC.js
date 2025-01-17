@@ -1,4 +1,5 @@
 const Store = require('../models/store');
+const Product = require('../models/product')
 exports.getStore = async (req, res) => {
     try {
         const data = await Store.find()
@@ -23,16 +24,27 @@ exports.getStore = async (req, res) => {
 
 exports.postStore = async (req, res) => {
     try {
-        const data = new Store({
-            ...req.body
-        });
+        console.log(req.body);
+        const {selectedProductId,quantity,status}=req.body;
+        const existingProduct = await Store.findOne({ product_ID: selectedProductId });
 
-        console.log("Store data to be saved:", data);
-        await data.save();
-        res.status(200).send("Inserted Successfully");
+        if (existingProduct) {
+            return res.status(409).json({
+                success: false,
+                message: 'Product already exists in the store.'
+            });
+        }
+        const storeData = new Store({
+            product_ID: selectedProductId,
+            quantity:quantity,
+            status:status
+        });
+        console.log("Store data to be saved:", storeData);
+        await storeData.save();
+        res.status(200).json({success:true,message:"Inserted Successfully"});
 
     } catch (err) {
-        console.error("Error in itemsPost:", err);
+        console.error("Error in Store:", err);
         res.status(500).send("Internal Server Error: " + err.message);
     }
 }

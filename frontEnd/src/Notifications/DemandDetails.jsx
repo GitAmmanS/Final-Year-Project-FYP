@@ -6,6 +6,19 @@ import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   Button, TextField
 } from '@mui/material';
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
  const DemandDetails = () => {
   const location = useLocation();
   const {demandNumber} = location.state;

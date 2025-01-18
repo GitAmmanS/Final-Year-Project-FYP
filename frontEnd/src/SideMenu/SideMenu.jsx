@@ -4,6 +4,19 @@ import { SideMenuData } from './SideMenuData';
 import logo from '../Images/Unilogo.png';
 import { CiMenuBurger } from "react-icons/ci";
 import { FaAngleUp } from "react-icons/fa";
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const SideMenu = () => {
     const userName = JSON.parse(localStorage.getItem('userName'));
     const navigate = useNavigate();
@@ -43,24 +56,25 @@ const SideMenu = () => {
                         />
                     </div>
                     <div className='font-headings mt-1 px-2 text-lg font-semibold'>
-                        <h1>UIIT LAB XPERTS</h1>
+                        <h1>{locales.sidemenu.project_name}</h1>
                     </div>
 
                     <ul className='mt-6 w-full'>
                         {SideMenuData.map((res, index) => (
-                            <li key={index} className='mt-2 px-4'  onClick={() => {
+                            <li key={index} className='mt-2 px-4' onClick={() => {
                                 if (res.title === "Demand") {
                                     setOpen(!open);
-                                }}}>
+                                }
+                            }}>
                                 <div
                                     className='cursor-pointer w-full flex items-center p-2 hover:bg-green-800 hover:text-green-50 rounded-md'
                                     onClick={() => handleSubMenuToggle(index, res)}
                                 >
 
-                                    <span className="mr-2" 
-                                    
-                                    > {open && res.title==="Demand"? <FaAngleUp /> : res.icon} </span>
-                                    {isSidebarOpen && <span>{res.title}</span>}
+                                    <span className="mr-2"
+
+                                    > {open && res.title === "Demand" ? <FaAngleUp /> : res.icon} </span>
+                                    {isSidebarOpen && <span>{locales.sidemenu[res.title]}</span>}
 
                                 </div>
                                 {res.subItems && res.subItems.length > 0 && isSidebarOpen && (
@@ -76,7 +90,7 @@ const SideMenu = () => {
                                             >
                                                 <div className='flex'>
                                                     <span className='pt-1 text-xs'>{result.icon}</span>
-                                                    <span>{result.title}</span>
+                                                    <span>{locales.sidemenu[result.title]}</span>
                                                 </div>
                                             </li>
                                         ))}

@@ -5,6 +5,19 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const AddProductDialog = ({ open, onClose, product }) => {
     console.log('items', product)
     const [categoryName, setCategoryName] = useState([]);

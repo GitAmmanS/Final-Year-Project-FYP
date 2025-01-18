@@ -7,9 +7,20 @@ import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
 import { MdEdit } from "react-icons/md";
-import locales from '../locales/en.json'
 import Loading from '../Loading/loading';
 import { useNavigate } from 'react-router-dom';
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
 
 const Store = () => {
     const [Loader, setLoader] = useState(false);
@@ -35,6 +46,10 @@ const Store = () => {
             setLoader(true);
         }
     }, [storeData]);
+    useEffect(() => {
+        
+    }, [localStorage.getItem("language")]);
+
     const handleEdit = (item) => {
         setEditId(item._id);
         setOpenEdit(true);

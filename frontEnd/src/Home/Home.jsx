@@ -6,6 +6,19 @@ import { MdOutlineInventory } from "react-icons/md";
 import { BiCategoryAlt } from "react-icons/bi";
 import {CircularProgressbar,buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const data = [
   {
     itemId: '12345',
@@ -38,17 +51,17 @@ const Home = () => {
   const [columns] = useState([
     {
       accessorKey: 'itemId',
-      header: 'Item ID',
+      header: locales.dashboard.item_id,
       size: 150,
     },
     {
       accessorKey: 'date',
-      header: 'Date',
+      header:locales.dashboard.date,
       size: 150,
     },
     {
       accessorKey: 'status',
-      header: 'Status',
+      header: locales.dashboard.status,
       size: 150,
     },
   ]);
@@ -73,7 +86,7 @@ const Home = () => {
       
       <div className='flex flex-wrap justify-between gap-2 mt-9 px-5   text-white'>
       <div className='bg-slate-900 w-60 h-40 rounded-md'>
-          <p className='text-base p-1'>Active Labs</p>
+          <p className='text-base p-1'>{ locales.dashboard.active_labs}</p>
           <div className='flex flex-row mt-3'>
           <div className='m-2'>
             <ProgressBar percentage={90}/>
@@ -81,13 +94,13 @@ const Home = () => {
 
             <div className='flex flex-col ml-5'>
               <p className='pl-20 mt-9 text-2xl'>07</p>
-              <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
+              <p className='pl-[20px] mt-2  text-xs'>{locales.dashboard.last_1_week}</p>
             </div>
           </div>
         </div>
         
         <div className='bg-pink-900 w-60 h-40 rounded-md'>
-          <p className='text-base p-1'>Active Rooms</p>
+          <p className='text-base p-1'>{locales.dashboard.active_rooms}</p>
           <div className='flex flex-row mt-3'>
           <div className='m-2'>
             <ProgressBar percentage={88}/>
@@ -95,14 +108,14 @@ const Home = () => {
 
             <div className='flex flex-col ml-5'>
               <p className='pl-20 mt-9 text-2xl'>22</p>
-              <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
+              <p className='pl-[20px] mt-2  text-xs'>{locales.dashboard.last_1_week}</p>
             </div>
           </div>
         </div>
         
        
         <div className='bg-green-500 w-60 h-40 rounded-md'>
-          <p className='text-base p-1'>Resolved</p>
+          <p className='text-base p-1'>{locales.dashboard.resolved}</p>
           <div className='flex flex-row mt-3'>
             <div className='m-2'>
             <ProgressBar percentage={60}/>
@@ -110,12 +123,12 @@ const Home = () => {
 
             <div className='flex flex-col ml-5'>
               <p className='pl-20 mt-9 text-2xl'>60</p>
-              <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
+              <p className='pl-[20px] mt-2  text-xs'>{locales.dashboard.last_1_week}</p>
             </div>
           </div>
         </div>
         <div className='bg-red-600 w-60 h-40 rounded-md'>
-          <p className='text-base p-1'>Pending</p>
+          <p className='text-base p-1'>{locales.dashboard.pending}</p>
           <div className='flex flex-row mt-3'>
           <div className='m-2'>
             <ProgressBar percentage={40}/>
@@ -123,7 +136,7 @@ const Home = () => {
 
             <div className='flex flex-col ml-5'>
               <p className='pl-20 mt-9 text-2xl'>40</p>
-              <p className='pl-[20px] mt-2  text-xs'>Last One Week</p>
+              <p className='pl-[20px] mt-2  text-xs'>{locales.dashboard.last_1_week}</p>
             </div>
           </div>
         </div>
@@ -131,30 +144,30 @@ const Home = () => {
       </div>
       <div className='flex justify-between'>
         <div className='flex flex-col'>
-          <p className='px-3 mt-4 font-semibold text-xl text-black'>Recent Complains</p>
+          <p className='px-3 mt-4 font-semibold text-xl text-black'>{locales.dashboard.recent_com}</p>
           <div> <MaterialReactTable table={table} /></div>
         </div>
         <div className='flex flex-col mt-4'>
-          <p className='pr-64  font-semibold text-xl  ' >Summary</p>
+          <p className='pr-64  font-semibold text-xl  ' >{locales.dashboard.summary}</p>
           <div className='flex mt-7'>
             <p className=' text-4xl text-gray-500 '> <MdOutlineInventory /> </p>
             <div >
-              <p className='text-sm'>150 Total Items</p>
-              <p className='text-xs text-gray-500'>Total Items</p>
+              <p className='text-sm'>150 {locales.dashboard.total_items}</p>
+              <p className='text-xs text-gray-500'>{locales.dashboard.total_items}</p>
             </div>
           </div>
           <div className='flex mt-7'>
             <p className='text-4xl text-gray-500'><BiCategoryAlt /></p>
             <div>
               <p className='text-sm'>20 </p>
-              <p className='text-xs text-gray-500'>Total Categories</p>
+              <p className='text-xs text-gray-500'>{locales.dashboard.total_categories}</p>
             </div>
           </div>
           <div className='flex mt-7'>
             <p className='text-4xl text-gray-500'><CgProfile /></p>
             <div>
               <p className='text-sm'>90</p>
-              <p className='text-xs text-gray-500'>Total Users</p>
+              <p className='text-xs text-gray-500'>{locales.dashboard.total_users}</p>
             </div>
             
           </div>

@@ -1,0 +1,112 @@
+{
+  "dialog": {
+    "title": {
+      "addItem": "آئٹم شامل کریں",
+      "updateItem": "آئٹم کو اپ ڈیٹ کریں"
+    },
+    "contentText": {
+      "addItemText": "براہ کرم نیچے آئٹم کی معلومات پُر کریں۔"
+    }
+  },
+  "buttons": {
+    "addProduct": "پروڈکٹ شامل کریں",
+    "add": "شامل کریں",
+    "addCategory": "زمرہ شامل کریں",
+    "addCompany": "کمپنی شامل کریں",
+    "save": "محفوظ کریں",
+    "cancel": "منسوخ کریں",
+    "delete": "حذف کریں",
+    "edit": "ترمیم کریں",
+    "moreInfo": "مزید معلومات",
+    "update": "اپ ڈیٹ کریں"
+  },
+  "labels": {
+    "add":"شامل کریں",
+    "items": "اشیاء",
+    "AllocateItems": "مختص شدہ اشیاء",
+    "StoreItems": "اسٹور روم",
+    "Enter":"داخل کریں",
+    "name": "نام",
+    "quantity": "مقدار",
+    "category": "زمرہ",
+    "company": "کمپنی",
+    "serialNumber": "سیریل نمبر",
+    "status": "حالت",
+    "actions": "عمل",
+    "picture": "تصویر",
+    "noItemsFound": "کوئی آئٹم نہیں ملا",
+    "noImage": "کوئی تصویر نہیں",
+    "qrcode": "کیو آر کوڈ"
+  },
+  "messages": {
+    "itemAdded": "آئٹم کامیابی سے شامل کیا گیا",
+    "itemUpdated": "آئٹم کامیابی سے اپ ڈیٹ کیا گیا",
+    "itemDeleted": "آئٹم کامیابی سے حذف کر دیا گیا",
+    "addCategorySuccess": "زمرہ کامیابی سے شامل کیا گیا",
+    "addCompanySuccess": "کمپنی کامیابی سے شامل کی گئی",
+    "deleteConfirmation": "کیا آپ واقعی اس آئٹم کو حذف کرنا چاہتے ہیں؟",
+    "errorMessage": "ڈیٹا حاصل کرنے میں خرابی",
+    "errorMessage2": "درخواست پر عملدرآمد میں خرابی",
+    "errorMessage3": "آئٹم کو حذف کرنے میں خرابی",
+    "companyAndCategory": "براہ کرم کا نام درج کریں",
+    "companyAndCategory2": "جسے آپ شامل کرنا چاہتے ہیں۔"
+  },
+  "placeholders": {
+    "name": "آئٹم کا نام درج کریں",
+    "category": "زمرہ منتخب کریں",
+    "company": "کمپنی منتخب کریں",
+    "status": "حالت منتخب کریں",
+    "room": "کمرہ منتخب کریں",
+    "lab": "لیب منتخب کریں",
+    "cpu": "سی پی یو منتخب کریں",
+    "os": "آپریٹنگ سسٹم منتخب کریں",
+    "otherspecs": "دیگر وضاحتیں منتخب کریں",
+    "ramCapacity": "ریم کی صلاحیت منتخب کریں",
+    "ramType": "ریم کی قسم منتخب کریں",
+    "ramStatus": "ریم کی حالت منتخب کریں",
+    "hddCapacity": "ہارڈ ڈسک کی صلاحیت منتخب کریں",
+    "hddType": "ہارڈ ڈسک کی قسم منتخب کریں",
+    "hddStatus": "ہارڈ ڈسک کی حالت منتخب کریں"
+  },
+  "sidemenu": {
+    "project_name": "یو آئی آئی ٹی لیب ایکسپرٹس",
+    "dashboard": "ڈیش بورڈ",
+    "product": "پروڈکٹ",
+    "store": "اسٹور",
+    "resource": "وسائل",
+    "computer_lab": "کمپیوٹر لیب",
+    "class_room": "کلاس روم",
+    "lecture_theatre": "لیکچر تھیٹر",
+    "faculty_room": "فیکلٹی روم",
+    "saminar_room": "سیمنار روم",
+    "inventory_room": "انوینٹری روم",
+    "user": "صارف",
+    "demand": "مانگ",
+    "reservations": "ریزرویشن",
+    "issue_items": "آئٹمز جاری کریں",
+    "settings": "سیٹنگ"
+  },
+  "header": {
+    "hello": "السلام علیکم",
+    "good_morning": "صبح بخیر",
+    "search": "تلاش کریں",
+    "urdu": "اردو",
+    "english": "انگریزی"
+  },
+  "dashboard": {
+    "recent_com": "حالیہ شکایات",
+    "active_labs": "فعال لیبز",
+    "active_rooms": "فعال کمرے",
+    "resolved": "حل شدہ",
+    "pending": "زیر التوا",
+    "last_1_week":"پچھلا ایک ہفتہ",
+    "summary": "خلاصہ",
+    "total_items": "کل اشیاء",
+    "total_categories": "کل اقسام",
+    "total_users": "کل صارفین",
+    "item_id": "آئٹم آئی ڈی",
+    "name": "نام",
+    "status": "اسٹیٹس",
+    "date":"تاریخ"
+  }
+}

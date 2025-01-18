@@ -2,6 +2,19 @@ import React, { useState,useEffect } from 'react';
 import { Second } from './DemandForm';
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios'
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const IssueItems = () => {
   const [step, setStep] = useState(1);
   const userName = JSON.parse(localStorage.getItem('userName'));
@@ -65,6 +78,7 @@ const IssueItems = () => {
     setStep(1);
   };
 
+  
   return (
     <>
       {step === 1 && (

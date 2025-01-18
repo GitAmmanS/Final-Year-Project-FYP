@@ -3,6 +3,18 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { BaseUrl } from '../BaseUrl';
 
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const MoreInformation = () => {
   const location = useLocation();
   const { item } = location.state;

@@ -5,6 +5,18 @@ import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
 
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const AddStore = () => {
   const [productData, setProductData] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null); 

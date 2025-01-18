@@ -2,6 +2,19 @@ import { DataGrid } from '@mui/x-data-grid'
 import React, { useState, useEffect } from 'react'
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios';
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 export function Second({ onSelectProducts }) {
     const [productData, setProductData] = useState([]);
     const [selectedProductIds, setSelectedProductIds] = useState(null);

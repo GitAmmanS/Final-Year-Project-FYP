@@ -21,15 +21,15 @@
       "update": "Update"
     },
     "labels": {
-      "items": "Items",
+      "add":"Add",
       "AllocateItems":"Allocated Items",
       "StoreItems":"Store Room",
+      "Enter":"Enter",
       "name": "Name",
       "quantity": "Quantity",
       "category": "Category",
       "company": "Company",
       "serialNumber": "Serial Number",
-      "status": "Status",
       "actions": "Actions",
       "picture": "Picture",
       "noItemsFound": "No items found",
@@ -65,6 +65,52 @@
       "hddCapacity": "Select hard disk capacity",
       "hddType": "Select hard disk type",
       "hddStatus": "Select hard disk status"
+    },
+    "sidemenu":{
+      "project_name":"UIIT LAB XPERTS",
+      "dashboard":"DashBoard",
+      "product":"Product",
+      "store":"Store",
+      "resource":"Resource",
+      "computer_lab":"Computer Lab",
+      "class_room":"Class Room",
+      "lecture_theatre":"Lecture Theatre",
+      "faculty_room":"Faculty Room",
+      "saminar_room":"Saminar Room",
+      "inventory_room":"Inventory Room",
+      "user":"User",
+      "demand":"Demand",
+      "reservations":"Reservations",
+      "issue_items":"Issue Items",
+      "settings":"Settings"
+    },
+    "header":{
+      "hello":"Hello",
+      "good_morning":"Good Morning",
+      "search":"Search",
+      "urdu":"Urdu",
+      "english":"English"
+    },
+    "dashboard":{
+      "recent_com":"Recent Complains",
+      "active_labs":"Active Labs",
+      "active_rooms":"Active Rooms",
+      "resolved":"Resolved",
+      "pending":"Pending",
+      "last_1_week":"Last One Week",
+      "summary":"Summary",
+      "total_items":"Total Items",
+      "total_categories":"Total Categories",
+      "total_users":"Total Users",
+      "item_id":"Item ID",
+      "name":"Name",
+      "status":"Status",
+      "date":"Date"
+      
+    },
+    "product":{
+      "model":"Model"
     }
+    
   }
   

@@ -22,29 +22,29 @@ function App() {
     <Router>
       <Layout>
         <ShowSomeTimes>
-      <Header/>
-      </ShowSomeTimes>
+          <Header />
+        </ShowSomeTimes>
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          <Route  element={<ProtectedRouting/>} >
-          <Route path='/' element={<Home/>} /> 
-          <Route path='/item' element={<Items />} />
-          <Route path='/more/:_id' element={<More/>} />
-          <Route path='/labs' element={<LabResource/>} />
-          <Route path='/Cl' element={<ClassRoomResource/>} />
-          <Route path='/store' element={<Store/>} />
-          <Route path='/product' element={<Product/>} />
-          <Route path='/product/moreInfo' element={<MoreInformation/>} />
-          <Route path='/store/storeAdd' element={<AddStore/>} />
-          <Route path='/issueItem' element={<IssueItems/>} />
-          <Route path='/demandsList' element={<DemandNotification/>} />
-          <Route path='/demandDetails' element={<DemandDetails/>} />
+          <Route element={<ProtectedRouting />} >
+            <Route path='/' element={<Home />} />
+            <Route path='/item' element={<Items />} />
+            <Route path='/more/:_id' element={<More />} />
+            <Route path='/labs' element={<LabResource />} />
+            <Route path='/Cl' element={<ClassRoomResource />} />
+            <Route path='/store' element={<Store />} />
+            <Route path='/product' element={<Product />} />
+            <Route path='/product/moreInfo' element={<MoreInformation />} />
+            <Route path='/store/storeAdd' element={<AddStore />} />
+            <Route path='/issueItem' element={<IssueItems />} />
+            <Route path='/demandsList' element={<DemandNotification />} />
+            <Route path='/demandDetails' element={<DemandDetails />} />
           </Route>
         </Routes>
       </Layout>
     </Router>
-   
+
   );
 }
 

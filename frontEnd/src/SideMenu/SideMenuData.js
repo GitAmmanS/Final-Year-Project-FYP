@@ -7,54 +7,55 @@ import { FaUser } from "react-icons/fa6";
 import { LuDoorOpen } from "react-icons/lu";
 import { GoDotFill } from "react-icons/go";
 import { GrProductHunt } from "react-icons/gr";
+
 export const SideMenuData= 
     [
         {
-            title:"DashBoard",
+            title:"dashboard",
             icon:<RxDashboard />,
             link:"/"
         },
         {
-            title:"Product",
+            title:"product",
             icon:<GrProductHunt />,
             link:"/product"
         },
         {
-            title:"Store",
+            title:"store",
             icon:<MdOutlineInventory2 />,
             link:"/store"
         },
         {
-            title:"Resource",
+            title:"resource",
             icon:<LuDoorOpen />,
             subItems:[
                 {
-                title:"Computer Lab",
+                title:"computer_lab",
                 icon:<GoDotFill />,
                 link:"/labs"
                 },
                 {
-                    title:"Class Room",
+                    title:"class_room",
                     icon:<GoDotFill />,
                     link:"/Cl"
                  },
                  {
-                    title:"Lecture Theatre",
+                    title:"lecture_theatre",
                     icon:<GoDotFill />,
                     link:"/Lt"
                  },
                  {
-                    title:"Faculty Room",
+                    title:"faculty_room",
                     icon:<GoDotFill />,
                     link:"/Fr"
                  },
                  {
-                    title:"Saminar Room",
+                    title:"saminar_room",
                     icon:<GoDotFill />,
                     link:"/Sr"
                  },
                  {
-                    title:"Inventory Room",
+                    title:"inventory_room",
                     icon:<GoDotFill />,
                     link:"/Ir"
                  }
@@ -62,21 +63,21 @@ export const SideMenuData=
             
         },
         {
-            title:"User",
+            title:"user",
             icon:<FaUser />,
             link:"/user"
         },
         {
-            title:"Demand",
+            title:"demand",
             icon:<FaAngleDown />,
             subItems:[
                 {
-                title:"Reservations",
+                title:"reservations",
                 icon:<GoDotFill />,
                 link:"/reservation"
                 },
                 {
-                    title:"Issue Items",
+                    title:"issue_items",
                     icon:<GoDotFill />,
                     link:"/issueitem"
                  }
@@ -85,7 +86,7 @@ export const SideMenuData=
         }
         ,
         {
-            title:"Settings",
+            title:"settings",
             icon:<CiSettings />,
             link:"/inventory"
         },

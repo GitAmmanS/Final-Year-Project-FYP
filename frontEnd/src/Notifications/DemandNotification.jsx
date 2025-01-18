@@ -2,6 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { BaseUrl } from '../BaseUrl'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const DemandNotification = () => {
     const [demands,setDemands] = useState([]);
     const [demandNumber,setDemandNumber] = useState();
@@ -35,11 +48,11 @@ const DemandNotification = () => {
       <li className="text-sm text-gray-600">{`Demand Description: ${demand.description}`}</li>
       <li
         className={`text-sm ${
-          demand.demandStatus === "Pending"
-            ? "text-yellow-600"
-            : demand.demandStatus === "Approved"
+          demand.demandStatus === "pending"
+            ? "text-red-600"
+            : demand.demandStatus === "approved"
             ? "text-green-600"
-            : "text-red-600"
+            : "text-blue-600"
         }`}
       >
         {`Status: ${demand.demandStatus}`}

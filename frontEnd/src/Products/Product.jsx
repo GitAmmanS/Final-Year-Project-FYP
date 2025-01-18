@@ -11,6 +11,19 @@ import { MdEdit } from 'react-icons/md';
 import AddProductDialog from './AddProductDialog';
 import { IoIosInformationCircle } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+
+let locales;
+const language = localStorage.getItem("language");
+if (language === "english") {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const Product = () => {
     const navigate = useNavigate();
     const [productData, getProductData] = useState([]);
@@ -73,32 +86,32 @@ const Product = () => {
     const [columns] = useState([
         {
             accessorKey: 'Name',
-            header: 'Name',
+            header: locales.labels.name,
             size: 100,
         },
         {
             accessorKey: 'Category',
-            header: 'Category',
+            header: locales.labels.category,
             size: 100,
         },
         {
             accessorKey: 'Company',
-            header: 'Company',
+            header: locales.labels.company,
             size: 100,
         },
         {
             accessorKey: 'Model',
-            header: 'Model',
+            header: locales.labels.model,
             size: 100,
         },
         {
             accessorKey: 'Picture',
-            header: 'Picture',
+            header: locales.labels.picture,
             size: 100,
         },
         {
             accessorKey: 'Actions',
-            header: 'Actions',
+            header: locales.labels.actions,
             size: 100,
         }
     ]);
@@ -137,12 +150,12 @@ const Product = () => {
     return (
         <div className="bg-slate-50 h-sceen mt-2 ">
             <div className='flex p-2 text-2xl mt-4 text-black justify-between'>
-                <p className='text-center font-bold cursor-pointer'>Products</p>
+                <p className='text-center font-bold cursor-pointer'>{locales.sidemenu.product}</p>
                 <div className='bg-none text-base space-x-[10px] '>
-                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleOpenDialog}>Add Products</button>
+                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleOpenDialog}>{locales.buttons.addProduct}</button>
                     <AddProductDialog open={dialogOpen} onClose={handleCloseDialog} product={itemData}/>
-                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleCategory}>Add Category</button>
-                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleCompany}>Add Company</button>
+                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleCategory}>{locales.buttons.addCategory}</button>
+                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleCompany}>{locales.buttons.addCompany}</button>
                 </div>
             </div>
             {
@@ -155,9 +168,9 @@ const Product = () => {
                     </div>
             }
             <Dialog open={open} onClose={handleClose} fullWidth>
-                <DialogTitle>Add {isCategory ? `Category` : `Company`}</DialogTitle>
+                <DialogTitle>{locales.labels.add}{isCategory ? locales.labels.category : locales.labels.company}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>Enter {isCategory ? `Category` : `Company`} name</DialogContentText>
+                    <DialogContentText>{locales.labels.Enter} {isCategory ?locales.labels.category : locales.labels.company} {locales.labels.name}</DialogContentText>
                     <TextField
                         margin="dense"
                         name="categoryOrCompanyName"
@@ -168,8 +181,8 @@ const Product = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button color='error' onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleAddCategoryOrCompany}>Add</Button>
+                    <Button color='error' onClick={handleClose}>{locales.buttons.cancel}</Button>
+                    <Button onClick={handleAddCategoryOrCompany}>{locales.buttons.delete}</Button>
                 </DialogActions>
             </Dialog>
            

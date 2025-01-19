@@ -90,7 +90,8 @@ if (language === "english") {
       </tr>
     </thead>
     <tbody>
-      {demand?.items?.map((product, index) => (
+    {demand?.items?.length > 0 ? (
+      demand?.items?.map((product, index) => (
         <tr key={index} className="hover:bg-gray-50 text-sm">
           <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
           <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
@@ -115,7 +116,14 @@ if (language === "english") {
             }} >Allocate</button></td>
           )}
         </tr>
-      ))}
+      ))
+    ) : (
+      <tr>
+        <td colSpan="9" className="text-center text-gray-500">
+          No items found.
+        </td>
+      </tr>
+    )}
     </tbody>
   </table>
 </div>

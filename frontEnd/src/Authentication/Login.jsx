@@ -1,7 +1,10 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BaseUrl } from '../BaseUrl';
+import uniBg from '../Images/PMAS-Arid-Agriculture-University.jpg.webp';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack'
 
 let locales;
 const language = localStorage.getItem("language");
@@ -19,8 +22,18 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [alert,setAlert] = useState(null);
     const navigate = useNavigate();
-
+    useEffect(()=>{
+        if (alert && alert.severity === 'success') {
+            setTimeout(() => {
+                    setEmail("");
+                    setPassword("");
+                    navigate("/");
+            }, 500); 
+          } 
+      
+    },[alert])
     const submitHandler = async (event) => {
         event.preventDefault();
         try {
@@ -31,25 +44,28 @@ const Login = () => {
             const user = response.data.user;
             if (user) {
                 localStorage.setItem('userName', JSON.stringify(user.name));
-                alert("Login Successful");
-                setEmail("");
-                setPassword("");
-                navigate("/");
+                setAlert({ severity: 'success', message: 'Succcesfull' });
+                
             } else {
-                setErrorMessage("Invalid email or password");
+                setAlert({ severity: 'error', message: 'An error occurs' });
             }
             
         } catch (error) {
             console.error('Error during login:', error);
-            setErrorMessage("An error occurred during login. Please try again.");
+            setAlert({severity:'error',message:'Invalid Credentials'});
         }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-green-100">
+      
+        <div className="flex items-center justify-center h-screen w-screen">
+            <div className='w-[60%] '>
+            <img src={uniBg} alt="nopic" className='bg-no-repeat h-screen rounded-r-2xl'/>
+            </div>
+            <div className='w-[40%]  flex justify-center'>
             <form
                 onSubmit={submitHandler}
-                className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg"
+                className="w-full max-w-md p-6  shadow-2xl rounded-lg"
             >
                 <h2 className="text-2xl font-bold mb-4 text-center text-gray-700">
                     Login
@@ -90,9 +106,9 @@ const Login = () => {
                         </button>
                     </p>
                 </div>
-                {errorMessage && (
-                    <p className="mb-4 text-sm text-red-500">{errorMessage}</p>
-                )}
+                <Stack sx={{ width: '100%' }} spacing={2}>
+            {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
+          </Stack>
                 <button
                     type="submit"
                     className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg focus:outline-none"
@@ -100,6 +116,8 @@ const Login = () => {
                     Login
                 </button>
             </form>
+        </div>
+        
         </div>
     );
 };

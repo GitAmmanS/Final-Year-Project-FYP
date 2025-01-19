@@ -4,8 +4,8 @@ const users = mongoose.Schema({
     phone:{type:String , required :true},
     email: { type: String, required: true, unique: true, match: /.+\@.+\..+/ },
     password: {type:String, required:true},
-    role_ID:{type:mongoose.Schema.Types.ObjectId ,ref :"role",required:true},
+    role:{type:String ,enum:["teacher","lab_Incharge","admin","technician"],default:"teacher",required:true},
     is_verified: { type: Boolean, default: false, required: true }
-})
+});
 
 module.exports = mongoose.model("users", users);

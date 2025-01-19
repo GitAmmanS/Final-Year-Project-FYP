@@ -35,7 +35,7 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(404).json({ message: "Something Went Wrong" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        let token = jwt.sign({email},"secret");
+        let token = jwt.sign({email:user.email,role:user.role},process.env.JWT_SECRET_KEY,{expiresIn:'1hr'});
         if (!isPasswordValid) {
             return resp.status(401).json({ message: "Something Went Wrong" });
         }
@@ -49,7 +49,7 @@ exports.userspostAuthentication = async (req, resp) => {
             message: "Login successful",
             user: userWithoutPassword,
         });
-
+        
     } catch (error) {
         console.error('Error during authentication:', error);
         resp.status(500).json({ message: "An error occurred during authentication" });

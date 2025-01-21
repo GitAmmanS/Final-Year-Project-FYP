@@ -34,7 +34,11 @@ exports.postDemand = async (req, res) => {
         });
         console.log(data)
         await data.save();
-        res.status(200).send("Inserted Demand successfully")
+        res.status(200).send({
+            success: true,
+            data: data,
+            message:"Demand Inserted Sucessfully"
+        });
     }
     catch (err) {
         res.status(500).json({ success: false, message: err.message });

@@ -5,6 +5,7 @@ import Print from '../Prints/Print';
 import jsPDF from 'jspdf';
 import axios from 'axios';
 import Loader from '../../src/Loading/loading'
+import Swal from 'sweetalert2'
 
 let locales;
 const language = localStorage.getItem("language");
@@ -34,11 +35,44 @@ const IssueItems = () => {
   const handleNext = () => {
 
     if (step === 1 && !formData.description) {
-      alert('Description is required!');
+      Swal.fire({
+        icon: "warning",
+        title: "Description Required",
+        text: "Description is required",
+        width: "380px",
+        height: "20px",
+        customClass: {
+          confirmButton: "bg-[#22C55E] text-white",
+        },
+      });
       return;
     }
     if (step === 2 && (!formData.selectedProducts || formData.selectedProducts.length === 0)) {
-      alert('Please select at least one product!');
+
+      Swal.fire({
+        icon: "warning",
+        title: "Select Products",
+        text: "Atleast one product is required",
+        width: "380px",
+        height: "20px",
+        customClass: {
+          confirmButton: "bg-[#22C55E] text-white",
+        },
+      });
+      return;
+    }
+    if (step === 3 && (!formData.quantities)) {
+
+      Swal.fire({
+        icon: "warning",
+        title: "Select Products",
+        text: "Atleast one product is required",
+        width: "380px",
+        height: "20px",
+        customClass: {
+          confirmButton: "bg-[#22C55E] text-white",
+        },
+      });
       return;
     }
 
@@ -51,52 +85,119 @@ const IssueItems = () => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleSubmit = async (e) => {
-    let confirm = window.confirm("Press OK to submit demand");
-    if (confirm === true) {
+    console.log(formData);
+    if (Object.values(formData.quantities).some((value) => value.trim() === "") || formData.quantities===null ) {
+      Swal.fire({
+        icon: "warning",
+        title: "Select Quantity",
+        text: "Please enter quanity for products",
+        width: "380px",
+        height: "20px",
+        customClass: {
+            confirmButton: "bg-[#22C55E] text-white",
+          },
+    });
+  }
+  else{
       e.preventDefault();
-      try {
-        console.log('Form Submitted:', formData);
+      console.log(Object.values(formData.quantities).some((value) => value.trim() === ""));
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton:
+            "bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 ml-4 rounded shadow",
+          cancelButton:
+            "bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded shadow",
+        },
+        buttonsStyling: false,
+      });
 
-        const response = await axios.post(`${BaseUrl}/demand/post`, formData);
-        console.log(response.data.data.number);
-
-        const resp = await axios.get(`${BaseUrl}/demand/getById/${response.data.data.number}`);
-        console.log(resp.data.data);
-        setDemandData(resp.data.data);
-
-        setLoader(true);
-        await sleep(2000);
-
-        let demandNotice = window.confirm("Print Demand?");
-        if (demandNotice === true) {
-          const doc = new jsPDF();
-          const content = printableRef.current;
-          if (content) {
-            setLoader(false);
-            doc.html(content, {
-              callback: function (doc) {
-                const pdfOutput = doc.output('blob');
-                const pdfUrl = URL.createObjectURL(pdfOutput);
-                window.open(pdfUrl, '_blank');
-              }
-            });
-
+      swalWithBootstrapButtons
+        .fire({
+          title: "Submit Demand?",
+          text: "Press OK to submit demand",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          reverseButtons: true,
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            SubmitDemand();
           }
-          
+        });
+
+      const SubmitDemand = async () => {
+        try {
+          console.log("Form Submitted:", formData);
+
+          const response = await axios.post(`${BaseUrl}/demand/post`, formData);
+          console.log(response.data.data.number);
+
+          const resp = await axios.get(
+            `${BaseUrl}/demand/getById/${response.data.data.number}`
+          );
+          console.log(resp.data.data);
+          setDemandData(resp.data.data);
+
+          setLoader(true);
+          await sleep(2000);
+
+          swalWithBootstrapButtons
+            .fire({
+              title: "Print Demand",
+              text: "Are you sure you want to print this?",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Yes",
+              cancelButtonText: "No",
+              reverseButtons: true,
+            })
+            .then((result) => {
+              if (result.isConfirmed) {
+                const doc = new jsPDF();
+                const content = printableRef.current;
+
+                if (content) {
+                  setLoader(false);
+                  doc.html(content, {
+                    callback: function (doc) {
+                      const pdfOutput = doc.output("blob");
+                      const pdfUrl = URL.createObjectURL(pdfOutput);
+                      window.open(pdfUrl, "_blank");
+                    },
+                  });
+                }
+              } else {
+                setLoader(false);
+              }
+
+              clearFields();
+            });
+        } catch (error) {
+          console.error("Error in Submitting:", error);
         }
-        else{
-          setLoader(false);
-        }
-        clearFields();
-      } catch (error) {
-        console.log(error);
-        alert("Error in Submitting");
-      }
+      };
     }
   };
 
+
+
+  const handleChangeSecond = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value, 
+      quantities: value.reduce((acc, quantity) => {
+        acc[quantity.id] = ""; 
+        return acc;
+      }, {}),
+    }));
+  };
   const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value, 
+    }));
   };
 
   const handleQuantityChange = (product, quantity) => {
@@ -180,7 +281,7 @@ const IssueItems = () => {
                   <div className="bg-white p-8 rounded-lg shadow-md w-3/4 mx-auto mt-5">
                     <Second
                       onSelectProducts={(selectedProducts) => {
-                        handleChange('selectedProducts', selectedProducts);
+                        handleChangeSecond('selectedProducts', selectedProducts);
                         console.log('selectedProducts', selectedProducts);
                       }}
                     />
@@ -246,7 +347,7 @@ const IssueItems = () => {
       </div>
       {demandData.items && demandData.items.length > 0 && (
         <div style={{ display: 'none' }}>
-          <Print ref={printableRef} data={demandData} name="Demand" subject="Request for Products" dateAndTime="createdAt"/>
+          <Print ref={printableRef} data={demandData} name="Demand" subject="Request for Products" dateAndTime="createdAt" />
         </div>
       )}
 

@@ -5,17 +5,18 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
+import Swal from 'sweetalert2'
 
 let locales;
 const language = localStorage.getItem("language");
 if (language === "english") {
-  import("../locales/en.json").then((module) => {
-    locales = module.default;
-  });
+    import("../locales/en.json").then((module) => {
+        locales = module.default;
+    });
 } else {
-  import("../locales/ur.json").then((module) => {
-    locales = module.default;
-  });
+    import("../locales/ur.json").then((module) => {
+        locales = module.default;
+    });
 }
 
 const AddProductDialog = ({ open, onClose, product }) => {
@@ -26,7 +27,7 @@ const AddProductDialog = ({ open, onClose, product }) => {
     const [capacity, setCapacity] = useState([]);
     const [type, setType] = useState([]);
     const [cpuName, setCpuName] = useState([]);
-    const [editId, setEditId] = useState([]);
+    const [editId, setEditId] = useState(null);
     const pattern = /\b(pc|personal computer)\b/i;
     const [formData, setFormData] = useState({
         name: '', category_ID: '', company_ID: '', cpu: '', otherspecs: '', os: '', model: '', ram_capacity: '', ram_type: '', hdd_capacity: '', hdd_type: '', picture: null,
@@ -112,7 +113,15 @@ const AddProductDialog = ({ open, onClose, product }) => {
             if (editId) {
                 const response = await axios.put(`${BaseUrl}/product/update/${editId}`, data);
                 console.log('Product Updated successfully:', response);
-                alert('Data Updated Successfully');
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Data Updated Sucessfully",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    width: "380px",
+                    height: "20px"
+                });
                 setFormData({
                     name: '', category_ID: '', company_ID: '', cpu: '', otherspecs: '', os: '', model: '', ram_capacity: '', ram_type: '', hdd_capacity: '', hdd_type: '', picture: null,
                 })
@@ -122,7 +131,15 @@ const AddProductDialog = ({ open, onClose, product }) => {
             else {
                 const response = await axios.post(`${BaseUrl}/product/post`, data);
                 console.log('Product added successfully:', response);
-                alert('Data Saved Successfully');
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Data Saved Sucessfully",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    width: "380px",
+                    height: "20px"
+                });
                 setFormData({
                     name: '', category_ID: '', company_ID: '', cpu: '', otherspecs: '', os: '', model: '', ram_capacity: '', ram_type: '', hdd_capacity: '', hdd_type: '', picture: null,
                 })
@@ -130,7 +147,16 @@ const AddProductDialog = ({ open, onClose, product }) => {
             }
         } catch (error) {
             console.error('Error adding product:', error);
-            alert('Error in adding Product')
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error In Adding Products",
+                width: "380px",
+                height: "20px",
+                customClass: {
+                    confirmButton: "bg-[#22C55E] text-white",
+                  },
+            });
         }
     };
     const closeDialog = () => {

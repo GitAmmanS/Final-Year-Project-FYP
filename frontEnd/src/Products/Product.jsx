@@ -11,6 +11,7 @@ import { MdEdit } from 'react-icons/md';
 import AddProductDialog from './AddProductDialog';
 import { IoIosInformationCircle } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 let locales;
 const language = localStorage.getItem("language");
@@ -52,7 +53,7 @@ const Product = () => {
             })
         }
         getProduct();
-    },[])
+    },[productData])
     useEffect(() => {
         if (productData.length > 0) {
             setLoader(true);
@@ -143,7 +144,16 @@ const Product = () => {
                 console.log(response);
             })
         }
-        alert('Added Successfully')
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Added Sucessfully",
+            showConfirmButton: false,
+            timer: 2000,
+            width:"380px",
+            height:"20px"
+          });
+
         setOpen(false);
         setCategoryOrCompanyName('');
     }
@@ -182,7 +192,7 @@ const Product = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button color='error' onClick={handleClose}>{locales.buttons.cancel}</Button>
-                    <Button onClick={handleAddCategoryOrCompany}>{locales.buttons.delete}</Button>
+                    <Button onClick={handleAddCategoryOrCompany}>{locales.buttons.add}</Button>
                 </DialogActions>
             </Dialog>
            

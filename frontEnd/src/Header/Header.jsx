@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
 import { IoNotificationsOutline } from "react-icons/io5";
+import Swal from 'sweetalert2';
 
 let locales;
 const language = localStorage.getItem("language");
@@ -47,8 +48,15 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userName');
-    alert('Logged out');
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Log Out",
+      showConfirmButton: false,
+      timer: 1000,
+      width: "380px",
+      height: "20px"
+  });
     axios.post(`${BaseUrl}/users/logout`, {
       name,
     });

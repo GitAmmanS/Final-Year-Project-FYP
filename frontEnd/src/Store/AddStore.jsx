@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { BaseUrl } from '../BaseUrl';
+import Swal from 'sweetalert2'
 
 let locales;
 const language = localStorage.getItem("language");
@@ -76,11 +77,21 @@ const AddStore = () => {
   const handleStoreSubmit = async(e) => {
     e.preventDefault();
     if (!selectedProductId) {
-      alert('Please select a product.');
+      Swal.fire({
+        icon: "info",
+        title: "Please Select Products",
+        width: "380px",
+        height: "20px"
+    });
       return;
     }
     if (!quantity || !status) {
-      alert('Please fill in all fields.');
+      Swal.fire({
+        icon: "info",
+        title: "Please Fill in All Fields",
+        width: "380px",
+        height: "20px"
+    });
       return;
     }
     try{
@@ -90,15 +101,38 @@ const AddStore = () => {
     setQuantity('');
     setStatus('');
    if(response.data.success){
-    alert(response.data.message);
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: response.data.message,
+      showConfirmButton: false,
+      timer: 2000,
+      width: "380px",
+      height: "20px"
+  });
    }
    else{
-    alert(response.data.message)
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: response.data.message,
+      width: "380px",
+      height: "20px"
+  });
    }
     }
     catch(error){
         console.log("error",error.message);
-        alert('Error in Submitting')
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Error In Submitting",
+          width: "380px",
+          height: "20px",
+          customClass: {
+              confirmButton: "bg-[#22C55E] text-white",
+            },
+      });
     }
 
   };

@@ -5,6 +5,7 @@ import { BaseUrl } from '../BaseUrl';
 import uniBg from '../Images/PMAS-Arid-Agriculture-University.jpg.webp';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Swal from 'sweetalert2';
 
 let locales;
 const language = localStorage.getItem("language");
@@ -33,6 +34,16 @@ const Signup = () => {
 
     if (initialPassword !== confirmPassword) {
      setAlert({severity: 'error', message: 'Password Does not match'})
+     Swal.fire({
+      icon: "warning",
+      title: "Password Mismatch",
+      text: "Password & Confirm Password Does Not match",
+      width: "380px",
+      height: "20px",
+      customClass: {
+          confirmButton: "bg-[#22C55E] text-white",
+        },
+  });
       return;
     }
 
@@ -47,11 +58,30 @@ const Signup = () => {
       });
       if (response.status === 200) {
         setAlert({ severity: 'success', message: 'Account Verification has been sent to your Email' });
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "User Registered Sucessfully",
+          showConfirmButton: false,
+          timer: 1500,
+          width: "380px",
+          height: "20px"
+      });
         setErrorMessage('');
       }
     } catch (error) {
       console.error('Error during signup:', error);
       setAlert({ severity: 'error', message: 'Invalid credentials, please try again.' });
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error While Sign Up",
+        width: "380px",
+        height: "20px",
+        customClass: {
+            confirmButton: "bg-[#22C55E] text-white",
+          },
+    });
     }
   };
 

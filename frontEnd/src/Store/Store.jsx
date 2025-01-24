@@ -9,6 +9,7 @@ import axios from 'axios';
 import { MdEdit } from "react-icons/md";
 import Loading from '../Loading/loading';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 let locales;
 const language = localStorage.getItem("language");
@@ -40,7 +41,7 @@ const Store = () => {
         };
 
         fetchData();
-    }, []);
+    }, [storeData,]);
     useEffect(() => {
         if (storeData.length > 0) {
             setLoader(true);
@@ -66,12 +67,29 @@ const Store = () => {
           .put(url, { quantity: StoreQuantity})
           .then((res) => {
             console.log(res.data);
-            alert('Quantity Updated Successfully'); 
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Quantity Updated Sucessfully",
+                showConfirmButton: false,
+                timer: 2000,
+                width: "380px",
+                height: "20px"
+            });
             handleClose();
           })
           .catch((err) => {
             console.error(err);
-            alert('Failed to update quantity. Please try again.'); 
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Failed to Update the Quantity",
+                width: "380px",
+                height: "20px",
+                customClass: {
+                    confirmButton: "bg-[#22C55E] text-white",
+                  },
+            }); 
           });
       };
       

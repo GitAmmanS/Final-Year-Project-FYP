@@ -5,6 +5,7 @@ import { BaseUrl } from '../BaseUrl';
 import uniBg from '../Images/PMAS-Arid-Agriculture-University.jpg.webp';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack'
+import Swal from 'sweetalert2';
 
 let locales;
 const language = localStorage.getItem("language");
@@ -45,14 +46,45 @@ const Login = () => {
             if (user) {
                 localStorage.setItem('userName', JSON.stringify(user.name));
                 setAlert({ severity: 'success', message: 'Succcesfull' });
+                Swal.fire({
+                      position: "top-end",
+                      icon: "success",
+                      title: "Log In Sucessfully",
+                      showConfirmButton: false,
+                      timer: 1000,
+                      width: "380px",
+                      height: "20px"
+                  });
 
             } else {
                 setAlert({ severity: 'error', message: 'An error occurs' });
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Error While Login",
+                    width: "380px",
+                    height: "20px",
+                    customClass: {
+                        confirmButton: "bg-[#22C55E] text-white",
+                      },
+                });
+    
             }
 
         } catch (error) {
             console.error('Error during login:', error);
             setAlert({ severity: 'error', message: 'Invalid Credentials' });
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Invalid Cradentials",
+                width: "380px",
+                height: "20px",
+                customClass: {
+                    confirmButton: "bg-[#22C55E] text-white",
+                  },
+            });
+
         }
     };
 

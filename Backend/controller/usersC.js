@@ -44,7 +44,9 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(403).json({ message: "Something Went Wrong.Not Verified" });
         }
         const { password: hashedPassword, ...userWithoutPassword } = user._doc; 
-        resp.cookie("token",token);
+        resp.cookie("token",token,{
+            maxAge: 3600 * 1000
+        });
          resp.status(200).json({
             message: "Login successful",
             user: userWithoutPassword,
@@ -65,7 +67,9 @@ exports.userLogout = async (req, resp) => {
             return resp.status(404).json({ message: "Something Went Wrong" });
         }
 
-        resp.cookie("token",'');
+        resp.cookie("token",'',{
+            expires: new Date(0) 
+        });
          resp.status(200).json({
             message: "Logout successful"
         });

@@ -61,19 +61,25 @@ export function Second({ onSelectProducts }) {
 
     const handleSelectionChange = (selectionModel) => {
         if (selectionModel.length > 0) {
-            setSelectedProductIds(selectionModel);
-            onSelectProducts(selectionModel);
+            const selectedProducts = selectionModel.map((id) => {
+                const product = rows.find((row) => row.id === id);
+                return { id: product.id, name: product.name };
+            });
+            setSelectedProductIds(selectedProducts);
+            onSelectProducts(selectedProducts);
         } else {
             setSelectedProductIds(null);
+            onSelectProducts([]);
         }
     };
+    
 
     return (
         <div className="mt-4">
             <p className="text-center text-xl text-gray-900 font-semibold">
                 Select Products
             </p>
-            <div className='mt-3' style={{ height: 400, width: '100%' }}>
+            <div className='' style={{ height: 400, width: '100%' }}>
                 <DataGrid
                     rows={rows}
                     columns={columns}

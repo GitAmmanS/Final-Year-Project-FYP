@@ -1,13 +1,14 @@
 import React, { forwardRef ,useEffect } from 'react';
 import Unilogo from '../Images/UIIT_SS_LOGO.png'
-
-const Print = forwardRef(({ data, name, subject }, ref) => {
+import {format} from 'date-fns'
+const Print = forwardRef(({ data, name, subject ,dateAndTime}, ref) => {
   const date = new Date();
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0'); 
   const year = date.getFullYear();
-  
-  const formattedDate = `${day}-${month}-${year}`;
+  const timestamp =()=> dateAndTime==="createdAt"? data.createdAt :data.updatedAt ;
+  const formattedDate =format( new Date(timestamp()),'PPpp');
+  // const formattedDate = `${day}-${month}-${year}`;
 
  
   
@@ -30,7 +31,7 @@ const Print = forwardRef(({ data, name, subject }, ref) => {
     </div>
     <div className="mt-[10px] ">
       <h1 className="text-[5px] whitespace-nowrap ">Subject: <span className='underline'>{subject}</span></h1>
-      <h1 className="text-[5px] text-justify min-w-[170px]" >{data.description}</h1>
+      <h1 className="text-[5px] text-justify min-w-[170px]" >Description : {data.description}</h1>
       
     </div>
     <div className="mt-[5px] ">

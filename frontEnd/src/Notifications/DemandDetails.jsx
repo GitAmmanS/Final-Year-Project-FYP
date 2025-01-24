@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useRef} from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation ,useNavigate} from 'react-router-dom';
 import { BaseUrl } from '../BaseUrl';
 import axios from 'axios'
 import Print from '../Prints/Print';
@@ -8,6 +8,7 @@ import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
   Button, TextField
 } from '@mui/material';
+import { FaCircleArrowLeft } from 'react-icons/fa6';
 
 let locales;
 const language = localStorage.getItem("language");
@@ -24,6 +25,7 @@ if (language === "english") {
 const DemandDetails = () => {
   const location = useLocation();
   const printableRef = useRef();
+  const navigate = useNavigate();
   const { demandNumber } = location.state;
   const [demand, setDemand] = useState([]);
   const [storeItems, setStoreItems] = useState();
@@ -91,8 +93,17 @@ const DemandDetails = () => {
   };
 
   return (
+    
     <div className="p-4 bg-blue-50 rounded-lg shadow-lg mt-4">
+      <div className='flex '>
+      <p
+          onClick={() => navigate('/demandsList')}
+          className="cursor-pointer hover:text-green-700 transition text-black p-1 text-xl"
+        >
+          <FaCircleArrowLeft />
+        </p>
       <h3 className="font-bold text-lg text-gray-800">{`Demand Number: ${demandNumber}`}</h3>
+      </div>
       <div className="flex flex-row ">
         <div className="text-gray-600 mt-2">
           <table className="w-full border-collapse border border-gray-300 mb-4">
@@ -118,11 +129,13 @@ const DemandDetails = () => {
                     <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
                     <td className="border border-gray-300 px-4 py-2">{product.product_Id.model}</td>
                     <td className="border border-gray-300 px-4 py-2 ">
-                      {Object.entries(product.product_Id.specs)
-                        .filter(([_, value]) => value !== null)
-                        .map(([key, value]) => `${key}: ${value}`)
-                        .join(", ")}
-
+                    <p>{product.product_Id?.specs?.otherspecs}</p>
+                    <p>{product.product_Id.specs.cpu?"Cpu : "+product.product_Id.specs?.cpu?.name:''}</p>
+                    <p>{product.product_Id.specs.os?"Operating System : "+product.product_Id.specs?.os?.name:''}</p>
+                    <p>{product.product_Id.specs.ram?"Ram Capacity :"+product.product_Id.specs.ram?.[0].capacity?.size || "":''}</p>
+                    <p>{product.product_Id.specs.ram?"Ram Type :"+product.product_Id.specs.ram?.[0].type?.name:''}</p>
+                    <p>{product.product_Id.specs.hdd?"Hdd Capacity :"+product.product_Id.specs.hdd?.[0].capacity?.size:''}</p>
+                    <p>{product.product_Id.specs.hdd?"Hdd Type :"+product.product_Id.specs.hdd?.[0].type?.name:''}</p>
                     </td>
                     <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded}</td>
                     <td className="border border-gray-300 px-4 py-2">
@@ -156,7 +169,7 @@ const DemandDetails = () => {
         </div>
         {demand.items && demand.items.length > 0 && (
           <div style={{ display: 'none' }}>
-            <Print ref={printableRef} data={demand} name="Response" subject="Response to Request for Products" />
+            <Print ref={printableRef} data={demand} name="Response" subject="Response to Request for Products" dateAndTime="updatedAt"/>
           </div>
         )}
 

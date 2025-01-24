@@ -27,7 +27,6 @@ const DemandNotification = () => {
   return (
     
     <div className=''>
-        {console.log("Demands:",demands)}
         <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 '>
             Demand List 
         </div>

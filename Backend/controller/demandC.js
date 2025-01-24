@@ -1,6 +1,6 @@
 const Demand = require('../models/demand')
 const User = require('../models/users')
-const Store = require('../models/store');
+const Store = require('../models/store'); 
 const generateRandomNumber = async () => {
     let randomNumber = Math.floor(Math.random() * 100000);
     let existingDemand = await Demand.findOne({ number: randomNumber });
@@ -134,9 +134,31 @@ exports.getDemandByStatus = async (req, res) => {
 exports.getDemandById = async (req, res) => {
     try {
         const number = req.params;
-        const data = await Demand.findOne(number).populate('requester').populate({ path: 'items.product_Id' }).populate({ path: 'items.product_Id', populate: { path: 'category_ID' } })
-            .populate({ path: 'items.product_Id', populate: { path: 'company_ID' } });
-        if (data) {
+        const data = await Demand.findOne(number).populate('requester')
+        .populate({
+          path: 'items.product_Id',
+          populate: [
+            { path: 'category_ID' }, 
+            { path: 'company_ID' }, 
+            { 
+              path: 'specs',
+              populate: [
+                { path: 'cpu' }, 
+                { path: 'os' }, 
+                { path: 'ram' ,
+                    populate:[
+                    {path:'capacity'},
+                    {path:'type'},
+              ]}, 
+                { path: 'hdd' ,
+                    populate:[
+                    {path:'capacity'},
+                   {path:'type'}]} ,
+              ],
+            },
+          ],
+        });
+          if (data) {
             res.status(200).send({
                 success: true,
                 data: data

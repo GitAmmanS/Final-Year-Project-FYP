@@ -8,11 +8,11 @@ const Demand = new mongoose.Schema({
         product_Id: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
         quantityDemanded: { type: Number, required: true },
         quantityReceived: { type: Number, default: 0 },
-        status: { type: String,enum:["pending","rejected","resolved"] ,default:"pending"}
+        status: { type: String,enum:["pending","rejected","resolved","partially resolved"] ,default:"pending"}
     }],
     demandStatus: {
         type: String,
-        enum: ["pending", "approved", "fulfilled", "rejected"],
+        enum: ["pending", "approved", "partially resolved", "rejected"],
         default: "pending"
     },
     dateRequested: { type: Date, default: Date.now },

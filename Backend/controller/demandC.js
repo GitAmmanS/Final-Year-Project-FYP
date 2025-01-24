@@ -1,22 +1,16 @@
 const Demand = require('../models/demand')
 const User = require('../models/users')
-const Store = require('../models/store'); 
-const generateRandomNumber = async () => {
-    let randomNumber = Math.floor(Math.random() * 100000);
-    let existingDemand = await Demand.findOne({ number: randomNumber });
-    while (existingDemand) {
-        randomNumber = Math.floor(Math.random() * 10000);
-        existingDemand = await Demand.findOne({ number: randomNumber });
-    }
+const Store = require('../models/store');
 
-    return randomNumber;
-};
 exports.postDemand = async (req, res) => {
 
     try {
         console.log(req.body);
         const { description, userName, quantities } = req.body;
-        const generatedNumber = await generateRandomNumber();
+        const maxDemand = await Demand.findOne().sort({ number: -1 }).select('number');
+        const maxNumber = maxDemand ? maxDemand.number : 3999;
+        const generatedNumber = maxNumber + 1;
+
 
         const findUser = await User.findOne({ name: userName });
         console.log(findUser._id);
@@ -37,7 +31,7 @@ exports.postDemand = async (req, res) => {
         res.status(200).send({
             success: true,
             data: data,
-            message:"Demand Inserted Sucessfully"
+            message: "Demand Inserted Sucessfully"
         });
     }
     catch (err) {
@@ -45,53 +39,76 @@ exports.postDemand = async (req, res) => {
     }
 }
 exports.updateDemand = async (req, res) => {
-
     try {
         const { StoreQuantity, editId, demandId } = req.body;
-        const _id = demandId;
-        const product_Id = editId;
-        const existingDemand = await Demand.findOne({
-            _id: _id,
-            "items.product_Id": product_Id
+        const existingDemand = await Demand.findOne({ 
+            _id: demandId, 
+            "items.product_Id": editId 
         });
         if (!existingDemand) {
             return res.status(404).json({ success: false, message: "Demand or item not found" });
         }
-        const storeItem = await Store.findOne({ product_ID: product_Id });
-
+        const storeItem = await Store.findOne({ product_ID: editId });
         if (!storeItem) {
             return res.status(404).json({ success: false, message: "Store item not found" });
         }
-        if(StoreQuantity>=1 && storeItem.quantity>=StoreQuantity ){
+
+        const matchedItem = existingDemand.items.find(item => item.product_Id._id.toString()===editId._id);
+        if (!matchedItem) {
+            return res.status(404).json({ success: false, message: "Product not found in demand items" });
+        }
+
+        if (StoreQuantity < 1 || StoreQuantity > storeItem.quantity) {
+            return res.status(400).json({ success: false, message: "Invalid Store Quantity" });
+        }
+        let itemStatus;
+        if (matchedItem.quantityDemanded.toString() === StoreQuantity.toString()) {
+            itemStatus = "resolved";
+        } else if (StoreQuantity > 0 && StoreQuantity < matchedItem.quantityDemanded.toString()) {
+            itemStatus = "partially resolved";
+        } else {
+            return res.status(400).json({ success: false, message: "Quantity exceeds demand or is invalid" });
+        }
+
+        const partiallyResolvedItems = existingDemand.items.filter(item => item.status === "partially resolved" || item.status === "pending");
+        const demandStatus = partiallyResolvedItems.length-1 > 0 ? "partially resolved" : "resolved";
+        
+
         const updateData = await Demand.findOneAndUpdate(
-            { _id: _id, "items.product_Id": product_Id },
+            { _id: demandId, "items.product_Id": editId },
             {
-                $set: { "items.$.quantityReceived": StoreQuantity },
-                "items.$.status": "resolved",
-                "demandStatus" : "resolved"
-            });
-        res.status(200).json({
-            success: true,
-            message: "Demand updated successfully"
-        })
+                $set: {
+                    "items.$.quantityReceived": StoreQuantity,
+                    "items.$.status": itemStatus,
+                    demandStatus: demandStatus
+                }
+            },
+            { new: true } 
+        );
+
         const newQuantity = storeItem.quantity - StoreQuantity;
-        console.log(newQuantity)
-        const updateStoreQuantity = await Store.findOneAndUpdate({ product_ID: product_Id },
+        const updateStoreQuantity = await Store.findOneAndUpdate(
+            { product_ID: editId },
             { $set: { quantity: newQuantity } }
-        )
+        );
+
         if (!updateStoreQuantity) {
             return res.status(500).json({ success: false, message: "Failed to update store quantity" });
         }
-        
+
+        return res.status(200).json({
+            success: true,
+            message: "Demand updated successfully",
+            updatedDemand: updateData,
+        });
+    } catch (err) {
+        console.error("Error:", err.message);
+        return res.status(500).json({ success: false, message: err.message });
     }
-    else{
-        res.status(500).json({success:false,message:"Error in Quanitity"})
-    }
-    }
-    catch (err) {
-        res.status(500).json({ success: false, message: err.message });
-    }
-}
+};
+
+
+
 exports.getDemand = async (req, res) => {
     try {
         const data = await Demand.find().populate('requester').populate('items.product_Id');
@@ -135,30 +152,34 @@ exports.getDemandById = async (req, res) => {
     try {
         const number = req.params;
         const data = await Demand.findOne(number).populate('requester')
-        .populate({
-          path: 'items.product_Id',
-          populate: [
-            { path: 'category_ID' }, 
-            { path: 'company_ID' }, 
-            { 
-              path: 'specs',
-              populate: [
-                { path: 'cpu' }, 
-                { path: 'os' }, 
-                { path: 'ram' ,
-                    populate:[
-                    {path:'capacity'},
-                    {path:'type'},
-              ]}, 
-                { path: 'hdd' ,
-                    populate:[
-                    {path:'capacity'},
-                   {path:'type'}]} ,
-              ],
-            },
-          ],
-        });
-          if (data) {
+            .populate({
+                path: 'items.product_Id',
+                populate: [
+                    { path: 'category_ID' },
+                    { path: 'company_ID' },
+                    {
+                        path: 'specs',
+                        populate: [
+                            { path: 'cpu' },
+                            { path: 'os' },
+                            {
+                                path: 'ram',
+                                populate: [
+                                    { path: 'capacity' },
+                                    { path: 'type' },
+                                ]
+                            },
+                            {
+                                path: 'hdd',
+                                populate: [
+                                    { path: 'capacity' },
+                                    { path: 'type' }]
+                            },
+                        ],
+                    },
+                ],
+            });
+        if (data) {
             res.status(200).send({
                 success: true,
                 data: data

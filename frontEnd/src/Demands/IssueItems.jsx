@@ -100,7 +100,6 @@ const IssueItems = () => {
   }
   else{
       e.preventDefault();
-      console.log(Object.values(formData.quantities).some((value) => value.trim() === ""));
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           confirmButton:
@@ -114,7 +113,7 @@ const IssueItems = () => {
       swalWithBootstrapButtons
         .fire({
           title: "Submit Demand?",
-          text: "Press OK to submit demand",
+          text: "Press Yes to submit demand",
           icon: "warning",
           showCancelButton: true,
           confirmButtonText: "Yes",
@@ -134,13 +133,12 @@ const IssueItems = () => {
           const response = await axios.post(`${BaseUrl}/demand/post`, formData);
           console.log(response.data.data.number);
 
+          setLoader(true);
           const resp = await axios.get(
             `${BaseUrl}/demand/getById/${response.data.data.number}`
           );
           console.log(resp.data.data);
           setDemandData(resp.data.data);
-
-          setLoader(true);
           await sleep(2000);
 
           swalWithBootstrapButtons

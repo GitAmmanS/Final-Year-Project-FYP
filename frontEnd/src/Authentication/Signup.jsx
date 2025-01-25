@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 import uniBg from '../Images/PMAS-Arid-Agriculture-University.jpg.webp';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';

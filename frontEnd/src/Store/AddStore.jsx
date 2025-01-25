@@ -3,7 +3,7 @@ import { FaCircleArrowLeft } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 import Swal from 'sweetalert2'
 
 let locales;
@@ -38,10 +38,10 @@ const AddStore = () => {
   }, []);
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'id', headerName: 'ID', width: 250 },
     { field: 'name', headerName: 'Name', width: 150 },
-    { field: 'category', headerName: 'Category', width: 150 },
-    { field: 'company', headerName: 'Company', width: 150 },
+    { field: 'category', headerName: 'Category', width: 100 },
+    { field: 'company', headerName: 'Company', width: 100 },
     {
       field: 'picture',
       headerName: 'Picture',
@@ -150,10 +150,10 @@ const AddStore = () => {
       </div>
       <div className="flex flex-col items-center justify-center w-full">
        
-        <div className="mt-4 w-[40%] h-[50%] border-2 border-black p-4">
-          <form onSubmit={handleStoreSubmit}>
+        <div className=" w-[40%] h-[50%] p-4 ">
+          <form onSubmit={handleStoreSubmit} className='flex  gap-x-3 text-sm'>
             <input
-              className="mt-3 w-80 block p-2 bg-gray-100 rounded-xl border-2 border-gray-700"
+              className="mt-3 w-80 block px-2 bg-gray-100 rounded-xl border-2 border-gray-700"
               type="number"
               min="1"
               placeholder="Quantity"
@@ -185,7 +185,7 @@ const AddStore = () => {
         </div>
         <div className='mt-5'>
         <p className='text-center text-lg text-gray-800 font-bold'>Select Product</p>
-        <div  style={{ height: 400, width: '100%' }}>
+        <div  style={{ height: 400, width: '90%' }}>
             <DataGrid
                      rows={rows}
                      columns={columns}
@@ -201,6 +201,7 @@ const AddStore = () => {
                            font:'bolder',
                            '&:hover': {
                              backgroundColor: '#bbdefb', 
+                             cursor:'pointer',
                            },
                          },
                        }}

@@ -4,7 +4,7 @@ import {
     Button, MenuItem, Select, InputLabel, FormControl, TextField
 } from '@mui/material';
 import axios from 'axios';
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 import Swal from 'sweetalert2'
 
 let locales;

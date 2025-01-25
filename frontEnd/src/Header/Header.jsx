@@ -5,7 +5,7 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 import { IoNotificationsOutline } from "react-icons/io5";
 import Swal from 'sweetalert2';
 

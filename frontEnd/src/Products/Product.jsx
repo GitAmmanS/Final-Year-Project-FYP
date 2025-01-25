@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { BaseUrl } from '../BaseUrl'
+import { BaseUrl } from '../utils/BaseUrl'
 import axios from 'axios'
 import Loading from 'react-loading'
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
@@ -162,10 +162,10 @@ const Product = () => {
             <div className='flex p-2 text-2xl mt-4 text-black justify-between'>
                 <p className='text-center font-bold cursor-pointer'>{locales.sidemenu.product}</p>
                 <div className='bg-none text-base space-x-[10px] '>
-                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleOpenDialog}>{locales.buttons.addProduct}</button>
+                    <button className="text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all hover:bg-gray-200" onClick={handleOpenDialog}>{locales.buttons.addProduct}</button>
                     <AddProductDialog open={dialogOpen} onClose={handleCloseDialog} product={itemData}/>
-                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleCategory}>{locales.buttons.addCategory}</button>
-                    <button className='px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl ' onClick={handleCompany}>{locales.buttons.addCompany}</button>
+                    <button className='text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all hover:bg-gray-200' onClick={handleCategory}>{locales.buttons.addCategory}</button>
+                    <button className='text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all hover:bg-gray-200' onClick={handleCompany}>{locales.buttons.addCompany}</button>
                 </div>
             </div>
             {

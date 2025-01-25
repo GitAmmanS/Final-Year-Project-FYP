@@ -37,11 +37,11 @@ const SideMenu = () => {
 
     return (
         <aside
-            className={`h-screen bg-green-500 flex flex-col items-center overflow-y-auto transition-all duration-100 ease-in-out ${isSidebarOpen ? 'w-48' : 'w-10 bg-white'
+            className={`h-screen bg-green-500 flex flex-col items-center overflow-y-auto ease-in-out ${isSidebarOpen ? 'w-48' : 'w-10 bg-white'
                 }`}
         >
             <CiMenuBurger
-                className={`absolute top-6 left-2 text-2xl hover:opacity-50 hover:cursor-pointer duration-100 scroll-smooth  transition-transform   ${isSidebarOpen ? 'rotate-0' : 'rotate-180'
+                className={`absolute top-6 left-2 text-2xl hover:opacity-50 hover:cursor-pointer duration-100     ${isSidebarOpen ? 'rotate-0' : 'rotate-180'
                     }`}
                 onClick={toggleSidebar}
             />

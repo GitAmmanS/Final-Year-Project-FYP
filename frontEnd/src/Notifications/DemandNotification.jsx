@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BaseUrl } from '../BaseUrl'
+import { BaseUrl } from '../utils/BaseUrl'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
@@ -19,6 +19,8 @@ const DemandNotification = () => {
   const [demands, setDemands] = useState([]);
   const [filteredDemands, setFilteredDemands] = useState([]);
   const [demandNumber, setDemandNumber] = useState();
+  const [buttonClick, setButtonClick] = useState("All Demand");
+  const [displayAllDemands, setDisplayAllDemands] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     axios.get((`${BaseUrl}/demand`)).then((res) => {
@@ -38,50 +40,71 @@ const DemandNotification = () => {
   const representByStatus = (statusName) => {
     const filteredDemands = demands.filter((demand) => demand.demandStatus === statusName);
     setFilteredDemands(filteredDemands);
+    if (filteredDemands === 0) {
+      return "no demands"
+    }
   }
   return (
 
     <div className=''>
-      <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 '>
+      <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 flex '>
         Demand List
-      </div>
-      <div className='flex-col justify-center items-center space-x-4 ml-[440px]'>
-        <button
-          className="border-2 font-bold border-black w-[140px] h-[40px] bg-[#b95d5d] hover:text-black text-white hover:font-bold hover:transition-all rounded-md text-[16px] hover:bg-[#d0aeae]"
-          onClick={() => { representByStatus("pending") }}>
-          Pending
-        </button>
-        <button
-          className="border-2 font-bold border-black w-[140px] h-[40px] bg-[#5d5fb9] hover:text-black text-white hover:font-bold hover:transition-all rounded-md text-[16px] hover:bg-[#afaed0]"
-          onClick={() => { representByStatus("partially resolved") }}>
-          Partial Resolved
-        </button>
-        <button
-          className="border-2 font-bold border-black w-[140px] h-[40px] bg-[#5DB963] hover:text-black text-white hover:font-bold hover:transition-all rounded-md text-[16px] hover:bg-[#AFD0AE]"
-          onClick={() => { representByStatus("resolved") }}>
-          Resolved
-        </button>
-        
+        <div className=' justify-center items-center space-x-4 ml-[440px] flex'>
+          <button
+            className={`text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "All Demand" ? "bg-gray-400 border-black" : "bg-gray-100 hover:bg-gray-200"}`}
+            onClick={() => {
+              representByStatus("")
+              setButtonClick("All Demand")
+            }}>
+            All Demands
+          </button>
+          <button
+            className={`text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "pending" ? "bg-gray-400 border-black" : "bg-gray-100 hover:bg-gray-200"}`}
+            onClick={() => {
+              representByStatus("pending")
+              setButtonClick("pending")
+            }}>
+            Pending
+          </button>
+          <button
+            className={`text-sm  border border-gray-300 w-max h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "partially resolved" && filteredDemands > 0 ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200"}`}
+            onClick={() => {
+              representByStatus("partially resolved")
+              setButtonClick("partially resolved")
+            }}>
+            Partial Resolved
+          </button>
+          <button
+            className={`text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "resolved" ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200"}`}
+            onClick={() => {
+              representByStatus("resolved")
+              setButtonClick("resolved")
+            }}>
+            Resolved
+          </button>
 
+
+        </div>
       </div>
+
 
       <div className="card flex justify-center items-center flex-col">
         <div className='mt-4 w-[90%] h-[50%] '>
           <div className="w-full  bg-green-50 p-4 rounded-2xl text-gray-800">
-            {filteredDemands.length>0 ? (
+            {filteredDemands.length > 0 ? (
               filteredDemands?.map((filteredDemands, index) => (
                 <ul
                   key={index}
-                  className="mb-4 p-4 bg-white rounded-lg shadow-lg border border-gray-200"
+                  className="mb-4  bg-white rounded-lg shadow-lg border border-gray-200"
                 >
                   <li className="font-bold text-lg">{`Demand Number: ${filteredDemands.number}`}</li>
-                  <li className="text-sm text-gray-600">{`From: ${filteredDemands.requester.name}`}</li>
-                  <li className="text-sm text-gray-600">{`Requested Date: ${new Date(
+                  <li className="text-xs text-gray-600">{`From: ${filteredDemands.requester.name}`}</li>
+                  <li className="text-xs text-gray-600">{`Requested Date: ${new Date(
                     filteredDemands.dateRequested
                   ).toLocaleDateString()}`}</li>
-                  <li className="text-sm text-gray-600">{`Demand Description: ${filteredDemands.description}`}</li>
+                  <li className="text-xs text-gray-600">{`Demand Description: ${filteredDemands.description}`}</li>
                   <li
-                    className={`text-sm font-bold ${filteredDemands.demandStatus === "pending"
+                    className={`text-xs font-bold ${filteredDemands.demandStatus === "pending"
                       ? "text-red-600"
                       : filteredDemands.demandStatus === "resolved"
                         ? "text-green-600"
@@ -102,13 +125,13 @@ const DemandNotification = () => {
                   className="mb-4 p-4 bg-white rounded-lg shadow-lg border border-gray-200"
                 >
                   <li className="font-bold text-lg">{`Demand Number: ${demands.number}`}</li>
-                  <li className="text-sm text-gray-600">{`From: ${demands.requester.name}`}</li>
-                  <li className="text-sm text-gray-600">{`Requested Date: ${new Date(
+                  <li className="text-xs text-gray-600">{`From: ${demands.requester.name}`}</li>
+                  <li className="text-xs text-gray-600">{`Requested Date: ${new Date(
                     demands.dateRequested
                   ).toLocaleDateString()}`}</li>
-                  <li className="text-sm text-gray-600">{`Demand Description: ${demands.description}`}</li>
+                  <li className="text-xs text-gray-600">{`Demand Description: ${demands.description}`}</li>
                   <li
-                    className={`text-sm font-bold ${demands.demandStatus === "pending"
+                    className={`text-xs font-bold ${demands.demandStatus === "pending"
                       ? "text-red-600"
                       : demands.demandStatus === "resolved"
                         ? "text-green-600"

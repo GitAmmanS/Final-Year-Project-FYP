@@ -4,7 +4,7 @@ import {
     Button, TextField
 } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 import axios from 'axios';
 import { MdEdit } from "react-icons/md";
 import Loading from '../Loading/loading';
@@ -166,14 +166,14 @@ const Store = () => {
     return (<div className="bg-slate-50 h-sceen mt-2 ">
         <div className='flex  justify-between'>
             <p className='text-xl font-semibold mt-5 ml-2 flex gap-2 items-center'>{locales.labels.StoreItems}</p>
-            <button className=' text-sm px-2 text-center border-[2px] bg-white h-10  border-black hover:bg-[#5eb05b] hover:border-[#5eb05b] hover:text-white hover:transition-all rounded-2xl  'onClick={handleAddStore} >Add Item +</button>
+            <button className='text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all hover:bg-gray-200 'onClick={handleAddStore} >Add Item +</button>
         </div>
         {
             Loader ?
-                <div className='flex flex-col w-full'>
+                <div className='flex flex-col w-full mt-3'>
                     <div> <MaterialReactTable table={table} /></div>
                 </div> :
-                <div className="loading-container flex justify-center items-center min-h-60 min-w-60">
+                <div className="mt-12 loading-container flex justify-center items-center ">
                     <Loading type="spin" color="#2C6B38" />
                 </div>
         }

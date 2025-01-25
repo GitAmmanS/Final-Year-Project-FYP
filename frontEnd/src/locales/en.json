@@ -80,7 +80,7 @@
       "inventory_room":"Inventory Room",
       "user":"User",
       "demand":"Demand",
-      "reservations":"Reservations",
+      "view_Demands":"View Demand",
       "issue_items":"Issue Items",
       "settings":"Settings"
     },

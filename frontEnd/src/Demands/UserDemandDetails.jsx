@@ -23,7 +23,7 @@ if (language === "english") {
   });
 }
 
-const DemandDetails = () => {
+const UserDemandDetails = () => {
   const location = useLocation();
   const printableRef = useRef();
   const navigate = useNavigate();
@@ -132,7 +132,7 @@ const DemandDetails = () => {
       <div className="p-4 bg-blue-50 rounded-lg shadow-lg mt-4">
         <div className='flex '>
           <p
-            onClick={() => navigate('/demandsList')}
+            onClick={() => navigate('/viewDemands')}
             className="cursor-pointer hover:text-green-700 transition text-black p-1 text-xl"
           >
             <FaCircleArrowLeft />
@@ -143,22 +143,21 @@ const DemandDetails = () => {
           <div className="text-gray-600 mt-2">
             <table className="w-full border-collapse border border-gray-300 mb-4">
               <thead>
-                <tr className="bg-gray-300 border-[2px]">
+                <tr className="bg-gray-300 border-[2px] ">
                   <th className="border border-gray-300 px-4 py-2">Product Name</th>
                   <th className="border border-gray-300 px-4 py-2">Category</th>
                   <th className="border border-gray-300 px-4 py-2">Company</th>
                   <th className="border border-gray-300 px-4 py-2">Model</th>
                   <th className="border border-gray-300 px-4 py-2">Specs</th>
                   <th className="border border-gray-300 px-4 py-2">Demaded Quantity</th>
-                  <th className="border border-gray-300 px-4 py-2">Available Quantity</th>
+                  <th className="border border-gray-300 px-4 py-2">Quantity Recieved</th>
                   <th className="border border-gray-300 px-4 py-2">Status</th>
-                  <th className="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {demand?.items?.length > 0 ? (
                   demand?.items?.map((product, index) => (
-                    <tr key={index} className="hover:bg-gray-50 text-sm">
+                    <tr key={index} className="hover:bg-gray-50 ">
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
@@ -174,64 +173,26 @@ const DemandDetails = () => {
                       </td>
                       <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded}</td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {getAvailableQuantity(product.product_Id._id)}
+                        {product.quantityReceived}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">{product.status}</td>
-                      {(product.status === "pending" || product.status ==="partially resolved") && (
-                        <td className="border border-gray-300 px-4 py-2"><button className='text-green-950 hover:text-green-700 cursor-pointer' onClick={() => {
-                          setOpenEdit(!openEdit);
-                          setEditId(product.product_Id);
-                        }} >Allocate</button></td>
-                      )}
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan="9" className="text-center text-gray-500">
-                      No items found.
+                      No Demands Found.
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
-            <button
-              type="button"
-              onClick={PrintNotification}
-              className="px-2 py-2 my-3 float-right bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 "
-            >
-              Print Notification
-            </button>
-          </div>
-          {demand.items && demand.items.length > 0 && (
-            <div style={{ display: 'none' }}>
-              <Print ref={printableRef} data={demand} name="Response" subject="Response to Request for Products" dateAndTime="updatedAt" />
-            </div>
-          )}
 
         </div>
-        <Dialog open={openEdit} onClose={handleClose}>
-          <DialogTitle>Allocate Item</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Please Quantity you want to Allocate
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              name="Quantity"
-              label="Quantity"
-              value={StoreQuantity}
-              defaultValue={1}
-              onChange={(e) => setStoreQuantity(e.target.value)}
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button color='error' onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleEditQuantity}>Add </Button>
-          </DialogActions>
-        </Dialog>
+        
+      </div>
       </div>
     );
   };
 
-  export default DemandDetails;
+  export default UserDemandDetails;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import SideMenu from './SideMenu/SideMenu';
+import SideMenu from '../SideMenu/SideMenu';
 import ShowSomeTimes from './ShowSomeTimes';
-import Loading from './Loading/loading';
+import Loading from '../Loading/loading';
 
 const Layout = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaCircleArrowLeft } from "react-icons/fa6";
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 
 let locales;
 const language = localStorage.getItem("language");

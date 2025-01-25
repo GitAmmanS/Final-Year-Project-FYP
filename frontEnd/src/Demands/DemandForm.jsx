@@ -1,6 +1,6 @@
 import { DataGrid } from '@mui/x-data-grid'
 import React, { useState, useEffect } from 'react'
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from '../utils/BaseUrl';
 import axios from 'axios';
 
 let locales;
@@ -31,7 +31,7 @@ export function Second({ onSelectProducts }) {
     }, []);
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 100 },
+        { field: 'id', headerName: 'ID', width: 250 },
         { field: 'name', headerName: 'Name', width: 150 },
         { field: 'category', headerName: 'Category', width: 150 },
         { field: 'company', headerName: 'Company', width: 150 },
@@ -75,10 +75,7 @@ export function Second({ onSelectProducts }) {
     
 
     return (
-        <div className="mt-4">
-            <p className="text-center text-xl text-gray-900 font-semibold">
-                Select Products
-            </p>
+        <div className="mt-4 text-base">
             <div className='' style={{ height: 400, width: '100%' }}>
                 <DataGrid
                     rows={rows}

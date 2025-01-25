@@ -72,9 +72,9 @@ export const SideMenuData=
             icon:<FaAngleDown />,
             subItems:[
                 {
-                title:"reservations",
+                title:"view_Demands",
                 icon:<GoDotFill />,
-                link:"/reservation"
+                link:"/viewDemands"
                 },
                 {
                     title:"issue_items",

@@ -114,7 +114,7 @@ const AddProductDialog = ({ open, onClose, product }) => {
                 const response = await axios.put(`${BaseUrl}/product/update/${editId}`, data);
                 console.log('Product Updated successfully:', response);
                 Swal.fire({
-                    position: "top-end",
+                    position: "center",
                     icon: "success",
                     title: "Data Updated Sucessfully",
                     showConfirmButton: false,

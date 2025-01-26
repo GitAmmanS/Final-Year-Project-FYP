@@ -16,7 +16,6 @@ exports.postDemand = async (req, res) => {
         console.log(findUser._id);
         const ids = Object.keys(quantities);
         const quantity = Object.values(quantities);
-        console.log("number", generatedNumber)
         const data = new Demand({
             requester: findUser._id,
             number: generatedNumber,
@@ -26,7 +25,6 @@ exports.postDemand = async (req, res) => {
                 quantityDemanded: quantity[index],
             })),
         });
-        console.log(data)
         await data.save();
         res.status(200).send({
             success: true,

@@ -86,7 +86,20 @@ const Header = () => {
             <input className='w-full outline-none' type="text" placeholder={locales.header.search} />
           </div>
         </div>
-
+     <div className='flex justify-center ml-4 pl-4 w-[100px]'>
+            <label className="inline-flex items-center me-5 cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={isChecked}
+                onChange={handleToggle}
+              />
+              <div className={`relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 ${isChecked ? "peer-checked:bg-green-600" : ""} peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
+              <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-500">
+                {isChecked ? locales.header.urdu: locales.header.english}
+              </span>
+            </label>
+          </div>
         <div className='flex mr-3 justify-normal'>
           <div onClick={() => navigate('/demandsList')}>
             <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
@@ -108,20 +121,7 @@ const Header = () => {
             )}
           </p>
 
-          <div className='flex justify-center ml-4 pl-4 w-[110px]'>
-            <label className="inline-flex items-center me-5 cursor-pointer">
-              <input
-                type="checkbox"
-                className="sr-only peer"
-                checked={isChecked}
-                onChange={handleToggle}
-              />
-              <div className={`relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 ${isChecked ? "peer-checked:bg-green-600" : ""} peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600`}></div>
-              <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-500">
-                {isChecked ? locales.header.urdu: locales.header.english}
-              </span>
-            </label>
-          </div>
+         
 
           {isOpen && (
             <div className="absolute right-0 mt-9 bg-white border border-gray-300 rounded-2xl shadow-2xl w-40">

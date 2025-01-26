@@ -67,7 +67,7 @@ const DemandNotification = () => {
             Pending
           </button>
           <button
-            className={`text-sm  border border-gray-300 w-max h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "partially resolved" && filteredDemands > 0 ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200"}`}
+            className={`text-sm  border border-gray-300 w-max h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "partially resolved"? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200"}`}
             onClick={() => {
               representByStatus("partially resolved")
               setButtonClick("partially resolved")

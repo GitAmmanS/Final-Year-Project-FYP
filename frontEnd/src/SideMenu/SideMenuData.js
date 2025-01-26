@@ -28,38 +28,7 @@ export const SideMenuData=
         {
             title:"resource",
             icon:<LuDoorOpen />,
-            subItems:[
-                {
-                title:"computer_lab",
-                icon:<GoDotFill />,
-                link:"/labs"
-                },
-                {
-                    title:"class_room",
-                    icon:<GoDotFill />,
-                    link:"/Cl"
-                 },
-                 {
-                    title:"lecture_theatre",
-                    icon:<GoDotFill />,
-                    link:"/Lt"
-                 },
-                 {
-                    title:"faculty_room",
-                    icon:<GoDotFill />,
-                    link:"/Fr"
-                 },
-                 {
-                    title:"saminar_room",
-                    icon:<GoDotFill />,
-                    link:"/Sr"
-                 },
-                 {
-                    title:"inventory_room",
-                    icon:<GoDotFill />,
-                    link:"/Ir"
-                 }
-            ]
+            link:"/resource"
             
         },
         {

@@ -15,6 +15,7 @@ import DemandDetails from './Notifications/DemandDetails';
 import ProtectedRouting from './utils/ProtectedRouting';
 import ViewDemand from './Demands/ViewDemand';
 import UserDemandDetails from './Demands/UserDemandDetails';
+import RoomResource from './Resource/RoomResource'
 function App() {
   return (
     <Router>
@@ -36,6 +37,7 @@ function App() {
             <Route path='/demandDetails' element={<DemandDetails />} />
             <Route path='/viewDemands' element={<ViewDemand />} />
             <Route path='/userDemandDetail' element={<UserDemandDetails />} />
+            <Route path='/resource' element={<RoomResource/>} />
           </Route>
         </Routes>
       </Layout>

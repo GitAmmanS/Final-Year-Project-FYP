@@ -22,7 +22,7 @@ const ViewDemand = () => {
        <p className=''>My Demands</p>
        </div>
           <div className="mt-2 w-full bg-green-50 rounded-2xl text-gray-800">
-         { demands?.map((demands, index) => (
+         { [...demands]?.reverse().map((demands, index) => (
                 <ul
                   key={index}
                   className="mb-4 p-4 bg-white rounded-lg shadow-lg border  border-gray-200"

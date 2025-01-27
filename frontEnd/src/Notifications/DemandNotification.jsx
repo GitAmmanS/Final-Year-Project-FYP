@@ -92,7 +92,7 @@ const DemandNotification = () => {
         <div className='mt-4 w-[90%] h-[50%] '>
           <div className="w-full  bg-green-50 p-4 rounded-2xl text-gray-800">
             {filteredDemands.length > 0 ? (
-              filteredDemands?.map((filteredDemands, index) => (
+              [...filteredDemands]?.reverse().map((filteredDemands, index) => (
                 <ul
                   key={index}
                   className="mb-4  bg-white rounded-lg shadow-lg border border-gray-200"
@@ -118,8 +118,8 @@ const DemandNotification = () => {
                   </div>
                 </ul>
               ))
-            ) : (
-              demands?.map((demands, index) => (
+            ) : (buttonClick==="All Demand"&&(
+              [...demands]?.reverse().map((demands, index) => (
                 <ul
                   key={index}
                   className="mb-4 p-4 bg-white rounded-lg shadow-lg border border-gray-200"
@@ -145,7 +145,7 @@ const DemandNotification = () => {
                   </div>
                 </ul>
               ))
-            )}
+            ))}
           </div>
 
         </div>

@@ -73,15 +73,28 @@ exports.updateStore = async (req, res) => {
             { _id: req.params.store_id },
             { $set: { quantity:newQuantity} }
         );
+        const updatedData = await Store.findOne({_id:req.params.store_id})
+            .populate({
+                path: 'product_ID',
+                populate: [
+                    { path: 'category_ID', select: 'name' },
+                    { path: 'company_ID', select: 'name' },
+                ]
+            })
+            if(!updatedData){
+                return res.status(500).json({message: "not found store data"})
+            }
         if (data.matchedCount === 0) {
             res.status(404).send({
                 success: false,
                 message: "Store not found"
             });
+            
         } else {
             res.send({
                 success: true,
-                message: "Store updated successfully"
+                message: "Store updated successfully",
+                data: updatedData
             });
         }
     } catch (error) {

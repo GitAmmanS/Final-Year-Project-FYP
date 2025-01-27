@@ -5,7 +5,6 @@ const Store = require('../models/store');
 exports.postDemand = async (req, res) => {
 
     try {
-        console.log(req.body);
         const { description, userName, quantities } = req.body;
         const maxDemand = await Demand.findOne().sort({ number: -1 }).select('number');
         const maxNumber = maxDemand ? maxDemand.number : 3999;
@@ -13,7 +12,7 @@ exports.postDemand = async (req, res) => {
 
 
         const findUser = await User.findOne({ name: userName });
-        console.log(findUser._id);
+      
         const ids = Object.keys(quantities);
         const quantity = Object.values(quantities);
         const data = new Demand({

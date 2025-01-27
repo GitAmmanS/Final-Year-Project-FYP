@@ -160,12 +160,11 @@ exports.usersdelete = async (req, resp) => {
 }
 exports.usersTableget = async (req, resp) => {
     try {
-        const data = await users.find({}).populate('role_ID').populate('rank_ID');
-        console.log(data);
+        const data = await users.find();
         if (data.length != 0) {
             resp.send({
                 success: true,
-                message: data
+                data: data
             });
         } else {
             resp.send({

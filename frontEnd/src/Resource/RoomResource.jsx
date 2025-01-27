@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem } from '@mui/material';
+import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 import axios from 'axios';
-import {BaseUrl} from '../utils/BaseUrl'
+import { BaseUrl } from '../utils/BaseUrl'
 import Swal from 'sweetalert2';
 const RoomResource = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [rooms, setRooms] = useState([]); 
+  const [rooms, setRooms] = useState([]);
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    axios.get((`${BaseUrl}/users/`)).then((res) => {
+      setUser(res.data.data);
+    }).catch((error) => {
+      console.log(error.message);
+    })
+  }, [])
   const [roomData, setRoomData] = useState({
-    incharge: '', type: 'lab', status: 'active',number:0
-     });
+    incharge: '', type: 'lab', status: 'active', number: 0
+  });
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
@@ -16,7 +24,7 @@ const RoomResource = () => {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setRoomData({ incharge: '', type: 'lab', status: 'active' ,number:0}); // Reset form
+    setRoomData({ incharge: '', type: 'lab', status: 'active', number: 0 }); // Reset form
   };
 
   const handleChange = (e) => {
@@ -31,16 +39,16 @@ const RoomResource = () => {
         setRooms(response.data.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
-     
+
       }
     };
     fetchRooms();
-  }, []);
+  }, [rooms]);
 
   const handleSubmit = async () => {
     try {
       const response = await axios.post(`${BaseUrl}/lab/post`, roomData)
-  
+
       Swal.fire({
         position: "center",
         icon: "success",
@@ -49,8 +57,8 @@ const RoomResource = () => {
         timer: 2000,
         width: "380px",
         height: "20px"
-    });
-  
+      });
+
       handleDialogClose();
     } catch (error) {
       console.error('Error adding room:', error);
@@ -62,56 +70,60 @@ const RoomResource = () => {
         width: "380px",
         height: "20px",
         customClass: {
-            confirmButton: "bg-[#22C55E] text-white",
-          },
-    });
+          confirmButton: "bg-[#22C55E] text-white",
+        },
+      });
     }
   };
 
   return (
     <div className="  m-4">
-   <div className="flex justify-between">
-      <div className="title text-lg text-gray-900 font-semibold mb-4">Add Rooms</div>
+      <div className="flex justify-between">
+        <div className="title text-lg text-gray-900 font-semibold mb-4">Add Rooms</div>
 
-      <div>
-        <button
-          onClick={handleDialogOpen}
-          className="text-sm border border-gray-300 w-28 h-10 text-black text-center p-2 rounded-lg shadow-md transition-all hover:bg-gray-200"
-        >
-          Add Room
-        </button>
-      </div>
+        <div>
+          <button
+            onClick={handleDialogOpen}
+            className="text-sm border border-gray-300 w-28 h-10 text-black text-center p-2 rounded-lg shadow-md transition-all hover:bg-gray-200"
+          >
+            Add Room
+          </button>
+        </div>
       </div>
       <div className="flex gap-4 flex-wrap mt-2  ">
-        {rooms.length>0 &&
-        (rooms?.map((room) => (
-          <div key={room._id} className="p-4 text-sm border border-gray-200 rounded-md shadow-lg 0 mb-2 cursor-pointer hover:bg-gray-200">
-            <p>
-              <strong>{room.type} Incharge:</strong> {room.incharge.name}
-            </p>
-            <p>
-              <strong>{room.type} No :</strong> {room.number}
-            </p>
-            <p>
-              <strong>{room.type} Status:</strong> {room.status}
-            </p>
-          </div>
-       ) ))}
+        {rooms.length > 0 &&
+          (rooms?.map((room) => (
+            <div key={room._id} className="p-4 text-sm border border-gray-200 rounded-md shadow-lg 0 mb-2 cursor-pointer hover:bg-gray-200">
+              <p>
+                <strong>{room.type} Incharge:</strong> {room.incharge.name}
+              </p>
+              <p>
+                <strong>{room.type} No :</strong> {room.number}
+              </p>
+              <p>
+                <strong>{room.type} Status:</strong> {room.status}
+              </p>
+            </div>
+          )))}
       </div>
 
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Add Room</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            name="incharge"
-            label="Incharge"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={roomData.incharge}
-            onChange={handleChange}
-          />
+          <FormControl fullWidth margin="dense" variant="outlined">
+            <InputLabel id="incharge-label">Incharge</InputLabel>
+            <Select
+              name="incharge"
+              value={roomData.incharge}
+              onChange={handleChange}
+            >
+              {user?.map((userName, index) => (
+                <MenuItem key={index} value={userName.name}>
+                  {userName.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             margin="dense"
             name="type"
@@ -126,15 +138,15 @@ const RoomResource = () => {
             <MenuItem value="room">Room</MenuItem>
           </TextField>
           <TextField
-           margin="dense"
-           name="number"
-           label="Number"
-           type='number'
-           fullWidth
-           variant="outlined"
-           value={roomData.number}
-           onChange={handleChange}
-         />
+            margin="dense"
+            name="number"
+            label="Number"
+            type='number'
+            fullWidth
+            variant="outlined"
+            value={roomData.number}
+            onChange={handleChange}
+          />
 
           <TextField
             margin="dense"

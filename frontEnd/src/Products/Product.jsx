@@ -5,7 +5,7 @@ import Loading from 'react-loading'
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import {
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    Button, TextField, Select, MenuItem, FormControl, InputLabel
+    Button, TextField
 } from '@mui/material';
 import { MdEdit } from 'react-icons/md';
 import AddProductDialog from './AddProductDialog';

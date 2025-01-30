@@ -35,7 +35,8 @@
       "noItemsFound": "No items found",
       "noImage": "No image",
       "model":"Model",
-      "qrcode" : "QR Code"
+      "qrcode" : "QR Code",
+      "convert":"Convert Text"
     },
     "messages": {
       "itemAdded": "Item Added Successfully",

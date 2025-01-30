@@ -1,7 +1,9 @@
 const Demand = require('../models/demand')
 const User = require('../models/users')
 const Store = require('../models/store');
-
+var generator = require('generate-serial-number');
+const QRCode = require('qrcode');
+const ProductStore = require('../models/productStore')
 exports.postDemand = async (req, res) => {
 
     try {
@@ -12,7 +14,7 @@ exports.postDemand = async (req, res) => {
 
 
         const findUser = await User.findOne({ name: userName });
-      
+
         const ids = Object.keys(quantities);
         const quantity = Object.values(quantities);
         const data = new Demand({
@@ -38,9 +40,9 @@ exports.postDemand = async (req, res) => {
 exports.updateDemand = async (req, res) => {
     try {
         const { StoreQuantity, editId, demandId } = req.body;
-        const existingDemand = await Demand.findOne({ 
-            _id: demandId, 
-            "items.product_Id": editId 
+        const existingDemand = await Demand.findOne({
+            _id: demandId,
+            "items.product_Id": editId
         });
         if (!existingDemand) {
             return res.status(404).json({ success: false, message: "Demand or item not found" });
@@ -50,7 +52,7 @@ exports.updateDemand = async (req, res) => {
             return res.status(404).json({ success: false, message: "Store item not found" });
         }
 
-        const matchedItem = existingDemand.items.find(item => item.product_Id._id.toString()===editId._id);
+        const matchedItem = existingDemand.items.find(item => item.product_Id._id.toString() === editId._id);
         if (!matchedItem) {
             return res.status(404).json({ success: false, message: "Product not found in demand items" });
         }
@@ -58,29 +60,37 @@ exports.updateDemand = async (req, res) => {
         if (StoreQuantity < 1 || StoreQuantity > storeItem.quantity) {
             return res.status(400).json({ success: false, message: "Invalid Store Quantity" });
         }
+        let totalRecievedQuantity = parseInt(StoreQuantity);
+        if (matchedItem.status === "partially resolved") {
+            totalRecievedQuantity += matchedItem.quantityReceived;
+        }
+
         let itemStatus;
-        if (matchedItem.quantityDemanded.toString() === StoreQuantity.toString()) {
+        if (matchedItem.quantityDemanded === totalRecievedQuantity) {
             itemStatus = "resolved";
-        } else if (StoreQuantity > 0 && StoreQuantity < matchedItem.quantityDemanded.toString()) {
+        } else if (totalRecievedQuantity > 0 && totalRecievedQuantity < matchedItem.quantityDemanded.toString()) {
             itemStatus = "partially resolved";
         } else {
             return res.status(400).json({ success: false, message: "Quantity exceeds demand or is invalid" });
         }
-
-        const partiallyResolvedItems = existingDemand.items.filter(item => item.status === "partially resolved" || item.status === "pending");
-        const demandStatus = partiallyResolvedItems.length-1 > 0 ? "partially resolved" : "resolved";
         
-
-        const updateData = await Demand.findOneAndUpdate(
+        const updatedDemand = await Demand.findOneAndUpdate(
             { _id: demandId, "items.product_Id": editId },
             {
                 $set: {
-                    "items.$.quantityReceived": StoreQuantity,
-                    "items.$.status": itemStatus,
-                    demandStatus: demandStatus
+                    "items.$.quantityReceived": totalRecievedQuantity,
+                    "items.$.status": itemStatus
                 }
             },
-            { new: true } 
+            { new: true }
+        );
+
+        const partiallyResolvedItems = updatedDemand.items.filter(item => item.status === "partially resolved" || item.status === "pending");
+        const demandStatus = partiallyResolvedItems.length > 0 ? "partially resolved" : "resolved";
+
+        const updateData = await Demand.findOneAndUpdate(
+            { _id: demandId },
+            { $set: { demandStatus: demandStatus } }
         );
 
         const newQuantity = storeItem.quantity - StoreQuantity;
@@ -88,7 +98,9 @@ exports.updateDemand = async (req, res) => {
             { product_ID: editId },
             { $set: { quantity: newQuantity } }
         );
-
+        if(updateStoreQuantity){
+            postToProductStore(storeItem,StoreQuantity);
+        }
         if (!updateStoreQuantity) {
             return res.status(500).json({ success: false, message: "Failed to update store quantity" });
         }
@@ -195,12 +207,12 @@ exports.getDemandById = async (req, res) => {
 exports.getDemandByName = async (req, res) => {
     try {
         const userName = req.params.name;
-        const user = await User.findOne({name:userName});
-        if(!user){
-            return res.status(500).json({message:"User not found"})
+        const user = await User.findOne({ name: userName });
+        if (!user) {
+            return res.status(500).json({ message: "User not found" })
         }
         const requester_ID = user._id;
-        const data = await Demand.find({requester:requester_ID}).populate('requester')
+        const data = await Demand.find({ requester: requester_ID }).populate('requester')
             .populate({
                 path: 'items.product_Id',
                 populate: [
@@ -243,4 +255,27 @@ exports.getDemandByName = async (req, res) => {
     catch (err) {
         res.status(500).send('Not found demand ' + err.message);
     }
+}
+async function postToProductStore (storeItem,quantityReceived){
+    try {
+               const data = new ProductStore({
+                store_ID:storeItem._id,
+                lab_ID:"679b5c2ce7d2e00046b59929",
+                quantity:quantityReceived,
+                items:[]
+            });
+           for (let i=0;i<quantityReceived;i++){
+            var generateSerialNumber = generator.generate(14);
+            const qrCodeData = await QRCode.toDataURL(generateSerialNumber);
+              data.items.push({
+                product_ID:storeItem.product_ID,
+                serialNumber: generateSerialNumber,
+                qrCode:qrCodeData
+              });
+            
+           }
+            await data.save();
+        } catch (err) {
+            console.error("Error :", err);  
+        }
 }

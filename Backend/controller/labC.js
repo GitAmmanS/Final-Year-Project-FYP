@@ -40,3 +40,32 @@ exports.getLab = async (req,res)=>{
         res.status(500).send('Not found lab '+err.message);
     }
 }
+exports.putLab = async (req,res)=>{
+    try{
+        const roomId = req.body.roomId;
+        const InchargeName = req.body.incharge;
+        const user = await User.findOne({name:InchargeName})
+        if(!user){
+            return res.status(500).json({success:false , message:err.message})
+        }
+        const userId = user._id;
+        const updateLab = await lab.findOneAndUpdate({_id:roomId},
+          {  $set:{
+                incharge:userId,
+                number:req.body.number,
+                type:req.body.type,
+                status:req.body.status
+            }
+           },{new:true}
+        )
+        if(!updateLab){
+            return res.status(400).json({success:false , message:"room not found"})
+        }
+    res.status(200).json({success:true,
+        message:"Updated successfully",
+        data:updateLab})
+    }
+    catch(err){
+        res.status(500).json({ success: false, message: "Not Updated lab: " + err.message });
+    }
+}

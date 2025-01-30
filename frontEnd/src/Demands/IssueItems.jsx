@@ -281,7 +281,6 @@ const IssueItems = () => {
                     <Second
                       onSelectProducts={(selectedProducts) => {
                         handleChangeSecond('selectedProducts', selectedProducts);
-                        console.log('selectedProducts', selectedProducts);
                       }}
                     />
                     <div className="flex justify-between mt-4 text-sm">

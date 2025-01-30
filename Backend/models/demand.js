@@ -12,7 +12,7 @@ const Demand = new mongoose.Schema({
     }],
     demandStatus: {
         type: String,
-        enum: ["pending", "approved", "partially resolved", "rejected"],
+        enum: ["pending","resolved", "partially resolved", "rejected"],
         default: "pending"
     },
     dateRequested: { type: Date, default: Date.now },

@@ -12,7 +12,7 @@ import Loading from '../Loading/loading';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import jsPDF from 'jspdf';
-
+import { MdOutlineManageHistory } from "react-icons/md";
 let locales;
 const language = localStorage.getItem("language");
 if (language === "english") {
@@ -26,7 +26,7 @@ if (language === "english") {
 }
 
 const Store = () => {
-    const [Loader, setLoader] = useState(false);
+    const [Loader, setLoader] = useState(true);
     const [storeData, setStoreData] = useState([]);
     const [StoreQuantity, setStoreQuantity] = useState('');
     const [openEdit, setOpenEdit] = useState(false);
@@ -34,7 +34,7 @@ const Store = () => {
     const [storeUpdatedData,setStoreUpdatedData] = useState([]);
     const navigate = useNavigate();
     const timestamp = Date.now();
-const readableDate = new Date(timestamp).toLocaleDateString(); 
+   const readableDate = new Date(timestamp).toLocaleDateString(); 
       const printableRef = useRef();
 
     useEffect(() => {
@@ -48,11 +48,6 @@ const readableDate = new Date(timestamp).toLocaleDateString();
         };
 
         fetchData();
-    }, []);
-    useEffect(() => {
-        if (storeData.length > 0) {
-            setLoader(true);
-        }
     }, [storeData]);
     useEffect(() => {
         
@@ -62,13 +57,14 @@ const readableDate = new Date(timestamp).toLocaleDateString();
         setEditId(item._id);
         setOpenEdit(true);
     };
-
+    const itemsHistory =(item)=>{
+        navigate('/store/storeItemsHistory',{ state: { item } })
+    }
     const handleClose = () => {
         setOpenEdit(false);
         setEditId(null);
       };
       const printNotification =()=>{
-        console.log(storeUpdatedData)
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
               confirmButton: "bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 ml-4 rounded shadow", 
@@ -78,8 +74,8 @@ const readableDate = new Date(timestamp).toLocaleDateString();
             buttonsStyling: false
           });
           swalWithBootstrapButtons.fire({
-            title: "Print Recieving?",
-            text: "Are you sure to print this",
+            title: "Recieving Stored",
+            text: "Do You Want to Print this Record?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes",
@@ -142,6 +138,7 @@ const readableDate = new Date(timestamp).toLocaleDateString();
             Actions: (
                 <div className='space-x-[5px] '>
                     <button className='text-xl hover:text-slate-600' onClick={() => { handleEdit(item) }}><MdEdit /></button>
+                    <button className='text-xl hover:text-slate-600' onClick={() => { itemsHistory(item) }}><MdOutlineManageHistory /></button>
                 </div>
             ),
         })),

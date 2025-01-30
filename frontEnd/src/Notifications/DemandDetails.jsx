@@ -42,7 +42,7 @@ const DemandDetails = () => {
   const handleEditQuantity = () => {
     if (editId) {
       axios.put((`${BaseUrl}/demand/put`), { StoreQuantity, editId, demandId }).then((response) => {
-        console.log(response.data.success)
+        console.log(response.data);
         if (response.data.success) {
           Swal.fire({
             position: "center",
@@ -142,23 +142,23 @@ const DemandDetails = () => {
         <div className="flex flex-row ">
           <div className="text-gray-600 mt-2">
             <table className="w-full border-collapse border border-gray-300 mb-4">
-              <thead>
-                <tr className="bg-gray-300 border-[2px]">
-                  <th className="border border-gray-300 px-4 py-2">Product Name</th>
-                  <th className="border border-gray-300 px-4 py-2">Category</th>
-                  <th className="border border-gray-300 px-4 py-2">Company</th>
-                  <th className="border border-gray-300 px-4 py-2">Model</th>
-                  <th className="border border-gray-300 px-4 py-2">Specs</th>
-                  <th className="border border-gray-300 px-4 py-2">Demaded Quantity</th>
-                  <th className="border border-gray-300 px-4 py-2">Available Quantity</th>
-                  <th className="border border-gray-300 px-4 py-2">Status</th>
-                  <th className="border border-gray-300 px-4 py-2">Actions</th>
+              <thead className=' text-base font-semibold bg-gray-400 text-center'>
+                <tr className=" border-[2px] text-black">
+                  <th className="p-2 border-2">Product Name</th>
+                  <th className="p-2 border-2">Category</th>
+                  <th className="p-2 border-2">Company</th>
+                  <th className="p-2 border-2">Model</th>
+                  <th className="p-2 border-2">Specs</th>
+                  <th className="p-2 border-2">Demaded Quantity</th>
+                  <th className="p-2 border-2">Available Quantity</th>
+                  <th className="p-2 border-2">Status</th>
+                  <th className="p-2 border-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {demand?.items?.length > 0 ? (
                   demand?.items?.map((product, index) => (
-                    <tr key={index} className="hover:bg-gray-50 text-sm">
+                    <tr key={index} className="text-sm text-center">
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>

@@ -1,19 +1,47 @@
 const ProductStore = require('../models/productStore');
 var generator = require('generate-serial-number');
 const QRCode = require('qrcode');
-exports.getProductStore = async (req,res)=>{
+exports.getProductStoreByLabId = async (req,res)=>{
     try{
-    
-    const data = await ProductStore.find().populate('items.product_ID').populate('store_ID').populate('lab_ID');
+    const data = await ProductStore.find({lab_ID:req.params.id}).populate('lab_ID').populate({
+        path: 'items.product_ID',
+        populate: [
+            { path: 'category_ID' },
+            { path: 'company_ID' },
+            {
+                path: 'specs',
+                populate: [
+                    { path: 'cpu' },
+                    { path: 'os' },
+                    {
+                        path: 'ram',
+                        populate: [
+                            { path: 'capacity' },
+                            { path: 'type' },
+                        ]
+                    },
+                    {
+                        path: 'hdd',
+                        populate: [
+                            { path: 'capacity' },
+                            { path: 'type' }]
+                    },
+                ],
+            },
+        ],
+    });
+    if(data){
         res.status(200).json({
             success:true,
             data:data
         })
     }
+    }
     
         catch(error){
             res.status(500).json({
-                success:false
+                success:false,
+                message:error.message
             })
         }
     }

@@ -7,7 +7,7 @@ const ProductStore = new mongoose.Schema({
     qrCode: { type: String }
     }],
     store_ID: { type: mongoose.Schema.Types.ObjectId, ref: "store", required: true },
-    lab_ID: { type: mongoose.Schema.Types.ObjectId, ref: "labs", required: true },
+    lab_ID: { type: mongoose.Schema.Types.ObjectId, ref: "lab", required: true },
     remarks: { type: String },
     quantity: { type: Number, default: 0 }
 

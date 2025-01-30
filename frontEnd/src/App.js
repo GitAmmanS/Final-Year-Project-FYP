@@ -16,6 +16,10 @@ import ProtectedRouting from './utils/ProtectedRouting';
 import ViewDemand from './Demands/ViewDemand';
 import UserDemandDetails from './Demands/UserDemandDetails';
 import RoomResource from './Resource/RoomResource'
+import StoreItemHistory from './Store/StoreItemHistory';
+import ShowLabInventory from './Resource/ShowLabInventory';
+import User from './User/User'
+import Setting from './Setting/Setting';
 function App() {
   return (
     <Router>
@@ -29,6 +33,7 @@ function App() {
           <Route element={<ProtectedRouting />} >
             <Route path='/' element={<Home />} />
             <Route path='/store' element={<Store />} />
+            <Route path='/store/storeItemsHistory' element={<StoreItemHistory />} />
             <Route path='/product' element={<Product />} />
             <Route path='/product/moreInfo' element={<MoreInformation />} />
             <Route path='/store/storeAdd' element={<AddStore />} />
@@ -38,6 +43,9 @@ function App() {
             <Route path='/viewDemands' element={<ViewDemand />} />
             <Route path='/userDemandDetail' element={<UserDemandDetails />} />
             <Route path='/resource' element={<RoomResource/>} />
+            <Route path='/resource/showInventory' element={<ShowLabInventory/>} />
+            <Route path='/user' element={<User/>} />
+            <Route path='/setting' element={<Setting/>} />
           </Route>
         </Routes>
       </Layout>

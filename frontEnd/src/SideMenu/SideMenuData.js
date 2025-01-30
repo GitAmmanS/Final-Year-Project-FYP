@@ -57,7 +57,7 @@ export const SideMenuData=
         {
             title:"settings",
             icon:<CiSettings />,
-            link:"/inventory"
+            link:"/setting"
         },
         
         

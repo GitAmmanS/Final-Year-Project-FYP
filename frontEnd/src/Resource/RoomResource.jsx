@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 import axios from 'axios';
 import { BaseUrl } from '../utils/BaseUrl'
 import Swal from 'sweetalert2';
+import { MdMoreVert } from "react-icons/md";
+import { MdOutlineModeEdit } from "react-icons/md";
+import { MdOutlineInventory2 } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 const RoomResource = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [user, setUser] = useState([]);
+  const [toggleStates, setToggleStates] = useState({});
+  const menuRef = useRef(null);
+  const [edit,setEdit]=useState(false);
+  const navigate = useNavigate();
+const handleToggle = (roomId) => {
+  setToggleStates((prev) => ({
+    ...prev,
+    [roomId]: !prev[roomId], 
+  }));
+};
+
   useEffect(() => {
     axios.get((`${BaseUrl}/users/`)).then((res) => {
       setUser(res.data.data);
@@ -15,7 +30,7 @@ const RoomResource = () => {
     })
   }, [])
   const [roomData, setRoomData] = useState({
-    incharge: '', type: 'lab', status: 'active', number: 0
+    incharge: '', type: 'lab', status: 'active', number: 0,roomId:''
   });
 
   const handleDialogOpen = () => {
@@ -24,14 +39,23 @@ const RoomResource = () => {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setRoomData({ incharge: '', type: 'lab', status: 'active', number: 0 }); // Reset form
+    setRoomData({ incharge: '', type: 'lab', status: 'active', number: 0,roomId:'' }); // Reset form
+    setEdit(false);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setRoomData((prev) => ({ ...prev, [name]: value }));
   };
-
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setToggleStates({});
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   useEffect(() => {
     const fetchRooms = async () => {
       try {
@@ -47,8 +71,12 @@ const RoomResource = () => {
 
   const handleSubmit = async () => {
     try {
+      if(edit){
+        const response = await axios.put(`${BaseUrl}/lab/put`, roomData)
+      }
+      else{
       const response = await axios.post(`${BaseUrl}/lab/post`, roomData)
-
+      }
       Swal.fire({
         position: "center",
         icon: "success",
@@ -75,40 +103,79 @@ const RoomResource = () => {
       });
     }
   };
-
+  const handleEdit =(room)=>{
+    setRoomData({ incharge: room.incharge?.name, type: room.type, status: room.status, number: room.number ,roomId:room._id});
+    setDialogOpen(true);
+    setEdit(true);
+  }
+  const ShowInventory =(room)=>{
+    navigate('showInventory',{state:{id:room._id}});
+  }
   return (
-    <div className="  m-4">
-      <div className="flex justify-between">
-        <div className="title text-lg text-gray-900 font-semibold mb-4">Add Rooms</div>
+    <>
+    <div className="m-4 p-6 bg-white shadow-lg rounded-lg">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-xl font-semibold text-gray-800">Rooms</h2>
+      <button
+        onClick={handleDialogOpen}
+        className="text-sm font-medium border border-gray-300 w-32 h-10 text-black text-center p-2 rounded-lg shadow-md transition-all hover:bg-gray-200"
+      >
+        Add Room
+      </button>
+    </div>
 
-        <div>
-          <button
-            onClick={handleDialogOpen}
-            className="text-sm border border-gray-300 w-28 h-10 text-black text-center p-2 rounded-lg shadow-md transition-all hover:bg-gray-200"
+    {rooms.length > 0 ? (
+      <div className="flex gap-4 flex-wrap mt-2">
+        {rooms.map((room) => (
+          <div
+            key={room._id}
+            className="p-4 text-sm border border-gray-300 bg-gray-50 rounded-lg shadow-md transition-all hover:shadow-lg hover:scale-105 cursor-pointer relative"
           >
-            Add Room
-          </button>
-        </div>
-      </div>
-      <div className="flex gap-4 flex-wrap mt-2  ">
-        {rooms.length > 0 &&
-          (rooms?.map((room) => (
-            <div key={room._id} className="p-4 text-sm border border-gray-200 rounded-md shadow-lg 0 mb-2 cursor-pointer hover:bg-gray-200">
-              <p>
-                <strong>{room.type} Incharge:</strong> {room.incharge.name}
-              </p>
-              <p>
-                <strong>{room.type} No :</strong> {room.number}
-              </p>
-              <p>
-                <strong>{room.type} Status:</strong> {room.status}
-              </p>
-            </div>
-          )))}
-      </div>
+            <p className="flex justify-between items-center">
+              <strong>{room.type} Incharge:</strong> {room.incharge.name}
+              <span
+                className="text-lg pl-3 cursor-pointer"
+                onClick={() => handleToggle(room._id)}
+              >
+                <MdMoreVert />
+              </span>
+            </p>
+            <p>
+              <strong>{room.type} No:</strong> {room.number}
+            </p>
+            <p>
+              <strong>{room.type} Status:</strong> {room.status}
+            </p>
 
+            {toggleStates[room._id] && (
+              <ul
+                ref={menuRef}
+                className="absolute right-2 top-10 bg-white border shadow-md rounded-md p-2"
+              >
+                <li
+                  onClick={() => handleEdit(room)}
+                  className="hover:text-gray-800 p-1 cursor-pointer flex items-center gap-2"
+                >
+                  Edit <MdOutlineModeEdit />
+                </li>
+                <li
+                  onClick={() => ShowInventory(room)}
+                  className="hover:text-gray-800 p-1 cursor-pointer flex items-center gap-2"
+                >
+                  Show Inventory <MdOutlineInventory2 />
+                </li>
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500 text-center mt-4">No rooms available.</p>
+    )}
+  </div>
+<div>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Add Room</DialogTitle>
+        <DialogTitle>{`${edit?"Edit Room ":"Add Room"}`}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense" variant="outlined">
             <InputLabel id="incharge-label">Incharge</InputLabel>
@@ -167,11 +234,12 @@ const RoomResource = () => {
             Cancel
           </Button>
           <Button onClick={handleSubmit} color="primary">
-            Add
+            {`${edit? "Edit" : "Add"}`}
           </Button>
         </DialogActions>
       </Dialog>
     </div>
+    </>
   );
 };
 

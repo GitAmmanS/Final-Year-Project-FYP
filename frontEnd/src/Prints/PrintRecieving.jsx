@@ -2,9 +2,8 @@ import React, { forwardRef } from 'react';
 import Unilogo from '../Images/UIIT_SS_LOGO.png';
 
 const PrintRecieving = forwardRef(({ data, quantityRecieved, name, subject }, ref) => {
-  console.log("data", data);
-  console.log("quantity", quantityRecieved);
-const time =data.updatedAt ? new Date(data.updatedAt).toLocaleString():'';
+const time =data[0]?.updatedAt ? new Date(data[0]?.updatedAt).toLocaleString():'';
+
   return (
     <div ref={ref} className="p-5 font-sans mt-[15px] ml-[10px] flex-col justify-center min-w-[190px] min-h-[260px]">
       <div className="text-center ml-[-10px] mt-[-20px]">

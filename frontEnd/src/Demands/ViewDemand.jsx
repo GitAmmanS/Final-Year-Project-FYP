@@ -28,11 +28,11 @@ const ViewDemand = () => {
                   className="mb-4 p-4 bg-white rounded-lg shadow-lg border  border-gray-200"
                 >
                   <li className="font-bold text-lg">{`Demand Number: ${demands.number}`}</li>
-                  <li className="text-xs text-gray-600">{`From: ${demands.requester.name}`}</li>
-                  <li className="text-xs text-gray-600">{`Requested Date: ${new Date(
+                  <li className="text-xs text-gray-600 font-thin">{`From: ${demands.requester.name}`}</li>
+                  <li className="text-xs text-gray-600 font-thin">{`Requested Date: ${new Date(
                     demands.dateRequested
                   ).toLocaleDateString()}`}</li>
-                  <li className="text-xs text-gray-600">{`Demand Description: ${demands.description}`}</li>
+                  <li className="text-xs text-gray-600 font-thin">{`Demand Description: ${demands.description}`}</li>
                   <li
                     className={`text-xs font-bold ${demands.demandStatus === "pending"
                       ? "text-red-600"

@@ -27,9 +27,9 @@ const DemandNotification = () => {
       setDemands(
         res.data.data.sort((a, b) => {
           const statusOrder = {
-            pending: 1,
+            pending: 3,
             "partially resolved": 2,
-            resolved: 3,
+            resolved: 1,
           };
           return statusOrder[a.demandStatus] - statusOrder[b.demandStatus];
         })

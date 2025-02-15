@@ -6,6 +6,7 @@ import uniBg from '../Images/PMAS-Arid-Agriculture-University.jpg.webp';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack'
 import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 let locales;
 const language = localStorage.getItem("language");
@@ -22,9 +23,9 @@ if (language === "english") {
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
     const [alert, setAlert] = useState(null);
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     useEffect(() => {
         if (alert && alert.severity === 'success') {
             setTimeout(() => {
@@ -42,21 +43,22 @@ const Login = () => {
                 email,
                 password,
             });
-            const user = response.data.user;
-            if (user) {
-                localStorage.setItem('userName', JSON.stringify(user.name));
-                setAlert({ severity: 'success', message: 'Succcesfull' });
+            if (response.status === 200) {
+                const { token, user } = response.data;
+                localStorage.setItem("authToken", token);
+                localStorage.setItem("user", JSON.stringify(user));
+                navigate("/");
                 Swal.fire({
-                      position: "top-end",
-                      icon: "success",
-                      title: "Log In Sucessfully",
-                      showConfirmButton: false,
-                      timer: 1000,
-                      width: "380px",
-                      height: "20px"
-                  });
-
-            } else {
+                    position: "top-end",
+                    icon: "success",
+                    title: "Log In Sucessfully",
+                    showConfirmButton: false,
+                    timer: 1000,
+                    width: "380px",
+                    height: "20px"
+                });
+            }
+            else {
                 setAlert({ severity: 'error', message: 'An error occurs' });
                 Swal.fire({
                     icon: "error",
@@ -66,9 +68,9 @@ const Login = () => {
                     height: "20px",
                     customClass: {
                         confirmButton: "bg-[#22C55E] text-white",
-                      },
+                    },
                 });
-    
+
             }
 
         } catch (error) {
@@ -82,7 +84,7 @@ const Login = () => {
                 height: "20px",
                 customClass: {
                     confirmButton: "bg-[#22C55E] text-white",
-                  },
+                },
             });
 
         }
@@ -118,13 +120,21 @@ const Login = () => {
                         <label className="block text-gray-700 font-medium mb-2">
                             Password:
                         </label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                        <div className='flex'>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            />
+                            <button className='absolute  right-14 p-3 text-gray-500 '
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <FaEye /> : <FaEyeSlash />  }
+                            </button>
+                        </div>
                     </div>
                     <div className="flex items-center justify-between mb-4">
                         <p className="text-sm text-gray-600">

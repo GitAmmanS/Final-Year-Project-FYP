@@ -60,17 +60,18 @@ export function Second({ onSelectProducts }) {
     }));
 
     const handleSelectionChange = (selectionModel) => {
-        if (selectionModel.length > 0) {
-            const selectedProducts = selectionModel.map((id) => {
-                const product = rows.find((row) => row.id === id);
-                return { id: product.id, name: product.name };
-            });
-            setSelectedProductIds(selectedProducts);
-            onSelectProducts(selectedProducts);
-        } else {
-            setSelectedProductIds(null);
-            onSelectProducts([]);
-        }
+        // if (selectionModel.length > 0) {
+        //     const selectedProducts = selectionModel.map((id) => {
+        //         const product = rows.find((row) => row.id === id);
+        //         return { id: product.id, name: product.name };
+        //     });
+        let sendId = selectionModel[0].toString();
+            setSelectedProductIds(sendId);
+            onSelectProducts(sendId);
+        // } else {
+        //     setSelectedProductIds(null);
+        //     onSelectProducts([]);
+        // }
     };
     
 
@@ -82,7 +83,6 @@ export function Second({ onSelectProducts }) {
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10]}
-                    checkboxSelection
                     onRowSelectionModelChange={(ids) => handleSelectionChange(ids)}
                     sx={{
                         '& .MuiDataGrid-row.Mui-selected': {

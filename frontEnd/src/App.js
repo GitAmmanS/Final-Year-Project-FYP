@@ -8,18 +8,21 @@ import ShowSomeTimes from './utils/ShowSomeTimes';
 import Store from './Store/Store';
 import Product from './Products/Product'
 import MoreInformation from './Products/MoreInformation';
-import AddStore from './Store/AddStore';
-import IssueItems from './Demands/IssueItems';
+// import AddStore from './Store/AddStore';
+import IssueItems from './StoreDemands/IssueItems';
 import DemandNotification from './Notifications/DemandNotification';
 import DemandDetails from './Notifications/DemandDetails';
 import ProtectedRouting from './utils/ProtectedRouting';
-import ViewDemand from './Demands/ViewDemand';
-import UserDemandDetails from './Demands/UserDemandDetails';
+import ViewDemand from './StoreDemands/ViewDemand';
+import UserDemandDetails from './StoreDemands/UserDemandDetails';
 import RoomResource from './Resource/RoomResource'
 import StoreItemHistory from './Store/StoreItemHistory';
 import ShowLabInventory from './Resource/ShowLabInventory';
 import User from './User/User'
 import Setting from './Setting/Setting';
+import View from './Demand/View';
+import CreateDemand from './Demand/CreateDemand';
+import Action from './Demand/Action';
 function App() {
   return (
     <Router>
@@ -30,13 +33,13 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          <Route element={<ProtectedRouting />} >
+          <Route element={<ProtectedRouting allowedRoles={["admin","lab_Incharge"]}/>} >
             <Route path='/' element={<Home />} />
             <Route path='/store' element={<Store />} />
             <Route path='/store/storeItemsHistory' element={<StoreItemHistory />} />
             <Route path='/product' element={<Product />} />
             <Route path='/product/moreInfo' element={<MoreInformation />} />
-            <Route path='/store/storeAdd' element={<AddStore />} />
+            {/* <Route path='/store/storeAdd' element={<AddStore />} /> */}
             <Route path='/issueItem' element={<IssueItems />} />
             <Route path='/demandsList' element={<DemandNotification />} />
             <Route path='/demandDetails' element={<DemandDetails />} />
@@ -46,6 +49,11 @@ function App() {
             <Route path='/resource/showInventory' element={<ShowLabInventory/>} />
             <Route path='/user' element={<User/>} />
             <Route path='/setting' element={<Setting/>} />
+            <Route path='/viewMainDemand' element={<View/>} />
+            <Route path='/createDemand' element={<CreateDemand/>} />
+            <Route path='/createDemand/moreInfo' element={<MoreInformation />} />
+            <Route path='/actionDemand' element={<Action />} />
+
           </Route>
         </Routes>
       </Layout>

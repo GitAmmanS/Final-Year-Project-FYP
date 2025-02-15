@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FaCircleArrowLeft } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
-import { Second } from '../Demands/DemandForm'
+import { Second } from '../StoreDemands/DemandForm'
 import { BaseUrl } from '../utils/BaseUrl'
 import axios from 'axios'
 import Swal from 'sweetalert2'

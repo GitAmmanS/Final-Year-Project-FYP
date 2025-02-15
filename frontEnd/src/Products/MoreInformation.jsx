@@ -24,7 +24,7 @@ const MoreInformation = () => {
     <>
       <div className="text-xl font-semibold mt-5 ml-2 flex gap-2 items-center">
         <p
-          onClick={() => navigate('/product')}
+          onClick={() => navigate(-1)}
           className="cursor-pointer hover:text-green-700 transition text-black"
         >
           <FaCircleArrowLeft />

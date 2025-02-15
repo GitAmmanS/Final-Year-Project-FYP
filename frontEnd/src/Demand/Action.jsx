@@ -23,7 +23,7 @@ if (language === "english") {
   });
 }
 
-const DemandDetails = () => {
+const Action = () => {
   const location = useLocation();
   const printableRef = useRef();
   const navigate = useNavigate();
@@ -33,6 +33,7 @@ const DemandDetails = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [StoreQuantity, setStoreQuantity] = useState(1);
   const [editId, setEditId] = useState(null);
+  const [quantityDemanded, setQuantityDemanded] = useState(null);
   const [demandId, setDemandId] = useState(null);
   const handleClose = () => {
     setOpenEdit(false);
@@ -41,7 +42,7 @@ const DemandDetails = () => {
   };
   const handleEditQuantity = () => {
     if (editId) {
-      axios.put((`${BaseUrl}/demand/put`), { StoreQuantity, editId, demandId }).then((response) => {
+      axios.put((`${BaseUrl}/mainDemand/put`), { StoreQuantity, editId, demandId }).then((response) => {
         console.log(response.data);
         if (response.data.success) {
           Swal.fire({
@@ -106,8 +107,8 @@ const DemandDetails = () => {
   }
 
     useEffect(() => {
-      axios.get((`${BaseUrl}/demand/getById/${demandNumber}`)).then((res) => {
-        setDemand(res.data.data)
+      axios.get((`${BaseUrl}/mainDemand/getById/${demandNumber}`)).then((res) => {
+        setDemand(res.data.data);
         setDemandId(res.data.data._id);
       }).catch((error) => {
         console.log(error.message);
@@ -132,7 +133,7 @@ const DemandDetails = () => {
       <div className="p-4 bg-blue-50 rounded-lg shadow-lg mt-4">
         <div className='flex '>
           <p
-            onClick={() => navigate('/demandsList')}
+            onClick={() => navigate('/viewMainDemand')}
             className="cursor-pointer hover:text-green-700 transition text-black p-1 text-xl"
           >
             <FaCircleArrowLeft />
@@ -182,8 +183,9 @@ const DemandDetails = () => {
                       {(product.status === "pending" || product.status ==="partially resolved") && (
                         <td className="border border-gray-300 px-4 py-2"><button className='text-green-950 hover:text-green-700 cursor-pointer' onClick={() => {
                           setOpenEdit(!openEdit);
+                          setQuantityDemanded(product.quantityDemanded);
                           setEditId(product.product_Id);
-                        }} >Allocate</button></td>
+                        }} >Enter Recieving</button></td>
                       )}
                     </tr>
                   ))
@@ -206,23 +208,36 @@ const DemandDetails = () => {
           </div>
           {demand.items && demand.items.length > 0 && (
             <div style={{ display: 'none' }}>
-              <Print ref={printableRef} data={demand} name="Response" subject="Response to Request for Products" dateAndTime="updatedAt" />
+              <Print ref={printableRef} data={demand} name="Response" subject="Response to Demand for Products" dateAndTime="updatedAt" />
             </div>
           )}
 
         </div>
         <Dialog open={openEdit} onClose={handleClose}>
-          <DialogTitle>Allocate Item</DialogTitle>
+          <DialogTitle>Enter Recieving</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Please Quantity you want to Allocate
+              Enter Quantity you Recieved
             </DialogContentText>
             <TextField
               margin="dense"
+              name="Quantity Demanded"
+              label="Quantity Demanded"
+              value={quantityDemanded}
+              defaultValue={1}
+              readOnly
+              inputProps={{ min: 1 }}
+              onChange={(e) => setStoreQuantity(e.target.value)}
+              fullWidth
+            />
+             <TextField
+              margin="dense"
               name="Quantity"
-              label="Quantity"
+              label="Quantity Recieved"
               value={StoreQuantity}
               defaultValue={1}
+               type='number'
+              inputProps={{ min: 1 }}
               onChange={(e) => setStoreQuantity(e.target.value)}
               fullWidth
             />
@@ -236,4 +251,4 @@ const DemandDetails = () => {
     );
   };
 
-  export default DemandDetails;
+  export default Action;

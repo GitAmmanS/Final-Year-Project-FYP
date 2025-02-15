@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useRef} from 'react';
-import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { TextField, Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, FormControl, InputLabel, Select, Toolbar } from '@mui/material';
 import axios from 'axios';
 import { BaseUrl } from '../utils/BaseUrl'
 import Swal from 'sweetalert2';
@@ -7,6 +7,7 @@ import { MdMoreVert } from "react-icons/md";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import {axiosInstance} from '../utils/AxiosInstance'
 const RoomResource = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
@@ -23,7 +24,7 @@ const handleToggle = (roomId) => {
 };
 
   useEffect(() => {
-    axios.get((`${BaseUrl}/users/`)).then((res) => {
+    axiosInstance.get((`${BaseUrl}/users/`)).then((res) => {
       setUser(res.data.data);
     }).catch((error) => {
       console.log(error.message);
@@ -109,7 +110,8 @@ const handleToggle = (roomId) => {
     setEdit(true);
   }
   const ShowInventory =(room)=>{
-    navigate('showInventory',{state:{id:room._id}});
+    console.log(room);
+    navigate('showInventory',{state:{id:room.incharge._id}});
   }
   return (
     <>
@@ -133,12 +135,14 @@ const handleToggle = (roomId) => {
           >
             <p className="flex justify-between items-center">
               <strong>{room.type} Incharge:</strong> {room.incharge.name}
+              <Toolbar title="More">
               <span
                 className="text-lg pl-3 cursor-pointer"
                 onClick={() => handleToggle(room._id)}
               >
                 <MdMoreVert />
               </span>
+              </Toolbar>
             </p>
             <p>
               <strong>{room.type} No:</strong> {room.number}

@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom'
 
 const ViewDemand = () => {
     const [demands, setDemands] = useState([]);
-    let name = JSON.parse(localStorage.getItem('userName'));
+    let user = JSON.parse(localStorage.getItem('user'));
+    let name = user.name;
     const navigate = useNavigate();
     useEffect(()=>{
         axios.get((`${BaseUrl}/demand/getByName/${name}`)).then((response)=>{
@@ -19,7 +20,7 @@ const ViewDemand = () => {
     <div className=''>
       <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 block'>
         <div className='flex justify-center text-center'>
-       <p className=''>My Demands</p>
+       <p className=''>My Requests</p>
        </div>
           <div className="mt-2 w-full bg-green-50 rounded-2xl text-gray-800">
          { [...demands]?.reverse().map((demands, index) => (
@@ -27,12 +28,12 @@ const ViewDemand = () => {
                   key={index}
                   className="mb-4 p-4 bg-white rounded-lg shadow-lg border  border-gray-200"
                 >
-                  <li className="font-bold text-lg">{`Demand Number: ${demands.number}`}</li>
+                  <li className="font-bold text-lg">{`Number: ${demands.number}`}</li>
                   <li className="text-xs text-gray-600 font-thin">{`From: ${demands.requester.name}`}</li>
                   <li className="text-xs text-gray-600 font-thin">{`Requested Date: ${new Date(
                     demands.dateRequested
                   ).toLocaleDateString()}`}</li>
-                  <li className="text-xs text-gray-600 font-thin">{`Demand Description: ${demands.description}`}</li>
+                  <li className="text-xs text-gray-600 font-thin">{`Request Description: ${demands.description}`}</li>
                   <li
                     className={`text-xs font-bold ${demands.demandStatus === "pending"
                       ? "text-red-600"

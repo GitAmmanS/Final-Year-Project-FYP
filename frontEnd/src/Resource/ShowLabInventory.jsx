@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { BaseUrl } from "../utils/BaseUrl";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaCircleArrowLeft } from "react-icons/fa6";
 
 const ShowLabInventory = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { id } = location.state;
     const [inventory, setInventory] = useState([]);
 
@@ -20,8 +22,16 @@ const ShowLabInventory = () => {
     }, [id]);
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="container mx-auto p-6 ">
+            <div className="flex ">
+            <p
+          onClick={() => navigate('/resource')}
+          className="cursor-pointer hover:text-green-700 transition text-black p-2"
+        >
+          <FaCircleArrowLeft />
+        </p>
             <h2 className="text-2xl font-semibold mb-4">Lab Inventory</h2>
+            </div>
             <div className="overflow-x-auto">
                 <table className="w-full border-collapse border border-gray-300">
                     <thead>

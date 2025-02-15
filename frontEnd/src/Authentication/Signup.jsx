@@ -6,6 +6,7 @@ import uniBg from '../Images/PMAS-Arid-Agriculture-University.jpg.webp';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 let locales;
 const language = localStorage.getItem("language");
@@ -29,21 +30,25 @@ const Signup = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [alert, setAlert] = useState(null);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+
+
   const submitHandler = async (event) => {
     event.preventDefault();
 
     if (initialPassword !== confirmPassword) {
-     setAlert({severity: 'error', message: 'Password Does not match'})
-     Swal.fire({
-      icon: "warning",
-      title: "Password Mismatch",
-      text: "Password & Confirm Password Does Not match",
-      width: "380px",
-      height: "20px",
-      customClass: {
+      setAlert({ severity: 'error', message: 'Password Does not match' })
+      Swal.fire({
+        icon: "warning",
+        title: "Password Mismatch",
+        text: "Password & Confirm Password Does Not match",
+        width: "380px",
+        height: "20px",
+        customClass: {
           confirmButton: "bg-[#22C55E] text-white",
         },
-  });
+      });
       return;
     }
 
@@ -66,7 +71,7 @@ const Signup = () => {
           timer: 1500,
           width: "380px",
           height: "20px"
-      });
+        });
         setErrorMessage('');
       }
     } catch (error) {
@@ -79,9 +84,9 @@ const Signup = () => {
         width: "380px",
         height: "20px",
         customClass: {
-            confirmButton: "bg-[#22C55E] text-white",
-          },
-    });
+          confirmButton: "bg-[#22C55E] text-white",
+        },
+      });
     }
   };
 
@@ -97,54 +102,66 @@ const Signup = () => {
           <div className="mb-4">
             <input
               type='text'
-              placeholder='Enter Name'
+              placeholder='Name'
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-96 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-96 text-[0.9rem] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
           <div className='mb-4'>
             <input
               type='email'
-              placeholder='Enter Email'
+              placeholder='Email'
               required
               value={initialEmail}
               onChange={(e) => setInitialEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-[0.9rem] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
           <div className="mb-4">
             <input
               type='number'
-              placeholder='Enter Phone'
+              placeholder='Phone'
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-[0.9rem] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
           <div className="mb-4">
             <input
-              type='password'
-              placeholder='Enter Password'
+              type={showPassword1 ? "text" : "password"}
+              placeholder='Password'
               required
               value={initialPassword}
               onChange={(e) => setInitialPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-[0.9rem] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
 
             />
+            <button className='absolute  right-14 p-3 text-gray-500 '
+              type="button"
+              onClick={() => setShowPassword1(!showPassword1)}
+            >
+              {showPassword1 ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
           <div className="mb-4">
             <input
-              type='password'
+              type={showPassword2 ? "text" : "password"}
               placeholder='Confirm Password'
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-[0.9rem] px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
 
             />
+            <button className='absolute  right-14 p-3 text-gray-500 '
+              type="button"
+              onClick={() => setShowPassword2(!showPassword2)}
+            >
+              {showPassword2 ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
 
           <Stack sx={{ width: '100%' }} spacing={2}>

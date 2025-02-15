@@ -9,7 +9,7 @@ const Stores = mongoose.Schema({
             previousQuanitity:{type:Number,min:1}
         }
     ],
-    quantity: { type: Number,min:1},
+    quantity: { type: Number,default:0},
     status: { type:String,enum:["New","Old","Damaged"],default:"New" },
     location: { type: String,default:"Uiit Lab Inventory Store" }
 }, { timestamps: true })

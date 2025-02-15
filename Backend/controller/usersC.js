@@ -35,7 +35,7 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(404).json({ message: "Something Went Wrong" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        let token = jwt.sign({email:user.email,role:user.role},process.env.JWT_SECRET_KEY,{expiresIn:'1hr'});
+        let token = jwt.sign({email:user.email,role:user.role},process.env.JWT_SECRET_KEY);
         if (!isPasswordValid) {
             return resp.status(401).json({ message: "Something Went Wrong" });
         }
@@ -44,12 +44,12 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(403).json({ message: "Something Went Wrong.Not Verified" });
         }
         const { password: hashedPassword, ...userWithoutPassword } = user._doc; 
-        resp.cookie("token",token,{
-            maxAge: 3600 * 1000
-        });
+        resp.cookie("token", token, { httpOnly: true });
+        console.log(token);
          resp.status(200).json({
             message: "Login successful",
             user: userWithoutPassword,
+            token
         });
         
     } catch (error) {
@@ -67,11 +67,10 @@ exports.userLogout = async (req, resp) => {
             return resp.status(404).json({ message: "Something Went Wrong" });
         }
 
-        resp.cookie("token",'',{
-            expires: new Date(0) 
-        });
+        resp.cookie("token","", { expires: new Date(0) });
          resp.status(200).json({
-            message: "Logout successful"
+            message: "Logout successful",
+            
         });
 
     } catch (error) {
@@ -161,22 +160,18 @@ exports.usersdelete = async (req, resp) => {
 exports.usersTableget = async (req, resp) => {
     try {
         const data = await users.find();
-        if (data.length != 0) {
-            resp.send({
-                success: true,
-                data: data
-            });
+
+        if (data.length>0) {
+            return resp.status(200).json({ success: true, data:data });
         } else {
-            resp.send({
-                success: false,
-                message: "No User Found"
-            });
+            return resp.status(404).json({ success: false, message: "No User Found" });
         }
+
     } catch (error) {
-        console.error(error);
-        resp.status(500).send("Internal Server Error");
+        return resp.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
 exports.usersUserget = async (req, resp) => {
     try {
         const data = await users.find({ role: "user" });

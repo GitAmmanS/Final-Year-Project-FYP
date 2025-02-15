@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SideMenuData } from './SideMenuData';
-import logo from '../Images/Unilogo.png';
+import logo from '../Images/UIIT_SS_LOGO.png';
 import { CiMenuBurger } from "react-icons/ci";
 import { FaAngleUp } from "react-icons/fa";
-
 let locales;
 const language = localStorage.getItem("language");
 if (language === "english") {
@@ -18,12 +17,12 @@ if (language === "english") {
 }
 
 const SideMenu = () => {
-  const userName = JSON.parse(localStorage.getItem('userName'));
+  const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const userRole = user.role;
   const handleSubMenuToggle = (index, res) => {
     if (res.subItems && res.subItems.length > 0) {
       setOpenSubMenu(openSubMenu === index ? null : index);
@@ -31,7 +30,9 @@ const SideMenu = () => {
       navigate(res.link);
     }
   };
-
+  const filteredSideMenuData = SideMenuData.filter(item=>
+    item.roles.includes(userRole)
+  )
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -42,7 +43,7 @@ const SideMenu = () => {
         isSidebarOpen ? 'w-56' : 'w-16'
       }`}
     >
-      {/* Toggle Sidebar Button */}
+    
       <div className="w-full flex justify-end p-2 mr-2">
         <CiMenuBurger
           className="text-white text-3xl cursor-pointer hover:opacity-70 transition-all duration-200"
@@ -50,12 +51,11 @@ const SideMenu = () => {
         />
       </div>
 
-      {/* Logo Section */}
       {isSidebarOpen && (
         <div className="mt-2 cursor-pointer flex flex-col items-center">
           <img
             src={logo?logo:''}
-            className="h-14 w-14 rounded-full shadow-md hover:scale-110 transition-all duration-300"
+            className="h-14 w-14 rounded-full bg-transparent shadow-md hover:scale-110 transition-all duration-300"
             alt="University Logo"
             onClick={() => navigate('/')}
           />
@@ -65,9 +65,8 @@ const SideMenu = () => {
         </div>
       )}
 
-      {/* Menu Items */}
       <ul className="mt-6 w-full">
-        {SideMenuData.map((res, index) => (
+        {filteredSideMenuData.map((res, index) => (
           <li key={index} className="mt-2 px-4">
             <div
               className={`cursor-pointer w-full flex items-center gap-3 p-3 rounded-md transition-all duration-300 ${
@@ -90,14 +89,15 @@ const SideMenu = () => {
               )}
             </div>
 
-            {/* Submenu */}
             {res.subItems && res.subItems.length > 0 && isSidebarOpen && (
               <ul
                 className={`ml-5 transition-all text-[#F9FAF9] duration-300 ease-in-out overflow-hidden ${
                   openSubMenu === index ? 'h-auto' : 'max-h-0'
                 }`}
               >
-                {res.subItems.map((result, subIndex) => (
+                {res.subItems
+                  .filter(subItem => subItem.roles.includes(userRole))
+                  .map((result, subIndex) => (
                   <li
                     key={subIndex}
                     className="cursor-pointer flex items-center gap-2 p-2 text-sm rounded-md transition-all duration-300 hover:bg-green-700 hover:text-white hover:scale-105 hover:shadow-md"

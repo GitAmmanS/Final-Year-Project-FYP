@@ -26,6 +26,7 @@ const osR = require("./routes/osR");
 const otherSpecsR = require("./routes/otherSpecsR");
 const cpuR = require("./routes/cpuR");
 const ramHddOptions = require('./routes/ramAndHddR');
+const mainDemand = require('./routes/mainDemandR');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use("/ram", ramR);
 app.use("/hdd", hddR); 
 app.use("/lab", labR); 
 app.use("/demand", demandR); 
+app.use("/mainDemand", mainDemand); 
 app.use("/productstore", productStore); 
 app.use("/permissions", permissionsR); 
 app.use("/os", osR); 

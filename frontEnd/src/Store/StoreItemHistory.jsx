@@ -22,7 +22,7 @@ const StoreItemHistory = () => {
         <table className='border-2 shadow-md'>
           <thead className='text-base font-semibold bg-gray-400 text-center'>
             <tr className='border-[2px] border-gray-500  '>
-              <td className='p-2 border-2'>Product Id</td>
+              <td className='p-2 border-2'>Record Id</td>
               <td className='p-2 border-2'>Quantity Recieved</td>
               <td className='p-2 border-2'>Available Quantity</td>
               <td className='p-2 border-2'>Date of Purchase</td>
@@ -32,7 +32,7 @@ const StoreItemHistory = () => {
              item.record.length > 0 ? (
               item.record.reverse().map((record, index) => (
                 <tr key={index} className='text-sm text-center'>
-                  <td className='p-2 border-2'>{itemId || ''}</td>
+                  <td className='p-2 border-2'>{record._id || ''}</td>
                   <td className='p-2 border-2'>{record.addedQuantity || 0}</td>
                   <td className='p-2 border-2'>{record?.previousQuanitity || 0}</td>
                   <td className='p-2 border-2'>{record.addedtime.split("T")[0] || ''}</td>

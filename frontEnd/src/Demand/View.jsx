@@ -15,7 +15,7 @@ if (language === "english") {
   });
 }
 
-const DemandNotification = () => {
+const View = () => {
   const [demands, setDemands] = useState([]);
   const [filteredDemands, setFilteredDemands] = useState([]);
   const [demandNumber, setDemandNumber] = useState();
@@ -23,7 +23,7 @@ const DemandNotification = () => {
   const [displayAllDemands, setDisplayAllDemands] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    axios.get((`${BaseUrl}/demand`)).then((res) => {
+    axios.get((`${BaseUrl}/mainDemand`)).then((res) => {
       setDemands(
         res.data.data.sort((a, b) => {
           const statusOrder = {
@@ -48,7 +48,7 @@ const DemandNotification = () => {
 
     <div className=''>
       <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 flex '>
-      Store Request List
+      Demands List
         <div className=' justify-center items-center space-x-4 ml-[440px] flex'>
           <button
             className={`text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "All Demand" ? "bg-gray-400 border-black" : "bg-gray-100 hover:bg-gray-200"}`}
@@ -56,7 +56,7 @@ const DemandNotification = () => {
               representByStatus("")
               setButtonClick("All Demand")
             }}>
-            All Requests
+            All
           </button>
           <button
             className={`text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "pending" ? "bg-gray-400 border-black" : "bg-gray-100 hover:bg-gray-200"}`}
@@ -97,12 +97,12 @@ const DemandNotification = () => {
                   key={index}
                   className="mb-4  bg-white rounded-lg shadow-lg border border-gray-200"
                 >
-                  <li className="font-bold text-lg">{`Number: ${filteredDemands.number}`}</li>
+                  <li className="font-bold text-lg">{`Demand Number: ${filteredDemands.number}`}</li>
                   <li className="text-xs text-gray-600">{`From: ${filteredDemands.requester.name}`}</li>
-                  <li className="text-xs text-gray-600">{`Requested Date: ${new Date(
+                  <li className="text-xs text-gray-600">{`Demand Date: ${new Date(
                     filteredDemands.dateRequested
                   ).toLocaleDateString()}`}</li>
-                  <li className="text-xs text-gray-600">{`Request Description: ${filteredDemands.description}`}</li>
+                  <li className="text-xs text-gray-600">{`Demand Description: ${filteredDemands.description}`}</li>
                   <li
                     className={`text-xs font-bold ${filteredDemands.demandStatus === "pending"
                       ? "text-red-600"
@@ -124,12 +124,12 @@ const DemandNotification = () => {
                   key={index}
                   className="mb-4 p-4 bg-white rounded-lg shadow-lg border border-gray-200"
                 >
-                  <li className="font-bold text-lg">{`Number: ${demands.number}`}</li>
+                  <li className="font-bold text-lg">{`Demand Number: ${demands.number}`}</li>
                   <li className="text-xs text-gray-600">{`From: ${demands.requester.name}`}</li>
-                  <li className="text-xs text-gray-600">{`Requested Date: ${new Date(
+                  <li className="text-xs text-gray-600">{`Demand Date: ${new Date(
                     demands.dateRequested
                   ).toLocaleDateString()}`}</li>
-                  <li className="text-xs text-gray-600">{`Request Description: ${demands.description}`}</li>
+                  <li className="text-xs text-gray-600">{`Demand Description: ${demands.description}`}</li>
                   <li
                     className={`text-xs font-bold ${demands.demandStatus === "pending"
                       ? "text-red-600"
@@ -141,7 +141,7 @@ const DemandNotification = () => {
                     {`Status: ${demands.demandStatus}`}
                   </li>
                   <div className='flex '>
-                    <li className=' hover:text-green-900 font-bold'><button onClick={() => navigate('/demandDetails', { state: { demandNumber: demands.number } })}>Action</button></li>
+                    <li className=' hover:text-green-900 font-bold'><button onClick={() => navigate('/actionDemand', { state: { demandNumber: demands.number } })}>Action</button></li>
                   </div>
                 </ul>
               ))
@@ -154,4 +154,4 @@ const DemandNotification = () => {
   )
 }
 
-export default DemandNotification
+export default View

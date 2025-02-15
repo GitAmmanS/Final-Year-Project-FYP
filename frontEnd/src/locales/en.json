@@ -36,7 +36,8 @@
       "noImage": "No image",
       "model":"Model",
       "qrcode" : "QR Code",
-      "convert":"Convert Text"
+      "convert":"Convert Text",
+      "quantityDemanded":"Quantity Demanded"
     },
     "messages": {
       "itemAdded": "Item Added Successfully",
@@ -81,10 +82,13 @@
       "saminar_room":"Saminar Room",
       "inventory_room":"Inventory Room",
       "user":"User",
-      "demand":"Demand",
-      "view_Demands":"View Demand",
+      "requestStore":"Request Store",
+      "view_Request":"View Request",
       "issue_items":"Issue Items",
-      "settings":"Settings"
+      "settings":"Settings",
+      "demand":"Demand",
+      "view_Demand":"View Demand",
+      "issue_Demand":"Create Demand"
     },
     "header":{
       "hello":"Hello",

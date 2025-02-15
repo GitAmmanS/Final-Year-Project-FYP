@@ -3,7 +3,7 @@ var generator = require('generate-serial-number');
 const QRCode = require('qrcode');
 exports.getProductStoreByLabId = async (req,res)=>{
     try{
-    const data = await ProductStore.find({lab_ID:req.params.id}).populate('lab_ID').populate({
+    const data = await ProductStore.find({lab_ID:req.params.id}).populate({
         path: 'items.product_ID',
         populate: [
             { path: 'category_ID' },

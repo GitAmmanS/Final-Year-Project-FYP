@@ -12,7 +12,7 @@ import AddProductDialog from './AddProductDialog';
 import { IoIosInformationCircle } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
-
+import Tooltip from '@mui/material/Tooltip';
 let locales;
 const language = localStorage.getItem("language");
 if (language === "english") {
@@ -72,12 +72,16 @@ const Product = () => {
             Actions: (
                 <>
                 <div className='flex gap-1'>
+                    <Tooltip title='edit'>
                 <div className='space-x-[5px] '>
                     <button className='text-xl hover:text-slate-600 ' onClick={() => { handleEditDialog(item) }}><MdEdit /></button>
                 </div>
-                <div className='space-x-[5px] '>
+                </Tooltip>
+            <Tooltip title='Preview'>
+            <div className='space-x-[5px] '>
                 <button className='text-xl hover:text-slate-600 ' onClick={() => { handleMoreInfo(item) }}><IoIosInformationCircle /></button>
             </div>
+            </Tooltip>
             </div>
             </>
             ),

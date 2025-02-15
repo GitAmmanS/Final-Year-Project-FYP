@@ -8,6 +8,7 @@ import axios from 'axios';
 import { BaseUrl } from '../utils/BaseUrl';
 import { IoNotificationsOutline } from "react-icons/io5";
 import Swal from 'sweetalert2';
+import Tooltip from '@mui/material/Tooltip';
 
 let locales;
 const language = localStorage.getItem("language");
@@ -25,8 +26,9 @@ const Header = () => {
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const [totalDemands, setTotalDemands] = useState(null);
-
-  let name = JSON.parse(localStorage.getItem('userName'));
+  
+  let user = JSON.parse(localStorage.getItem('user'));
+  const name = user?user.name:'';
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -56,6 +58,8 @@ const Header = () => {
     axios.post(`${BaseUrl}/users/logout`, {
       name,
     });
+    localStorage.setItem('user', JSON.stringify({}));
+    localStorage.removeItem('authToken');
     navigate('/login');
   };
 
@@ -84,14 +88,17 @@ const Header = () => {
         <div className=''>
           <div className='flex gap-2 border w-96 border-gray-950 rounded-md p-1'>
             <p className='text-2xl'><CiSearch /></p>
-            <input className='w-full outline-none' type="text" placeholder={locales.header.search} />
+            <input className='w-full outline-none' type="search" placeholder={locales.header.search} />
           </div>
         </div>
      
         <div className='flex mr-3 justify-normal'>
           <div onClick={() => navigate('/demandsList')}>
+            <Tooltip title="Notifications">
             <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
+           
             </p>
+            </Tooltip>
             {totalDemands ? (
               <span className='text-xs bg-red-600 border-2 border-red-950 w-4 text-center top-[1.2rem] ml-6 absolute text-white font-bold rounded-full'>{totalDemands}</span>
             ) : null}

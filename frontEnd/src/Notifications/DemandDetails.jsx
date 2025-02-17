@@ -144,7 +144,7 @@ const DemandDetails = () => {
         <div className="flex flex-row ">
           <div className="text-gray-900 mt-2">
             <table className="w-full border-collapse border border-gray-300 mb-4">
-              <thead className=' text-sm font-semibold bg-gray-400 text-center even:bg-slate-300'>
+              <thead className=' text-sm font-semibold bg-gray-400 text-center'>
                 <tr className=" border-[2px] text-black">
                   <th className="p-2 border-2">Product Name</th>
                   <th className="p-2 border-2">Category</th>
@@ -163,7 +163,7 @@ const DemandDetails = () => {
               <tbody>
                 {demand?.items?.length > 0 ? (
                   demand?.items?.map((product, index) => (
-                    <tr key={index} className="text-base text-center">
+                    <tr key={index} className="text-xs text-center even:bg-slate-400">
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>

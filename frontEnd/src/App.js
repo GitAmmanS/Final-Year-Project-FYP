@@ -34,27 +34,42 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-          <Route element={<ProtectedRouting allowedRoles={["admin","lab_Incharge"]}/>} >
+
+          <Route element={<ProtectedRouting allowedRoles={["admin","lab_Incharge","store_Incharge"]} />} >
             <Route path='/' element={<Home />} />
-            <Route path='/store' element={<Store />} />
-            <Route path='/store/storeItemsHistory' element={<StoreItemHistory />} />
-            <Route path='/product' element={<Product />} />
-            <Route path='/product/moreInfo' element={<MoreInformation />} />
-            <Route path='/issueItem' element={<IssueItems />} />
-            <Route path='/demandsList' element={<DemandNotification />} />
-            <Route path='/demandDetails' element={<DemandDetails />} />
+            <Route path='/setting' element={<Setting />} />
+          </Route>
+
+          <Route element={<ProtectedRouting allowedRoles={["admin", "lab_Incharge"]} />} >
             <Route path='/viewDemands' element={<ViewDemand />} />
             <Route path='/userDemandDetail' element={<UserDemandDetails />} />
-            <Route path='/resourceCard' element={<Card />} />
-            <Route path='/resource' element={<RoomResource/>} />
-            <Route path='/resource/showInventory' element={<ShowLabInventory/>} />
-            <Route path='/user' element={<User/>} />
-            <Route path='/setting' element={<Setting/>} />
-            <Route path='/viewMainDemand' element={<View/>} />
-            <Route path='/createDemand' element={<CreateDemand/>} />
+          </Route>
+
+          <Route element={<ProtectedRouting allowedRoles={["admin", "store_Incharge"]} />} >
+           <Route path='/product' element={<Product />} />
+           <Route path='/product/moreInfo' element={<MoreInformation />} />
+            <Route path='/store' element={<Store />} />
+            <Route path='/viewMainDemand' element={<View />} />
+            <Route path='/store/storeItemsHistory' element={<StoreItemHistory />} />
+            <Route path='/demandsList' element={<DemandNotification />} />
+            <Route path='/demandDetails' element={<DemandDetails />} />
             <Route path='/createDemand/moreInfo' element={<MoreInformation />} />
             <Route path='/actionDemand' element={<Action />} />
-            <Route path='/labInventory' element={<LabInventory/>} />
+          </Route>
+
+          <Route element={<ProtectedRouting allowedRoles={["admin"]} />} >
+            <Route path='/resourceCard' element={<Card />} />
+            <Route path='/resource' element={<RoomResource />} />
+            <Route path='/resource/showInventory' element={<ShowLabInventory />} />
+            <Route path='/user' element={<User />} />
+          </Route>
+
+          <Route element={<ProtectedRouting allowedRoles={["lab_Incharge"]} />} >
+            <Route path='/issueItem' element={<IssueItems />} />
+            <Route path='/labInventory' element={<LabInventory />} />
+          </Route>
+          <Route element={<ProtectedRouting allowedRoles={["store_Incharge"]} />} >
+            <Route path='/createDemand' element={<CreateDemand />} />
           </Route>
         </Routes>
       </Layout>

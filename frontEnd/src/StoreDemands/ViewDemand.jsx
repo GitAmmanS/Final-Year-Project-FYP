@@ -45,7 +45,7 @@ const ViewDemand = () => {
                     {`Status: ${demands.demandStatus}`}
                   </li>
                   <div className='flex '>
-                    <li className=' hover:text-green-900 text-sm font-bold'><button onClick={() => navigate('/userDemandDetail', { state: { demandNumber: demands.number } })}>Demand Details</button></li>
+                    <li className=' hover:text-green-900 text-sm font-bold'><button onClick={() => navigate('/userDemandDetail', { state: { demandNumber: demands.number } })}>Request Detail</button></li>
                   </div>
                 </ul>
               )

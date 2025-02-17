@@ -14,13 +14,13 @@ export const SideMenuData=
             title:"dashboard",
             icon:<RxDashboard />,
             link:"/",
-            roles:["admin","teacher","lab_Incharge","technicians"]
+            roles:["admin","teacher","lab_Incharge","store_Incharge"]
         },
         {
             title:"product",
             icon:<GrProductHunt />,
             link:"/product",
-            roles:["admin"]
+            roles:["admin","store_Incharge"]
         },
         {
             title:"store",
@@ -99,7 +99,7 @@ export const SideMenuData=
             title:"settings",
             icon:<CiSettings />,
             link:"/setting",
-            roles:["admin","teacher","lab_Incharge","technicians"]
+            roles:["admin","teacher","lab_Incharge","store_Incharge"]
         },
         
         

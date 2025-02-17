@@ -50,7 +50,7 @@ const Action = () => {
           Swal.fire({
             position: "center",
             icon: "success",
-            title: "Product Allocated",
+            title: "Entered Receiving Successfully",
             showConfirmButton: false,
             timer: 2000,
             width: "380px",
@@ -63,7 +63,7 @@ const Action = () => {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Error In Allocating",
+          text: "Error",
           width: "380px",
           height: "20px",
           customClass: {
@@ -191,6 +191,7 @@ const Action = () => {
                           onClick={() => {
                             setOpenEdit(!openEdit);
                             setEditId(product.product_Id);
+                            setQuantityDemanded(product.quantityDemanded);
                           }}
                         >
                           Enter Receiving

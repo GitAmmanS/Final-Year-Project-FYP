@@ -29,6 +29,7 @@ const Header = () => {
   
   let user = JSON.parse(localStorage.getItem('user'));
   const name = user?user.name:'';
+  const role = user.role;
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -91,8 +92,9 @@ const Header = () => {
             <input className='w-full outline-none' type="search" placeholder={locales.header.search} />
           </div>
         </div>
-     
+
         <div className='flex mr-3 justify-normal'>
+          {role !=="lab_Incharge" &&
           <div onClick={() => navigate('/demandsList')}>
             <Tooltip title="Notifications">
             <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
@@ -103,6 +105,7 @@ const Header = () => {
               <span className='text-xs bg-red-600 border-2 border-red-950 w-4 text-center top-[1.2rem] ml-6 absolute text-white font-bold rounded-full'>{totalDemands}</span>
             ) : null}
           </div>
+          }
           <p className='text-5xl'> <CgProfile /></p>
           <div className='flex flex-col mt-2'>
             <p className='text-sm'>{name}</p>

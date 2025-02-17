@@ -9,7 +9,6 @@ const ShowLabInventory = () => {
     const navigate = useNavigate();
     const { id } = location.state;
     const [inventory, setInventory] = useState([]);
-
     useEffect(() => {
         axios.get(`${BaseUrl}/productstore/${id}`)
             .then((response) => {
@@ -24,12 +23,12 @@ const ShowLabInventory = () => {
     return (
         <div className="container mx-auto p-6 ">
             <div className="flex ">
-            <p
+            {/* <p
           onClick={() => navigate('/resource')}
           className="cursor-pointer hover:text-green-700 transition text-black p-2"
         >
           <FaCircleArrowLeft />
-        </p>
+        </p> */}
             <h2 className="text-2xl font-semibold mb-4">Lab Inventory</h2>
             </div>
             <div className="overflow-x-auto">
@@ -57,8 +56,8 @@ const ShowLabInventory = () => {
                                         />
                                     </td>
                                     <td className="border border-gray-300 p-2">
-                                        {item.product_ID?.createdAt
-                                            ? new Date(item.product_ID.createdAt).toLocaleDateString()
+                                        {item?.installDate
+                                            ? new Date(item.installDate).toLocaleDateString()
                                             : "N/A"}
                                     </td>
                                     <td className="border border-gray-300 p-2">{item.product_ID?.model || "N/A"}</td>

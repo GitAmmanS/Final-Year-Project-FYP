@@ -8,7 +8,6 @@ import ShowSomeTimes from './utils/ShowSomeTimes';
 import Store from './Store/Store';
 import Product from './Products/Product'
 import MoreInformation from './Products/MoreInformation';
-// import AddStore from './Store/AddStore';
 import IssueItems from './StoreDemands/IssueItems';
 import DemandNotification from './Notifications/DemandNotification';
 import DemandDetails from './Notifications/DemandDetails';
@@ -23,6 +22,8 @@ import Setting from './Setting/Setting';
 import View from './Demand/View';
 import CreateDemand from './Demand/CreateDemand';
 import Action from './Demand/Action';
+import Card from './Resource/Card';
+import LabInventory from './LabInventory/LabInventory';
 function App() {
   return (
     <Router>
@@ -39,12 +40,12 @@ function App() {
             <Route path='/store/storeItemsHistory' element={<StoreItemHistory />} />
             <Route path='/product' element={<Product />} />
             <Route path='/product/moreInfo' element={<MoreInformation />} />
-            {/* <Route path='/store/storeAdd' element={<AddStore />} /> */}
             <Route path='/issueItem' element={<IssueItems />} />
             <Route path='/demandsList' element={<DemandNotification />} />
             <Route path='/demandDetails' element={<DemandDetails />} />
             <Route path='/viewDemands' element={<ViewDemand />} />
             <Route path='/userDemandDetail' element={<UserDemandDetails />} />
+            <Route path='/resourceCard' element={<Card />} />
             <Route path='/resource' element={<RoomResource/>} />
             <Route path='/resource/showInventory' element={<ShowLabInventory/>} />
             <Route path='/user' element={<User/>} />
@@ -53,7 +54,7 @@ function App() {
             <Route path='/createDemand' element={<CreateDemand/>} />
             <Route path='/createDemand/moreInfo' element={<MoreInformation />} />
             <Route path='/actionDemand' element={<Action />} />
-
+            <Route path='/labInventory' element={<LabInventory/>} />
           </Route>
         </Routes>
       </Layout>

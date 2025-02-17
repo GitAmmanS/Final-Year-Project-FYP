@@ -6,9 +6,12 @@ import Swal from 'sweetalert2';
 import { MdMoreVert } from "react-icons/md";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { MdOutlineInventory2 } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {axiosInstance} from '../utils/AxiosInstance'
+import { FaCircleArrowLeft } from 'react-icons/fa6';
 const RoomResource = () => {
+  const location = useLocation();
+  const {name} = location.state || '';
   const [dialogOpen, setDialogOpen] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [user, setUser] = useState([]);
@@ -31,7 +34,7 @@ const handleToggle = (roomId) => {
     })
   }, [])
   const [roomData, setRoomData] = useState({
-    incharge: '', type: 'lab', status: 'active', number: 0,roomId:''
+    incharge: '', type: name, status: 'active', number: 0,roomId:''
   });
 
   const handleDialogOpen = () => {
@@ -40,7 +43,7 @@ const handleToggle = (roomId) => {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setRoomData({ incharge: '', type: 'lab', status: 'active', number: 0,roomId:'' }); // Reset form
+    setRoomData({ incharge: '', type: name, status: 'active', number: 0,roomId:'' }); // Reset form
     setEdit(false);
   };
 
@@ -60,7 +63,7 @@ const handleToggle = (roomId) => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get(`${BaseUrl}/lab`);
+        const response = await axios.get(`${BaseUrl}/lab/${name}`);
         setRooms(response.data.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -111,18 +114,26 @@ const handleToggle = (roomId) => {
   }
   const ShowInventory =(room)=>{
     console.log(room);
-    navigate('showInventory',{state:{id:room.incharge._id}});
+    navigate('showInventory',{state:{id:room._id}});
   }
   return (
     <>
-    <div className="m-4 p-6 bg-white shadow-lg rounded-lg">
+    <div className=" p-6 bg-white shadow-lg rounded-lg">
     <div className="flex justify-between items-center mb-4">
-      <h2 className="text-xl font-semibold text-gray-800">Rooms</h2>
+      <div className='flex'>
+       <p
+          onClick={() => navigate('/resourceCard')}
+          className="cursor-pointer hover:text-green-700 transition text-black p-2"
+        >
+          <FaCircleArrowLeft  size={20}/>
+        </p>
+      <h2 className="text-xl p-1 font-semibold text-gray-800">{name.toUpperCase()}</h2>
+      </div>
       <button
         onClick={handleDialogOpen}
         className="text-sm font-medium border border-gray-300 w-32 h-10 text-black text-center p-2 rounded-lg shadow-md transition-all hover:bg-gray-200"
       >
-        Add Room
+        Add {name}
       </button>
     </div>
 
@@ -134,7 +145,7 @@ const handleToggle = (roomId) => {
             className="p-4 text-sm border border-gray-300 bg-gray-50 rounded-lg shadow-md transition-all hover:shadow-lg hover:scale-105 cursor-pointer relative"
           >
             <p className="flex justify-between items-center">
-              <strong>{room.type} Incharge:</strong> {room.incharge.name}
+              <strong>{room.type} Incharge:</strong> {room.incharge?.name|| ''}
               <Toolbar title="More">
               <span
                 className="text-lg pl-3 cursor-pointer"
@@ -203,7 +214,7 @@ const handleToggle = (roomId) => {
             fullWidth
             variant="outlined"
             value={roomData.type}
-            onChange={handleChange}
+            readOnly
           >
             <MenuItem value="lab">Lab</MenuItem>
             <MenuItem value="room">Room</MenuItem>

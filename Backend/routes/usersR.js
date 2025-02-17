@@ -11,7 +11,7 @@ router.post("/logout",usersC.userLogout);
 router.get("/",verifyToken,authorizedRoles("admin","lab-Incharge"),usersC.usersTableget);
 router.post("/",usersC.userspost);
 router.delete("/:email",verifyToken,authorizedRoles("admin"),usersC.usersdelete);
-router.put("/:users_name", verifyToken, authorizedRoles("admin", "lab_Incharge"),usersC.usersupdate);
+router.put("/:id", verifyToken, authorizedRoles("admin", "lab_Incharge"),usersC.usersupdate);
 router.get("/:email",verifyToken, authorizedRoles("admin"),usersC.usersUserget);
 router.get("/datasingle/:email",verifyToken, authorizedRoles("admin", "lab_Incharge"),usersC.usersSingleget);
 

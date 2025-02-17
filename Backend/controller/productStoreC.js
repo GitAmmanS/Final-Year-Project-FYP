@@ -1,6 +1,7 @@
 const ProductStore = require('../models/productStore');
 var generator = require('generate-serial-number');
 const QRCode = require('qrcode');
+const lab = require('../models/lab')
 exports.getProductStoreByLabId = async (req,res)=>{
     try{
     const data = await ProductStore.find({lab_ID:req.params.id}).populate({
@@ -111,3 +112,55 @@ exports.deleteProductStore = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+exports.getProductStoreByUserId = async (req,res)=>{
+    try{
+        const getLab = await lab.findOne({incharge:req.params.id});
+        if(!getLab){
+            return res.status(500).json({
+                success:false,
+                message:"user not found"
+            })
+        }
+        console.log(getLab);
+    const data = await ProductStore.find({lab_ID:getLab._id}).populate({
+        path: 'items.product_ID',
+        populate: [
+            { path: 'category_ID' },
+            { path: 'company_ID' },
+            {
+                path: 'specs',
+                populate: [
+                    { path: 'cpu' },
+                    { path: 'os' },
+                    {
+                        path: 'ram',
+                        populate: [
+                            { path: 'capacity' },
+                            { path: 'type' },
+                        ]
+                    },
+                    {
+                        path: 'hdd',
+                        populate: [
+                            { path: 'capacity' },
+                            { path: 'type' }]
+                    },
+                ],
+            },
+        ],
+    });
+    if(data){
+        res.status(200).json({
+            success:true,
+            data:data
+        })
+    }
+    }
+    
+        catch(error){
+            res.status(500).json({
+                success:false,
+                message:error.message
+            })
+        }
+    }

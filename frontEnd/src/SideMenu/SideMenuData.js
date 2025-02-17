@@ -1,6 +1,6 @@
 import React from 'react'
 import { RxDashboard } from "react-icons/rx";
-import { MdOutlineInventory2 } from "react-icons/md";
+import { MdOutlineInventory2, MdOutlineVideoLabel } from "react-icons/md";
 import { CiSettings } from "react-icons/ci";
 import { FaAngleDown } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
@@ -20,19 +20,26 @@ export const SideMenuData=
             title:"product",
             icon:<GrProductHunt />,
             link:"/product",
-            roles:["admin","lab_Incharge"]
+            roles:["admin"]
         },
         {
             title:"store",
             icon:<MdOutlineInventory2 />,
             link:"/store",
-            roles:["admin"]
+            roles:["admin","store_Incharge"]
         },
         {
             title:"resource",
             icon:<LuDoorOpen />,
-            link:"/resource",
-            roles:["admin","lab_Incharge"]
+            link:"/resourceCard",
+            roles:["admin"]
+            
+        },
+        {
+            title:"labInventory",
+            icon:<MdOutlineVideoLabel/>,
+            link:"/labInventory",
+            roles:["lab_Incharge"]
             
         },
         {
@@ -50,13 +57,19 @@ export const SideMenuData=
                 title:"view_Request",
                 icon:<GoDotFill />,
                 link:"/viewDemands",
-                roles: ["admin", "lab_Incharge"],
+                roles: ["lab_Incharge"],
                 },
+                {
+                    title:"view_AllRequest",
+                    icon:<GoDotFill />,
+                    link:"/demandsList",
+                    roles: ["admin"],
+                    },
                 {
                     title:"issue_items",
                     icon:<GoDotFill />,
                     link:"/issueitem",
-                    roles: ["admin", "lab_Incharge"],
+                    roles: ["lab_Incharge"],
                  }
             ]
             
@@ -65,19 +78,19 @@ export const SideMenuData=
         {
             title:"demand",
             icon:<FaAngleDown />,
-            roles: ["admin"],
+            roles: ["admin","store_Incharge"],
             subItems:[
                 {
                 title:"view_Demand",
                 icon:<GoDotFill />,
                 link:"/viewMainDemand",
-                roles: ["admin"],
+                roles: ["admin","store_Incharge"],
                 },
                 {
                     title:"issue_Demand",
                     icon:<GoDotFill />,
                     link:"/createDemand",
-                    roles: ["admin"],
+                    roles: ["store_Incharge"],
                  }
             ]
             

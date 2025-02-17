@@ -28,6 +28,8 @@ const DemandDetails = () => {
   const printableRef = useRef();
   const navigate = useNavigate();
   const { demandNumber } = location.state;
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userRole = user.role;
   const [demand, setDemand] = useState([]);
   const [storeItems, setStoreItems] = useState();
   const [openEdit, setOpenEdit] = useState(false);
@@ -140,9 +142,9 @@ const DemandDetails = () => {
           <h3 className="font-bold text-lg text-gray-800">{`Demand Number: ${demandNumber}`}</h3>
         </div>
         <div className="flex flex-row ">
-          <div className="text-gray-600 mt-2">
+          <div className="text-gray-900 mt-2">
             <table className="w-full border-collapse border border-gray-300 mb-4">
-              <thead className=' text-base font-semibold bg-gray-400 text-center'>
+              <thead className=' text-sm font-semibold bg-gray-400 text-center even:bg-slate-300'>
                 <tr className=" border-[2px] text-black">
                   <th className="p-2 border-2">Product Name</th>
                   <th className="p-2 border-2">Category</th>
@@ -153,13 +155,15 @@ const DemandDetails = () => {
                   <th className="p-2 border-2">Quantity Recieved</th>
                   <th className="p-2 border-2">Available Quantity</th>
                   <th className="p-2 border-2">Status</th>
+                  {userRole!=="admin"&&
                   <th className="p-2 border-2">Actions</th>
+                  }
                 </tr>
               </thead>
               <tbody>
                 {demand?.items?.length > 0 ? (
                   demand?.items?.map((product, index) => (
-                    <tr key={index} className="text-sm text-center">
+                    <tr key={index} className="text-base text-center">
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
                       <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
@@ -179,12 +183,20 @@ const DemandDetails = () => {
                         {getAvailableQuantity(product.product_Id._id)}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">{product.status}</td>
-                      {(product.status === "pending" || product.status ==="partially resolved") && (
-                        <td className="border border-gray-300 px-4 py-2"><button className='text-green-950 hover:text-green-700 cursor-pointer' onClick={() => {
-                          setOpenEdit(!openEdit);
-                          setEditId(product.product_Id);
-                        }} >Allocate</button></td>
-                      )}
+                      {(product.status === "pending" || product.status === "partially resolved") && userRole !== "admin" && (
+  <td className="border border-gray-300 px-4 py-2">
+    <button 
+      className='text-green-950 hover:text-green-700 cursor-pointer' 
+      onClick={() => {
+        setOpenEdit(!openEdit);
+        setEditId(product.product_Id);
+      }}
+    >
+      Allocate
+    </button>
+  </td>
+)}
+
                     </tr>
                   ))
                 ) : (

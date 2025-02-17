@@ -88,7 +88,9 @@
       "settings":"Settings",
       "demand":"Demand",
       "view_Demand":"View Demand",
-      "issue_Demand":"Create Demand"
+      "issue_Demand":"Create Demand",
+      "labInventory":"Lab Inventory",
+      "view_AllRequest":"View Requests"
     },
     "header":{
       "hello":"Hello",

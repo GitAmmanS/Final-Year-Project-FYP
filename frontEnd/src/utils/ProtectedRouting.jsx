@@ -4,7 +4,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 const ProtectedRouting = ({allowedRoles}) => {
   const token = localStorage.getItem('authToken'); 
   const user = JSON.parse(localStorage.getItem('user'));
-
+  console.log(user);
   if(!token){
     return <Navigate to="/login"/>
   }

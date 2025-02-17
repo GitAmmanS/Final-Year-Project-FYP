@@ -122,19 +122,29 @@ exports.verifyMail = async (req, res) => {
     }
 }
 exports.usersupdate = async (req, resp) => {
-
-    const data = await users.updateOne({ name: req.params.users_name }, { $set: req.body }); //i->ignore all cases{
-    if (data.matchedCount === 0) {
-        resp.send({
-            success: false,
-            message: data.matchedCount
-        });
-    } else {
-        resp.send({
-            success: true,
-            message: data.matchedCount
-        });
-    }
+   try {
+    const data = await users.findOneAndUpdate({ _id: req.params.id }, { $set:
+        {role: req.body.role}},{new:true}); 
+   if(data){
+    resp.status(200).send({
+        success:true,
+        data:data
+    })
+   }
+   else{
+    resp.status(400).send({
+        success:false,
+        data:"no data"
+    })
+   }
+   }
+   catch(error){
+    console.log(error.message)
+    resp.status(500).send({
+        success:false,
+        data:error.message
+    })
+   }
 };
 
 exports.usersdelete = async (req, resp) => {

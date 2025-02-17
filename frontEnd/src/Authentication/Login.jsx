@@ -128,7 +128,7 @@ const Login = () => {
                                 required
                                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
-                            <button className='absolute  right-14 p-3 text-gray-500 '
+                            <button className='absolute  ml-[22rem] p-3 text-gray-500 '
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                             >

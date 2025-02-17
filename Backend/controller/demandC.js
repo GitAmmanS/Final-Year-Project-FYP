@@ -3,7 +3,8 @@ const User = require('../models/users')
 const Store = require('../models/store');
 var generator = require('generate-serial-number');
 const QRCode = require('qrcode');
-const ProductStore = require('../models/productStore')
+const ProductStore = require('../models/productStore');
+const lab = require('../models/lab');
 exports.postDemand = async (req, res) => {
 
     try {
@@ -256,9 +257,12 @@ exports.getDemandByName = async (req, res) => {
 }
 async function postToProductStore (storeItem,quantityReceived,user){
     try {
+            //    console.log(user);
+               const searchLabs = await lab.findOne({incharge:user});
+               const getUser = searchLabs._id;
                const data = new ProductStore({
                 store_ID:storeItem._id,
-                lab_ID:user,
+                lab_ID:getUser,
                 quantity:quantityReceived,
                 items:[]
             });

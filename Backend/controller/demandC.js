@@ -255,6 +255,58 @@ exports.getDemandByName = async (req, res) => {
         res.status(500).send('Not found demand ' + err.message);
     }
 }
+exports.getDemandByUserID = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = await User.findOne({ _id: id });
+        if (!user) {
+            return res.status(500).json({ message: "User not found" })
+        }
+        const requester_ID = user._id;
+        const data = await Demand.find({ requester: requester_ID }).populate('requester')
+            .populate({
+                path: 'items.product_Id',
+                populate: [
+                    { path: 'category_ID' },
+                    { path: 'company_ID' },
+                    {
+                        path: 'specs',
+                        populate: [
+                            { path: 'cpu' },
+                            { path: 'os' },
+                            {
+                                path: 'ram',
+                                populate: [
+                                    { path: 'capacity' },
+                                    { path: 'type' },
+                                ]
+                            },
+                            {
+                                path: 'hdd',
+                                populate: [
+                                    { path: 'capacity' },
+                                    { path: 'type' }]
+                            },
+                        ],
+                    },
+                ],
+            });
+        if (data) {
+            res.status(200).send({
+                success: true,
+                data: data
+            });
+        } else {
+            res.status(404).send({
+                success: false,
+                data: "demand not found"
+            });
+        }
+    }
+    catch (err) {
+        res.status(500).send('Not found demand ' + err.message);
+    }
+}
 async function postToProductStore (storeItem,quantityReceived,user){
     try {
             //    console.log(user);
@@ -268,13 +320,15 @@ async function postToProductStore (storeItem,quantityReceived,user){
             });
            for (let i=0;i<quantityReceived;i++){
             var generateSerialNumber = generator.generate(14);
-            const qrCodeData = await QRCode.toDataURL(generateSerialNumber);
+            var qrCodeData = await QRCode.toDataURL(generateSerialNumber);
+
               data.items.push({
                 product_ID:storeItem.product_ID,
                 serialNumber: generateSerialNumber,
                 qrCode:qrCodeData
               });
-            
+            generateSerialNumber=0;
+            qrCodeData='';
            }
             await data.save();
         } catch (err) {

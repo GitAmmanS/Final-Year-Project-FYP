@@ -21,11 +21,11 @@
     "update": "اپ ڈیٹ کریں"
   },
   "labels": {
-    "add":"شامل کریں",
+    "add": "شامل کریں",
     "items": "اشیاء",
     "AllocateItems": "مختص شدہ اشیاء",
     "StoreItems": "اسٹور روم",
-    "Enter":"داخل کریں",
+    "Enter": "داخل کریں",
     "name": "نام",
     "quantity": "مقدار",
     "category": "زمرہ",
@@ -37,7 +37,7 @@
     "noItemsFound": "کوئی آئٹم نہیں ملا",
     "noImage": "کوئی تصویر نہیں",
     "qrcode": "کیو آر کوڈ",
-    "convert":"متن تبدیل کریں"
+    "convert": "متن تبدیل کریں"
   },
   "messages": {
     "itemAdded": "آئٹم کامیابی سے شامل کیا گیا",
@@ -83,13 +83,18 @@
     "inventory_room": "انوینٹری روم",
     "user": "صارف",
     "demand": "مانگ",
+    "complains": "شکایات",
+    "view_Complains": "شکایات دیکھیں",
+    "view_AllComplains": "شکایات دیکھیں",
     "reservations": "ریزرویشن",
     "issue_items": "آئٹمز جاری کریں",
     "settings": "سیٹنگ"
   },
   "header": {
     "hello": "السلام علیکم",
-    "good_morning": "صبح بخیر",
+    "good_morning": "Good Morning",
+    "good_Evening": "شام بخیر",
+    "good_Night": "شب بخیر",
     "search": "تلاش کریں",
     "urdu": "اردو",
     "english": "انگریزی"
@@ -100,14 +105,14 @@
     "active_rooms": "فعال کمرے",
     "resolved": "حل شدہ",
     "pending": "زیر التوا",
-    "last_1_week":"پچھلا ایک ہفتہ",
+    "last_1_week": "پچھلا ایک ہفتہ",
     "summary": "خلاصہ",
-    "total_items": "کل اشیاء",
+    "total_Products": "کل اشیاء",
     "total_categories": "کل اقسام",
     "total_users": "کل صارفین",
     "item_id": "آئٹم آئی ڈی",
     "name": "نام",
     "status": "اسٹیٹس",
-    "date":"تاریخ"
+    "date": "تاریخ"
   }
 }

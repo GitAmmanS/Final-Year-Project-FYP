@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { FaCircleArrowLeft } from 'react-icons/fa6';
 import Swal from 'sweetalert2'
+import Loading from 'react-loading'
 
 let locales;
 const language = localStorage.getItem("language");
@@ -30,6 +31,7 @@ const Action = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   const userRole = user.role;
   const { demandNumber } = location.state;
+  const [loader, setLoader] = useState(false);
   const [demand, setDemand] = useState([]);
   const [storeItems, setStoreItems] = useState();
   const [openEdit, setOpenEdit] = useState(false);
@@ -59,11 +61,12 @@ const Action = () => {
           handleClose();
         }
       }).catch((error) => {
-        console.log(error.message)
+        console.log(error.message);
+        setOpenEdit(false);
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Error",
+          text: "Please Enter The Correct Quantity",
           width: "380px",
           height: "20px",
           customClass: {
@@ -109,13 +112,19 @@ const Action = () => {
   }
 
   useEffect(() => {
-    axios.get((`${BaseUrl}/mainDemand/getById/${demandNumber}`)).then((res) => {
-      setDemand(res.data.data);
-      setDemandId(res.data.data._id);
-    }).catch((error) => {
-      console.log(error.message);
-    })
-  }, [demandNumber, demand])
+    setLoader(true); 
+    axios.get(`${BaseUrl}/mainDemand/getById/${demandNumber}`)
+      .then((res) => {
+        setDemand(res.data.data);
+        setDemandId(res.data.data._id);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+      .finally(() => {
+        setLoader(false); 
+      });
+  }, [demandNumber]);
   useEffect(() => {
     axios.get((`${BaseUrl}/store`)).then((res) => {
       setStoreItems(res.data.data)
@@ -140,91 +149,98 @@ const Action = () => {
         >
           <FaCircleArrowLeft />
         </p>
-        <h3 className="font-bold text-lg text-gray-800">{`Demand Number: ${demandNumber}`}</h3>
+        <h3 className="font-bold text-lg text-gray-800">Demand Number: <span className='text-gray-500'>{demandNumber}</span></h3>
       </div>
-      <div className="flex flex-row ">
-        <div className="text-gray-900 mt-2">
-          <table className="w-full border-collapse border border-gray-300 mb-4">
-            <thead className=' text-sm font-semibold bg-gray-400 text-center'>
-              <tr className=" border-[2px] text-black">
-                <th className="p-2 border-2">Product Name</th>
-                <th className="p-2 border-2">Category</th>
-                <th className="p-2 border-2">Company</th>
-                <th className="p-2 border-2">Model</th>
-                <th className="p-2 border-2">Specs</th>
-                <th className="p-2 border-2">Demaded Quantity</th>
-                <th className="p-2 border-2">Quantity Recieved</th>
-                <th className="p-2 border-2">Available Quantity</th>
-                <th className="p-2 border-2">Status</th>
-                {userRole!=="admin"&&
-                <th className="p-2 border-2">Actions</th>
-                  }
-              </tr>
-            </thead>
-            <tbody>
-              {demand?.items?.length > 0 ? (
-                demand?.items?.map((product, index) => (
-                  <tr key={index} className="text-xs text-center even:bg-slate-400">
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.model}</td>
-                    <td className="border border-gray-300 px-4 py-2 ">
-                      <p>{product.product_Id?.specs?.otherspecs}</p>
-                      <p>{product.product_Id.specs.cpu ? "Cpu : " + product.product_Id.specs?.cpu?.name : ''}</p>
-                      <p>{product.product_Id.specs.os ? "Operating System : " + product.product_Id.specs?.os?.name : ''}</p>
-                      <p>{product.product_Id.specs.ram ? "Ram Capacity :" + product.product_Id.specs.ram?.[0].capacity?.size || "" : ''}</p>
-                      <p>{product.product_Id.specs.ram ? "Ram Type :" + product.product_Id.specs.ram?.[0].type?.name : ''}</p>
-                      <p>{product.product_Id.specs.hdd ? "Hdd Capacity :" + product.product_Id.specs.hdd?.[0].capacity?.size : ''}</p>
-                      <p>{product.product_Id.specs.hdd ? "Hdd Type :" + product.product_Id.specs.hdd?.[0].type?.name : ''}</p>
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded || 0}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.quantityReceived || 0}</td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {getAvailableQuantity(product.product_Id._id)}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">{product.status}</td>
-                    {(product.status === "pending" || product.status === "partially resolved") && userRole !== "admin" && (
-                      <td className="border border-gray-300 px-4 py-2">
-                        <button
-                          className='text-green-950 hover:text-green-700 cursor-pointer'
-                          onClick={() => {
-                            setOpenEdit(!openEdit);
-                            setEditId(product.product_Id);
-                            setQuantityDemanded(product.quantityDemanded);
-                          }}
-                        >
-                          Enter Receiving
-                        </button>
-                      </td>
-                    )}
-
+      {
+        !loader ?
+          <div className="flex flex-row ">
+            <div className="text-gray-900 mt-2 md:min-w-[1000px]">
+              <table className="w-full border-collapse border border-gray-300 mb-4">
+                <thead className=' text-sm font-semibold bg-gray-500 text-center text-[16px]'>
+                  <tr className=" border-[2px] text-white">
+                    <th className="p-2 border-2">Product Name</th>
+                    <th className="p-2 border-2">Category</th>
+                    <th className="p-2 border-2">Company</th>
+                    <th className="p-2 border-2">Model</th>
+                    <th className="p-2 border-2">Specs</th>
+                    <th className="p-2 border-2">Demaded Quantity</th>
+                    <th className="p-2 border-2">Quantity Recieved</th>
+                    <th className="p-2 border-2">Available Quantity</th>
+                    <th className="p-2 border-2">Status</th>
+                    {userRole !== "admin" &&
+                      <th className="p-2 border-2">Actions</th>
+                    }
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="text-center text-gray-500">
-                    No items found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          <button
-            type="button"
-            onClick={PrintNotification}
-            className="px-2 py-2 my-3 float-right bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 "
-          >
-            Print Notification
-          </button>
-        </div>
-        {demand.items && demand.items.length > 0 && (
-          <div style={{ display: 'none' }}>
-            <Print ref={printableRef} data={demand} name="Response" subject="Response to Demand for Products" dateAndTime="updatedAt" />
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {demand?.items?.length > 0 ? (
+                    demand?.items?.map((product, index) => (
+                      <tr key={index} className="text-xs text-center even:bg-slate-300 text-[14px]">
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.model}</td>
+                        <td className="border border-gray-300 px-4 py-2 ">
+                          <p>{product.product_Id?.specs?.otherspecs}</p>
+                          <p>{product.product_Id.specs.cpu ? "Cpu : " + product.product_Id.specs?.cpu?.name : ''}</p>
+                          <p>{product.product_Id.specs.os ? "Operating System : " + product.product_Id.specs?.os?.name : ''}</p>
+                          <p>{product.product_Id.specs.ram ? "Ram Capacity :" + product.product_Id.specs.ram?.[0].capacity?.size || "" : ''}</p>
+                          <p>{product.product_Id.specs.ram ? "Ram Type :" + product.product_Id.specs.ram?.[0].type?.name : ''}</p>
+                          <p>{product.product_Id.specs.hdd ? "Hdd Capacity :" + product.product_Id.specs.hdd?.[0].capacity?.size : ''}</p>
+                          <p>{product.product_Id.specs.hdd ? "Hdd Type :" + product.product_Id.specs.hdd?.[0].type?.name : ''}</p>
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded || 0}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.quantityReceived || 0}</td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {getAvailableQuantity(product.product_Id._id)}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">{product.status}</td>
+                        {(product.status === "pending" || product.status === "partially resolved") && userRole !== "admin" && (
+                          <td className="border border-gray-300 px-4 py-2">
+                            <button
+                              className='text-green-950 hover:text-green-700 cursor-pointer'
+                              onClick={() => {
+                                setOpenEdit(!openEdit);
+                                setEditId(product.product_Id);
+                                setQuantityDemanded(product.quantityDemanded);
+                              }}
+                            >
+                              Enter Receiving
+                            </button>
+                          </td>
+                        )}
 
-      </div>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="9" className="text-center text-gray-500">
+                        No items found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <button
+                type="button"
+                onClick={PrintNotification}
+                className="px-2 py-2 my-3 float-right bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200 "
+              >
+                Print Notification
+              </button>
+            </div>
+            {demand.items && demand.items.length > 0 && (
+              <div style={{ display: 'none' }}>
+                <Print ref={printableRef} data={demand} name="Response" subject="Response to Demand for Products" dateAndTime="updatedAt" />
+              </div>
+            )}
+
+          </div> :
+          <div className="loading-container flex justify-center items-center pt-20 min-h-50 min-w-60">
+            <Loading type="spin" color="#2C6B38" />
+          </div>
+      }
+
       <Dialog open={openEdit} onClose={handleClose}>
         <DialogTitle>Enter Recieving</DialogTitle>
         <DialogContent>

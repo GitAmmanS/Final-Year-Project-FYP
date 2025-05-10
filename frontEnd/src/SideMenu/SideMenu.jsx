@@ -18,6 +18,7 @@ if (language === "english") {
 
 const SideMenu = () => {
   const user = JSON.parse(localStorage.getItem('user'));
+  console.log(user);
   const navigate = useNavigate();
   const [openSubMenu, setOpenSubMenu] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

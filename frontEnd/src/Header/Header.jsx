@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef} from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { PiHandWaving } from "react-icons/pi";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
@@ -8,7 +8,9 @@ import axios from 'axios';
 import { BaseUrl } from '../utils/BaseUrl';
 import { IoNotificationsOutline } from "react-icons/io5";
 import Swal from 'sweetalert2';
+import moment from 'moment'
 import Tooltip from '@mui/material/Tooltip';
+import { axiosInstance } from '../utils/AxiosInstance';
 
 let locales;
 const language = localStorage.getItem("language");
@@ -26,27 +28,72 @@ const Header = () => {
   const navigate = useNavigate();
   const menuRef = useRef(null);
   const [totalDemands, setTotalDemands] = useState(null);
-  
+  const [totalComplains, setTotalComplains] = useState(null);
+
+  const currentHour = moment().hour();
+  console.log(currentHour);
+  let greetingKey = locales.header.good_morning;
+  if (currentHour >= 5 && currentHour < 12) {
+    greetingKey = locales.header.good_morning;
+  } else if (currentHour >= 12 && currentHour < 18) {
+    greetingKey = locales.header.good_Evening;
+  } else {
+    greetingKey = locales.header.good_Night;
+  }
+
   let user = JSON.parse(localStorage.getItem('user'));
-  const name = user?user.name:'';
+  const DemandsL = localStorage.getItem('complains');
+  const ComplaintL = localStorage.getItem('Demands');
+  console.log(localStorage.getItem('complains'));
+  const name = user ? user.name : '';
   const role = user.role;
+  const Photo = user.picture;
+  console.log(Photo);
   const [isOpen, setIsOpen] = useState(false);
+  const [formated_Role, setFormatedRole] = useState('');
 
   useEffect(() => {
-    axios.get(`${BaseUrl}/demand/getByStatus`).then((response) => {
-      setTotalDemands(response.data.data);
-    });
-  }, [totalDemands]);
+    const formatRole = (role) => {
+      if (!role) return "";
+      return role
+        .replace(/_/g, " ")
+        .replace(/\b\w/, (char) => char.toUpperCase());
+    };
+
+    setFormatedRole(formatRole(role));
+  }, [role])
+
+  useEffect(() => {
+    const fetchdata=()=>{
+      axios.get(`${BaseUrl}/demand/getByStatus`).then((response) => {
+        setTotalDemands(response.data.data);
+        console.log(response);
+      });
+      axiosInstance.get(`${BaseUrl}/complain/ByStatus`).then((resp) => {
+        setTotalComplains(resp.data.data);;
+      });
+    }
+    fetchdata();
+
+    window.addEventListener('NotificationChanged', fetchdata);
+
+    return () => {
+      window.removeEventListener('NotificationChanged', fetchdata);
+    };
+  }, [ComplaintL,DemandsL]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleProfile = () => {
-    navigate('/');
+    navigate('/UserProfile', { state: { userData: user } });
   };
 
   const handleLogout = () => {
+    let text = `You have been logged out     Good Bye`;
+    const voice = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(voice);
     Swal.fire({
       position: "top-end",
       icon: "success",
@@ -55,7 +102,7 @@ const Header = () => {
       timer: 1000,
       width: "380px",
       height: "20px"
-  });
+    });
     axios.post(`${BaseUrl}/users/logout`, {
       name,
     });
@@ -64,18 +111,19 @@ const Header = () => {
     navigate('/login');
   };
 
-   useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setIsOpen();
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);//clean up function
-    }, []);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);//clean up function
+  }, []);
+
 
   return (
-    <div className='h-[80px] z-[50] sticky top-0 right-0 pt-[10px] bg-[white] shadow-lg'>
+    <div className='h-[80px] sticky top-0 right-0 pt-[10px] bg-[white] z-50 shadow-lg'>
       <div className='flex justify-between mt-3 px-3'>
         <div className=''>
           <div className='flex gap-3'>
@@ -83,33 +131,45 @@ const Header = () => {
             <p className=' text-2xl text-yellow-700'><PiHandWaving /> </p>
           </div>
           <div>
-            <p className='text-xs text-gray-400'>{locales.header.good_morning}</p>
+            <p className='text-xs text-gray-400'>{greetingKey}</p>
           </div>
         </div>
-        <div className=''>
-          <div className='flex gap-2 border w-96 border-gray-950 rounded-md p-1'>
-            <p className='text-2xl'><CiSearch /></p>
-            <input className='w-full outline-none' type="search" placeholder={locales.header.search} />
-          </div>
+        <div className='w-80 text-[24px] font-bold font-mono text-gray-500  '>
+          <marquee behavior="scroll" direction="left">{locales.sidemenu.project_name}</marquee>
+
         </div>
 
         <div className='flex mr-3 justify-normal'>
-          {role !=="lab_Incharge" &&
-          <div onClick={() => navigate('/demandsList')}>
-            <Tooltip title="Notifications">
-            <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
-           
-            </p>
-            </Tooltip>
-            {totalDemands ? (
-              <span className='text-xs bg-red-600 border-2 border-red-950 w-4 text-center top-[1.2rem] ml-6 absolute text-white font-bold rounded-full'>{totalDemands}</span>
-            ) : null}
-          </div>
+          {role !== "lab_Incharge" && role !== "teacher" && role !=="admin"  && role !== "technician" &&
+            <div onClick={() => navigate('/demandsList')}>
+              <Tooltip title="Notifications">
+                <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
+
+                </p>
+              </Tooltip>
+              {totalDemands ? (
+                <span className='text-xs bg-red-600 border-2 border-red-950 w-4 text-center top-[1.2rem] ml-6 absolute text-white font-bold rounded-full'>{totalDemands}</span>
+              ) : null}
+            </div>
           }
-          <p className='text-5xl'> <CgProfile /></p>
+          {role != "store_Incharge" && role != "teacher" &&
+            <div onClick={() => navigate('/complains')}>
+              <Tooltip title="Notifications">
+                <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
+                </p>
+              </Tooltip>
+              {totalComplains ? (
+                <span className='text-xs bg-red-600 border-2 border-red-950 w-4 text-center top-[1.2rem] ml-6 absolute text-white font-bold rounded-full'>{totalComplains}</span>
+              ) : null}
+            </div>
+          }
+          <p className='text-5xl'>{
+            Photo ? <img src={`${BaseUrl}/${Photo}`} alt="pic" style={{ width: 50, height: 50, borderRadius: 25, marginRight: 6 }} /> : <CgProfile />
+          }
+          </p>
           <div className='flex flex-col mt-2'>
             <p className='text-sm'>{name}</p>
-            <p className='text-xs text-gray-400 '>Admin</p>
+            <p className='text-xs text-gray-400'>{formated_Role}</p>
           </div>
           <p className="mt-4 ml-3 cursor-pointer" onClick={toggleDropdown}>
             {isOpen ? (
@@ -119,7 +179,7 @@ const Header = () => {
             )}
           </p>
 
-         
+
 
           {isOpen && (
             <div className="absolute right-0 mt-9 bg-white border border-gray-300 rounded-2xl shadow-2xl w-40">

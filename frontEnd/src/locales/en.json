@@ -87,6 +87,9 @@
       "issue_items":"Issue Items",
       "settings":"Settings",
       "demand":"Demand",
+      "complains":"Complaints",
+      "view_Complains":"View Complaints",
+      "view_AllComplains":"View Complaints",
       "view_Demand":"View Demand",
       "issue_Demand":"Create Demand",
       "labInventory":"Lab Inventory",
@@ -95,6 +98,8 @@
     "header":{
       "hello":"Hello",
       "good_morning":"Good Morning",
+      "good_Evening":"Good Evening",
+      "good_Night":"Good Night",
       "search":"Search",
       "urdu":"Urdu",
       "english":"English"
@@ -107,7 +112,7 @@
       "pending":"Pending",
       "last_1_week":"Last One Week",
       "summary":"Summary",
-      "total_items":"Total Items",
+      "total_ ":"Total Products",
       "total_categories":"Total Categories",
       "total_users":"Total Users",
       "item_id":"Item ID",

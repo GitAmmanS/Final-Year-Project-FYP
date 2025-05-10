@@ -7,6 +7,7 @@ import { FaUser } from "react-icons/fa6";
 import { LuDoorOpen } from "react-icons/lu";
 import { GoDotFill } from "react-icons/go";
 import { GrProductHunt } from "react-icons/gr";
+import { MdReportProblem } from "react-icons/md";
 
 export const SideMenuData= 
     [
@@ -14,7 +15,7 @@ export const SideMenuData=
             title:"dashboard",
             icon:<RxDashboard />,
             link:"/",
-            roles:["admin","teacher","lab_Incharge","store_Incharge"]
+            roles:["admin","teacher","lab_Incharge","store_Incharge","technician"]
         },
         {
             title:"product",
@@ -47,6 +48,26 @@ export const SideMenuData=
             icon:<FaUser />,
             link:"/user",
             roles:["admin"]
+        },
+        {
+            title:"complains",
+            icon:<FaAngleDown />,
+            roles: ["admin", "lab_Incharge","teacher","technician"],
+            subItems:[
+                {
+                title:"view_AllComplains",
+                icon:<GoDotFill />,
+                link:"/complains",
+                roles: ["lab_Incharge","admin","technician"],
+                },
+                {
+                    title:"view_Complains",
+                    icon:<GoDotFill />,
+                    link:"/complains",
+                    roles: ["teacher"],
+                },
+            ]
+            
         },
         {
             title:"requestStore",
@@ -99,7 +120,7 @@ export const SideMenuData=
             title:"settings",
             icon:<CiSettings />,
             link:"/setting",
-            roles:["admin","teacher","lab_Incharge","store_Incharge"]
+            roles:["admin","teacher","lab_Incharge","store_Incharge","technician"]
         },
         
         

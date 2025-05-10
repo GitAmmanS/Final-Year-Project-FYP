@@ -12,8 +12,14 @@ exports.userspost = async (req, resp) => {
         const salt = await bcrypt.genSalt(saltRounds);
         const hashedPassword = await bcrypt.hash(myPlaintextPassword, salt);
 
+        const path = req.file ? `${req.file.filename}` : null;
+        if (!path) {
+            return resp.status(400).send('Picture is required');
+        }
+
         const data = new users({
-            ...req.body, 
+            ...req.body,
+            picture: path, 
             password: hashedPassword, 
         });
         console.log(data)
@@ -121,7 +127,7 @@ exports.verifyMail = async (req, res) => {
         res.send("not ok");
     }
 }
-exports.usersupdate = async (req, resp) => {
+exports.usersRoleupdate = async (req, resp) => {
    try {
     const data = await users.findOneAndUpdate({ _id: req.params.id }, { $set:
         {role: req.body.role}},{new:true}); 
@@ -146,6 +152,37 @@ exports.usersupdate = async (req, resp) => {
     })
    }
 };
+exports.usersupdate = async (req, res) => {
+    try {
+        const updatedData = {
+            name: req.body.name,
+            phone: req.body.phone,
+        };
+
+        if (req.file) {
+            const path = req.file ? `${req.file.filename}` : null;
+            updatedData.picture=path;
+        }
+
+
+        const user = await users.findByIdAndUpdate(
+            req.params.id,
+            { $set: updatedData },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+
 
 exports.usersdelete = async (req, resp) => {
     try {

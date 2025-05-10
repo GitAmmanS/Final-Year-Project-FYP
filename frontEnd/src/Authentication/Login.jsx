@@ -43,11 +43,15 @@ const Login = () => {
                 email,
                 password,
             });
+            console.log(response);
             if (response.status === 200) {
                 const { token, user } = response.data;
                 localStorage.setItem("authToken", token);
                 localStorage.setItem("user", JSON.stringify(user));
                 navigate("/");
+                let text = `Good to see you again, ${user.name}! Let's get started.`;
+                const voice = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(voice);
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
@@ -132,7 +136,7 @@ const Login = () => {
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword ? <FaEye /> : <FaEyeSlash />  }
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
                             </button>
                         </div>
                     </div>

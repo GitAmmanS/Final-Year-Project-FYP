@@ -10,10 +10,10 @@ const Card = () => {
 
   return (
     <div>
-      <div className="text-2xl font-bold text-center mt-5 text-gray-800">
+      <div className="text-3xl font-bold  my-8 ml-2 text-gray-800">
         Resources
       </div>
-      <div className="flex flex-wrap justify-center gap-8 m-5">
+      <div className="flex flex-col flex-wrap justify-center  gap-8 m-5 ml-16 ">
         {/* Lab Card */}
         <div
           className="w-[40%] bg-blue-900 text-white h-[7rem] rounded-lg flex items-center justify-between p-4 text-2xl shadow-lg transition duration-300 hover:bg-blue-700 cursor-pointer"

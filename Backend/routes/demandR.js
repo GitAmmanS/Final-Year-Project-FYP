@@ -8,5 +8,6 @@ router.get('/', demandC.getDemand);
 router.get('/getByStatus', demandC.getDemandByStatus);
 router.get('/getById/:number', demandC.getDemandById);
 router.get('/getByName/:name', demandC.getDemandByName);
+router.get('/getByUserID/:id', demandC.getDemandByUserID);
 router.put('/put', demandC.updateDemand);
 module.exports = router;

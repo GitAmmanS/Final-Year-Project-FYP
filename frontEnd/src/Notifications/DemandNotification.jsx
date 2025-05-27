@@ -5,8 +5,8 @@ import Loading from 'react-loading'
 import { useNavigate } from 'react-router-dom'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -23,7 +23,7 @@ const DemandNotification = () => {
   const [demandNumber, setDemandNumber] = useState();
   const [buttonClick, setButtonClick] = useState("All Demand");
   const [displayAllDemands, setDisplayAllDemands] = useState(true);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const Role = user?.role;
   const navigate = useNavigate();
   useEffect(() => {
@@ -173,7 +173,12 @@ const DemandNotification = () => {
             <Loading type="spin" color="#2C6B38" />
           </div>
       }
-
+      {
+        
+        demands.length<=0 && filteredDemands.length<=0 && buttonClick==='All Demand' &&(
+          <div className='text-center mt-4 text-gray-500 font-semibold'>No Request found</div>
+        )
+      }
     </div>
   )
 }

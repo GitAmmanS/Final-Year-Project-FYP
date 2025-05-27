@@ -4,6 +4,7 @@ const verifyToken =(req,res,next) =>{
     let token;
     let authHeader = req.headers.Authorization || req.headers.authorization;
 
+    console.log("AUTH-------------------->",req.headers);
     if(authHeader && authHeader.startsWith("Bearer")){
         token = authHeader.split(" ")[1];
     
@@ -16,6 +17,7 @@ const verifyToken =(req,res,next) =>{
         next();
     }
     catch(error){
+        console.log(error.message);
         req.status(403).json({message:"No Token Authorization Required"})
     }
     

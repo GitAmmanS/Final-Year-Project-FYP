@@ -15,8 +15,8 @@ import jsPDF from 'jspdf';
 import { MdOutlineManageHistory } from "react-icons/md";
 import Tooltip from '@mui/material/Tooltip';
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english"|| language==null) {
     import("../locales/en.json").then((module) => {
         locales = module.default;
     });
@@ -53,7 +53,7 @@ const Store = () => {
     }, [storeData]);
     useEffect(() => {
 
-    }, [localStorage.getItem("language")]);
+    }, [sessionStorage.getItem("language")]);
 
     const itemsHistory = (item) => {
         navigate('/store/storeItemsHistory', { state: { item } })
@@ -123,15 +123,21 @@ const Store = () => {
     const table = useMaterialReactTable({
         columns,
         data: transformedData,
+        muiTableHeadCellProps: {
+            className: "[&.MuiTableCell-head]:bg-[#1B4D3E] [&.MuiTableCell-head]:text-white",
+          },
+          muiTableBodyCellProps: {
+            className: "[&.MuiTableCell-body]:bg-[#FAF0E6]",
+          },
     });
 
     return (<div className="bg-slate-50 h-sceen mt-2 ">
-        <div className='flex  justify-between mt-5'>
+        <div className='flex  justify-between'>
             <p className='text-2xl font-semibold mt-5 ml-2 flex gap-2 items-center'>{locales.labels.StoreItems}</p>
         </div>
         {
             Loader ?
-                <div className='flex flex-col w-full mt-3'>
+                <div className='flex flex-col w-full m-2'>
                     <div> <MaterialReactTable table={table} /></div>
                 </div> :
                 <div className="loading-container flex justify-center items-center min-h-60 min-w-60">

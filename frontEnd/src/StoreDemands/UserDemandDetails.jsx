@@ -13,8 +13,8 @@ import { FaCircleArrowLeft } from 'react-icons/fa6';
 import Swal from 'sweetalert2'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language == null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -148,63 +148,68 @@ const UserDemandDetails = () => {
         <h3 className="font-bold text-lg text-gray-800">Demand Number: <span className='text-gray-500'>{demandNumber}</span></h3>
       </div>
       {
-        !loader?
-      <div className="flex flex-row ">
-        <div className="text-gray-900 mt-2 md:min-w-[1000px]">
-          <table className="w-full border-collapse border border-gray-300 mb-4">
-            <thead className='text-sm font-semibold bg-gray-500 text-center text-[16px]'>
-              <tr className=" border-[2px] text-white">
-                <th className="border border-gray-300 px-4 py-2">Product Name</th>
-                <th className="border border-gray-300 px-4 py-2">Category</th>
-                <th className="border border-gray-300 px-4 py-2">Company</th>
-                <th className="border border-gray-300 px-4 py-2">Model</th>
-                <th className="border border-gray-300 px-4 py-2">Specs</th>
-                <th className="border border-gray-300 px-4 py-2">Demaded Quantity</th>
-                <th className="border border-gray-300 px-4 py-2">Quantity Recieved</th>
-                <th className="border border-gray-300 px-4 py-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {demand?.items?.length > 0 ? (
-                demand?.items?.map((product, index) => (
-                  <tr key={index} className="text-xs text-center even:bg-slate-300 text-[14px]">
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
-                    <td className="border border-gray-300 px-4 py-2">{product.product_Id.model}</td>
-                    <td className="border border-gray-300 px-4 py-2 ">
-                      <p>{product.product_Id?.specs?.otherspecs}</p>
-                      <p>{product.product_Id.specs.cpu ? "Cpu : " + product.product_Id.specs?.cpu?.name : ''}</p>
-                      <p>{product.product_Id.specs.os ? "Operating System : " + product.product_Id.specs?.os?.name : ''}</p>
-                      <p>{product.product_Id.specs.ram ? "Ram Capacity :" + product.product_Id.specs.ram?.[0].capacity?.size || "" : ''}</p>
-                      <p>{product.product_Id.specs.ram ? "Ram Type :" + product.product_Id.specs.ram?.[0].type?.name : ''}</p>
-                      <p>{product.product_Id.specs.hdd ? "Hdd Capacity :" + product.product_Id.specs.hdd?.[0].capacity?.size : ''}</p>
-                      <p>{product.product_Id.specs.hdd ? "Hdd Type :" + product.product_Id.specs.hdd?.[0].type?.name : ''}</p>
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded}</td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {product.quantityReceived}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">{product.status.toUpperCase()}</td>
+        !loader ?
+          <div className="flex flex-row ">
+            <div className="text-gray-900 mt-2 md:min-w-[1000px]">
+              <table className="w-full border-collapse border border-gray-300 mb-4">
+                <thead className='text-sm font-semibold bg-gray-500 text-center text-[16px]'>
+                  <tr className=" border-[2px] text-white">
+                    <th className="border border-gray-300 px-4 py-2">Product Name</th>
+                    <th className="border border-gray-300 px-4 py-2">Category</th>
+                    <th className="border border-gray-300 px-4 py-2">Company</th>
+                    <th className="border border-gray-300 px-4 py-2">Model</th>
+                    <th className="border border-gray-300 px-4 py-2">Specs</th>
+                    <th className="border border-gray-300 px-4 py-2">Demaded Quantity</th>
+                    <th className="border border-gray-300 px-4 py-2">Quantity Recieved</th>
+                    <th className="border border-gray-300 px-4 py-2">Status</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" className="text-center text-gray-500">
-                    No Demands Found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {demand?.items?.length > 0 ? (
+                    demand?.items?.map((product, index) => (
+                      <tr key={index} className="text-xs text-center even:bg-slate-300 text-[14px]">
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id?.product_ID?.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id?.product_ID?.category_ID.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id?.product_ID?.company_ID.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product.product_Id?.product_ID?.model}</td>
+                        <td className="border border-gray-300 px-4 py-2 ">
+                          <p>{product.product_Id?.product_ID?.specs?.otherspecs}</p>
+                          <p>{product.product_Id?.product_ID?.specs.cpu ? "Cpu : " + product.product_Id?.product_ID?.specs?.cpu?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.os ? "Operating System : " + product.product_Id?.product_ID?.specs?.os?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.ram ? "Ram Capacity :" + product.product_Id?.product_ID?.specs.ram?.[0].capacity?.size || "" : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.ram ? "Ram Type :" + product.product_Id?.product_ID?.specs.ram?.[0].type?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.hdd ? "Hdd Capacity :" + product.product_Id?.product_ID?.specs.hdd?.[0].capacity?.size : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.hdd ? "Hdd Type :" + product.product_Id?.product_ID?.specs.hdd?.[0].type?.name : ''}</p>
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded}</td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {product.quantityReceived}
+                        </td>
+                        <td className={`border border-gray-300 px-4 py-2 font-bold ${product.status === "pending"
+                          ? "text-red-700"
+                          : product.status === "partially resolved"
+                            ? "text-blue-500"
+                            : "text-green-500"
+                          }`}>{(product.status.toUpperCase()).replace('_', ' ')}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="9" className="text-center text-gray-500">
+                        No Demands Found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
 
-        </div>
+            </div>
 
-      </div>:
-      <div className="loading-container flex justify-center items-center pt-20 min-h-50 min-w-60">
-        <Loading type="spin" color="#2C6B38" />
-      </div>
-        }
+          </div> :
+          <div className="loading-container flex justify-center items-center pt-20 min-h-50 min-w-60">
+            <Loading type="spin" color="#2C6B38" />
+          </div>
+      }
 
     </div>
   );

@@ -37,10 +37,10 @@ export const SideMenuData=
             
         },
         {
-            title:"labInventory",
+            title:"Inventory",
             icon:<MdOutlineVideoLabel/>,
             link:"/labInventory",
-            roles:["lab_Incharge"]
+            roles:["lab_Incharge","teacher"]
             
         },
         {
@@ -66,19 +66,25 @@ export const SideMenuData=
                     link:"/complains",
                     roles: ["teacher"],
                 },
+                {
+                    title:"Issue_Complaint",
+                    icon:<GoDotFill />,
+                    link:"/Issue_Complaint",
+                    roles: ["teacher"],
+                },
             ]
             
         },
         {
             title:"requestStore",
             icon:<FaAngleDown />,
-            roles: ["admin", "lab_Incharge"],
+            roles: ["admin", "lab_Incharge","teacher"],
             subItems:[
                 {
                 title:"view_Request",
                 icon:<GoDotFill />,
                 link:"/viewDemands",
-                roles: ["lab_Incharge"],
+                roles: ["lab_Incharge","teacher"],
                 },
                 {
                     title:"view_AllRequest",
@@ -87,10 +93,10 @@ export const SideMenuData=
                     roles: ["admin"],
                     },
                 {
-                    title:"issue_items",
+                    title:"issue_request",
                     icon:<GoDotFill />,
                     link:"/issueitem",
-                    roles: ["lab_Incharge"],
+                    roles: ["lab_Incharge","teacher"],
                  }
             ]
             

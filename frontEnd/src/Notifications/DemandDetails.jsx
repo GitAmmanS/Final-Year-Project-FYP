@@ -13,8 +13,8 @@ import { FaCircleArrowLeft } from 'react-icons/fa6';
 import Swal from 'sweetalert2'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language == null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -30,7 +30,7 @@ const DemandDetails = () => {
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
   const { demandNumber } = location.state;
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const userRole = user.role;
   const [demand, setDemand] = useState([]);
   const [storeItems, setStoreItems] = useState();
@@ -38,16 +38,20 @@ const DemandDetails = () => {
   const [StoreQuantity, setStoreQuantity] = useState(1);
   const [editId, setEditId] = useState(null);
   const [demandId, setDemandId] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
   const handleClose = () => {
     setOpenEdit(false);
     setEditId(null);
     setStoreQuantity(1)
   };
   const handleEditQuantity = () => {
+    setOpenEdit(false);
     if (editId) {
-      axios.put((`${BaseUrl}/demand/put`), { StoreQuantity, editId, demandId }).then((response) => {
+      setLoader(true);
+      axios.put((`${BaseUrl}/demand/put`), { StoreQuantity, editId, demandId , Location:demand.location }).then((response) => {
         console.log(response.data);
         if (response.data.success) {
+          setLoader(false);
           const event = new CustomEvent('NotificationChanged');
           window.dispatchEvent(event);
           Swal.fire({
@@ -59,9 +63,11 @@ const DemandDetails = () => {
             width: "380px",
             height: "20px"
           });
+          setSubmitted(!submitted);
           handleClose();
         }
       }).catch((error) => {
+        setLoader(false);
         console.log(error.message)
         setOpenEdit(false);
         Swal.fire({
@@ -72,9 +78,8 @@ const DemandDetails = () => {
           customClass: {
             confirmButton: "bg-[#22C55E] text-white",
           },
-        });
-
-
+        })
+      
       })
     }
   }
@@ -118,17 +123,17 @@ const DemandDetails = () => {
 
     axios.get(`${BaseUrl}/demand/getById/${demandNumber}`)
       .then((res) => {
+        setLoader(false);
         setDemand(res.data.data);
+        console.log(res.data.data);
         setDemandId(res.data.data._id);
       })
       .catch((error) => {
+        setLoader(false);
         console.log(error.message);
       })
-      .finally(() => {
-        setLoader(false);
-      });
 
-  }, [demandNumber]);
+  }, [demandNumber, submitted]);
   useEffect(() => {
     axios.get((`${BaseUrl}/store`)).then((res) => {
       setStoreItems(res.data.data)
@@ -176,36 +181,48 @@ const DemandDetails = () => {
                     }
                   </tr>
                 </thead>
+                {
+                  console.log(demand)
+                }
                 <tbody>
                   {demand?.items?.length > 0 ? (
                     demand?.items?.map((product, index) => (
                       <tr key={index} className="text-xs text-center even:bg-slate-300 text-[14px]">
-                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.name}</td>
-                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.category_ID.name}</td>
-                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.company_ID.name}</td>
-                        <td className="border border-gray-300 px-4 py-2">{product.product_Id.model}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product?.product_Id?.product_ID?.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product?.product_Id?.product_ID?.category_ID?.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product?.product_Id?.product_ID?.company_ID?.name}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product?.product_Id?.product_ID?.model}</td>
                         <td className="border border-gray-300 px-4 py-2 ">
-                          <p>{product.product_Id?.specs?.otherspecs}</p>
-                          <p>{product.product_Id.specs.cpu ? "Cpu : " + product.product_Id.specs?.cpu?.name : ''}</p>
-                          <p>{product.product_Id.specs.os ? "Operating System : " + product.product_Id.specs?.os?.name : ''}</p>
-                          <p>{product.product_Id.specs.ram ? "Ram Capacity :" + product.product_Id.specs.ram?.[0].capacity?.size || "" : ''}</p>
-                          <p>{product.product_Id.specs.ram ? "Ram Type :" + product.product_Id.specs.ram?.[0].type?.name : ''}</p>
-                          <p>{product.product_Id.specs.hdd ? "Hdd Capacity :" + product.product_Id.specs.hdd?.[0].capacity?.size : ''}</p>
-                          <p>{product.product_Id.specs.hdd ? "Hdd Type :" + product.product_Id.specs.hdd?.[0].type?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs?.otherspecs}</p>
+                          <p>{product.product_Id?.product_ID?.specs.cpu ? "Cpu : " + product.product_Id?.product_ID?.specs?.cpu?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.os ? "Operating System : " + product.product_Id?.product_ID?.specs?.os?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.ram ? "Ram Capacity :" + product.product_Id?.product_ID?.specs.ram?.[0].capacity?.size || "" : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.ram ? "Ram Type :" + product.product_Id?.product_ID?.specs.ram?.[0].type?.name : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.hdd ? "Hdd Capacity :" + product.product_Id?.product_ID?.specs.hdd?.[0].capacity?.size : ''}</p>
+                          <p>{product.product_Id?.product_ID?.specs.hdd ? "Hdd Type :" + product.product_Id?.product_ID?.specs.hdd?.[0].type?.name : ''}</p>
                         </td>
-                        <td className="border border-gray-300 px-4 py-2">{product.quantityDemanded || 0}</td>
-                        <td className="border border-gray-300 px-4 py-2">{product.quantityReceived || 0}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product?.quantityDemanded || 0}</td>
+                        <td className="border border-gray-300 px-4 py-2">{product?.quantityReceived || 0}</td>
                         <td className="border border-gray-300 px-4 py-2">
-                          {getAvailableQuantity(product.product_Id._id)}
+                          {getAvailableQuantity(product?.product_Id?.product_ID?._id)}
                         </td>
-                        <td className="border border-gray-300 px-4 py-2">{product.status}</td>
-                        {(product.status === "pending" || product.status === "partially resolved") && userRole !== "admin" && (
-                          <td className="border border-gray-300 px-4 py-2">
+                        <td className={`border border-gray-300 px-4 py-2 font-bold ${product?.status === "pending"
+                          ? "text-red-700"
+                          : product?.status === "partially resolved"
+                            ? "text-blue-500"
+                            : "text-green-500"
+                          }`}
+                        >{(product?.status.toUpperCase().replace('_', ' '))}</td>
+                        {(product?.status === "pending" || product?.status === "partially resolved") && userRole !== "admin" && (
+                          <td className="border border-gray-300 px-4 py-2 cursor-pointer font-bold">
                             <button
-                              className='text-green-950 hover:text-green-700 cursor-pointer'
+                              className=''
                               onClick={() => {
                                 setOpenEdit(!openEdit);
-                                setEditId(product.product_Id);
+                                setEditId(product?.product_Id?.product_ID._id);
+                                {
+                                  console.log(product?.product_Id?.product_ID._id);
+                                }
                               }}
                             >
                               Allocate

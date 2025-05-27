@@ -47,7 +47,7 @@ const UserProfile = () => {
             });
             if (resp.status === 200) {
                 setLoader(false);
-                localStorage.setItem("user", JSON.stringify(resp.data.data));
+                sessionStorage.setItem("user", JSON.stringify(resp.data.data));
                 console.log(resp.data.data);
                 navigate("/UserProfile", { state: { userData: resp.data.data } });
                 Swal.fire({
@@ -160,7 +160,7 @@ const UserProfile = () => {
                                 </div>
                                 <div className="col-span-2">
                                     <p className="text-gray-500">Role (read-only)</p>
-                                    <h3 className="text-md font-semibold text-gray-800">{userData.role}</h3>
+                                    <h3 className="text-md font-semibold text-gray-800">{userData.role.toUpperCase()}</h3>
                                 </div>
                                 <div className="col-span-2">
                                     <p className="text-gray-500">Email (read-only)</p>

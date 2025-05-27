@@ -104,6 +104,7 @@ exports.getDemandById = async (req, res) => {
                     },
                 ],
             });
+            console.log(data);
         if (data) {
             res.status(200).send({
                 success: true,

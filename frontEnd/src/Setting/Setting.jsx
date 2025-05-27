@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { CgProfile } from 'react-icons/cg';
 import { IoNotificationsOutline } from 'react-icons/io5';
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -15,13 +15,15 @@ if (language === "english") {
 
 
 const Setting = () => {
-    const [isChecked, setIsChecked] = useState(localStorage.getItem("language") === "english" ? false : true);
+    const [isChecked, setIsChecked] = useState(language === "english"  || language ==null ? false : true);
+    console.log(language==null);
+    console.log(isChecked);
     const handleToggle = () => {
         setIsChecked(!isChecked);
         window.location.reload();
       };
       useEffect(() => {
-        localStorage.setItem("language", isChecked ? "urdu" : "english");
+        sessionStorage.setItem("language", isChecked ? "urdu" : "english");
       }, [isChecked]);
   return (
     <div className='w-full  bg-white shadow-sm flex'>

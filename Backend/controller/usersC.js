@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
+
 dotenv.config();
 exports.userspost = async (req, resp) => {
     try {
@@ -19,8 +21,8 @@ exports.userspost = async (req, resp) => {
 
         const data = new users({
             ...req.body,
-            picture: path, 
-            password: hashedPassword, 
+            picture: path,
+            password: hashedPassword,
         });
         console.log(data)
         await data.save();
@@ -41,7 +43,7 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(404).json({ message: "Something Went Wrong" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        let token = jwt.sign({email:user.email,role:user.role},process.env.JWT_SECRET_KEY);
+        let token = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET_KEY);
         if (!isPasswordValid) {
             return resp.status(401).json({ message: "Something Went Wrong" });
         }
@@ -49,15 +51,19 @@ exports.userspostAuthentication = async (req, resp) => {
         if (!user.is_verified) {
             return resp.status(403).json({ message: "Something Went Wrong.Not Verified" });
         }
-        const { password: hashedPassword, ...userWithoutPassword } = user._doc; 
+
+        user.is_active = moment().format('dddd');
+        await user.save();
+
+        const { password: hashedPassword, ...userWithoutPassword } = user._doc;
         resp.cookie("token", token, { httpOnly: true });
         console.log(token);
-         resp.status(200).json({
+        resp.status(200).json({
             message: "Login successful",
             user: userWithoutPassword,
             token
         });
-        
+
     } catch (error) {
         console.error('Error during authentication:', error);
         resp.status(500).json({ message: "An error occurred during authentication" });
@@ -73,10 +79,10 @@ exports.userLogout = async (req, resp) => {
             return resp.status(404).json({ message: "Something Went Wrong" });
         }
 
-        resp.cookie("token","", { expires: new Date(0) });
-         resp.status(200).json({
+        resp.cookie("token", "", { expires: new Date(0) });
+        resp.status(200).json({
             message: "Logout successful",
-            
+
         });
 
     } catch (error) {
@@ -90,7 +96,7 @@ const sendVerifyMail = async (name, email, user_id) => {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: '465',
-            secure: true, 
+            secure: true,
             auth: {
                 user: process.env.EMAIL,
                 pass: process.env.PASSWORD
@@ -128,29 +134,31 @@ exports.verifyMail = async (req, res) => {
     }
 }
 exports.usersRoleupdate = async (req, resp) => {
-   try {
-    const data = await users.findOneAndUpdate({ _id: req.params.id }, { $set:
-        {role: req.body.role}},{new:true}); 
-   if(data){
-    resp.status(200).send({
-        success:true,
-        data:data
-    })
-   }
-   else{
-    resp.status(400).send({
-        success:false,
-        data:"no data"
-    })
-   }
-   }
-   catch(error){
-    console.log(error.message)
-    resp.status(500).send({
-        success:false,
-        data:error.message
-    })
-   }
+    try {
+        const data = await users.findOneAndUpdate({ _id: req.params.id }, {
+            $set:
+                { role: req.body.role }
+        }, { new: true });
+        if (data) {
+            resp.status(200).send({
+                success: true,
+                data: data
+            })
+        }
+        else {
+            resp.status(400).send({
+                success: false,
+                data: "no data"
+            })
+        }
+    }
+    catch (error) {
+        console.log(error.message)
+        resp.status(500).send({
+            success: false,
+            data: error.message
+        })
+    }
 };
 exports.usersupdate = async (req, res) => {
     try {
@@ -161,13 +169,34 @@ exports.usersupdate = async (req, res) => {
 
         if (req.file) {
             const path = req.file ? `${req.file.filename}` : null;
-            updatedData.picture=path;
+            updatedData.picture = path;
         }
 
 
         const user = await users.findByIdAndUpdate(
             req.params.id,
             { $set: updatedData },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+exports.userStatesupdate = async (req, res) => {
+    try {
+        const email = req.body.email;
+        const Day = req.body.CurrentDay;
+
+        const user = await users.updateOne(
+            {email:email},
+            { $set: { is_active: Day } },
             { new: true }
         );
 
@@ -208,8 +237,8 @@ exports.usersTableget = async (req, resp) => {
     try {
         const data = await users.find();
 
-        if (data.length>0) {
-            return resp.status(200).json({ success: true, data:data });
+        if (data.length > 0) {
+            return resp.status(200).json({ success: true, data: data });
         } else {
             return resp.status(404).json({ success: false, message: "No User Found" });
         }

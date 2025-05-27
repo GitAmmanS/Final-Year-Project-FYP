@@ -13,8 +13,8 @@ import Swal from 'sweetalert2'
 import Loading from 'react-loading'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -28,7 +28,7 @@ const Action = () => {
   const location = useLocation();
   const printableRef = useRef();
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const userRole = user.role;
   const { demandNumber } = location.state;
   const [loader, setLoader] = useState(false);
@@ -39,6 +39,7 @@ const Action = () => {
   const [editId, setEditId] = useState(null);
   const [quantityDemanded, setQuantityDemanded] = useState(null);
   const [demandId, setDemandId] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
   const handleClose = () => {
     setOpenEdit(false);
     setEditId(null);
@@ -58,6 +59,7 @@ const Action = () => {
             width: "380px",
             height: "20px"
           });
+          setSubmitted(!submitted);
           handleClose();
         }
       }).catch((error) => {
@@ -124,14 +126,14 @@ const Action = () => {
       .finally(() => {
         setLoader(false); 
       });
-  }, [demandNumber]);
+  }, [demandNumber,submitted]);
   useEffect(() => {
     axios.get((`${BaseUrl}/store`)).then((res) => {
       setStoreItems(res.data.data)
     }).catch((error) => {
       console.log(error.message);
     })
-  }, [])
+  }, [submitted])
   const getAvailableQuantity = (productId) => {
     const productInStore = storeItems?.find((storeItem) => {
       return storeItem.product_ID._id === productId;
@@ -194,11 +196,17 @@ const Action = () => {
                         <td className="border border-gray-300 px-4 py-2">
                           {getAvailableQuantity(product.product_Id._id)}
                         </td>
-                        <td className="border border-gray-300 px-4 py-2">{product.status}</td>
+                        <td className={`border border-gray-300 px-4 py-2 font-bold ${product.status === "pending"
+                            ? "text-red-700"
+                            : product.status === "partially resolved"
+                              ? "text-blue-500"
+                              : "text-green-500"
+                          }`}
+                        >{(product.status.toUpperCase().replace('_', ' '))}</td>
                         {(product.status === "pending" || product.status === "partially resolved") && userRole !== "admin" && (
-                          <td className="border border-gray-300 px-4 py-2">
+                          <td className="border border-gray-300 px-4 py-2 font-bolder cursor-pointer">
                             <button
-                              className='text-green-950 hover:text-green-700 cursor-pointer'
+                              className=''
                               onClick={() => {
                                 setOpenEdit(!openEdit);
                                 setEditId(product.product_Id);

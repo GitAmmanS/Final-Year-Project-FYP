@@ -14,8 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import Tooltip from '@mui/material/Tooltip';
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -123,6 +123,12 @@ const Product = () => {
     const table = useMaterialReactTable({
         columns,
         data: transformedData,
+        muiTableHeadCellProps: {
+            className: "[&.MuiTableCell-head]:bg-[#1B4D3E] [&.MuiTableCell-head]:text-white",
+          },
+          muiTableBodyCellProps: {
+            className: "[&.MuiTableCell-body]:bg-[#FAF0E6]",
+          },
     });
     const handleCategory = () => {
         setIsCategory(true);
@@ -174,7 +180,7 @@ const Product = () => {
             </div>
             {
                 loader ?
-                    <div className='flex flex-col w-full'>
+                    <div className='flex flex-col w-full m-2'>
                         <div> <MaterialReactTable table={table} /></div>
                     </div> :
                     <div className="loading-container flex justify-center items-center min-h-60 min-w-60">

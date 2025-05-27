@@ -13,8 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { axiosInstance } from '../utils/AxiosInstance';
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language == null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -35,19 +35,21 @@ const Header = () => {
   let greetingKey = locales.header.good_morning;
   if (currentHour >= 5 && currentHour < 12) {
     greetingKey = locales.header.good_morning;
-  } else if (currentHour >= 12 && currentHour < 18) {
+  } else if (currentHour >= 12 && currentHour < 17) {
+    greetingKey = locales.header.good_Afternoon;
+  } else if (currentHour >= 17 && currentHour < 21) {
     greetingKey = locales.header.good_Evening;
   } else {
     greetingKey = locales.header.good_Night;
   }
 
-  let user = JSON.parse(localStorage.getItem('user'));
-  const DemandsL = localStorage.getItem('complains');
-  const ComplaintL = localStorage.getItem('Demands');
-  console.log(localStorage.getItem('complains'));
+  let user = JSON.parse(sessionStorage.getItem('user'));
+  const DemandsL = sessionStorage.getItem('complains');
+  const ComplaintL = sessionStorage.getItem('Demands');
+  console.log(sessionStorage.getItem('complains'));
   const name = user ? user.name : '';
-  const role = user.role;
-  const Photo = user.picture;
+  const role = user?.role;
+  const Photo = user?.picture;
   console.log(Photo);
   const [isOpen, setIsOpen] = useState(false);
   const [formated_Role, setFormatedRole] = useState('');
@@ -64,14 +66,27 @@ const Header = () => {
   }, [role])
 
   useEffect(() => {
-    const fetchdata=()=>{
+    const fetchdata = async () => {
       axios.get(`${BaseUrl}/demand/getByStatus`).then((response) => {
         setTotalDemands(response.data.data);
         console.log(response);
       });
-      axiosInstance.get(`${BaseUrl}/complain/ByStatus`).then((resp) => {
-        setTotalComplains(resp.data.data);;
-      });
+      if (role === "admin" || role === "lab_Incharge" || role === "technician") {
+        const resp = await axiosInstance.get(`${BaseUrl}/complain/`)
+        let Data;
+        if (resp) {
+          if (role !== 'admin') {
+            Data = Array.isArray(resp.data.message)? resp.data.message?.filter?.((complain) => complain.assigned_to._id === user._id && complain.status === 'pending').length : '';
+            console.log(Array.isArray(resp.data.message));
+          }
+          else {
+            Data = Array.isArray(resp.data.message) ? resp.data.message.length : '';
+            console.log(Data);
+          }
+
+        }
+        setTotalComplains(Data);
+      }
     }
     fetchdata();
 
@@ -80,7 +95,7 @@ const Header = () => {
     return () => {
       window.removeEventListener('NotificationChanged', fetchdata);
     };
-  }, [ComplaintL,DemandsL]);
+  }, [ComplaintL, DemandsL]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -106,8 +121,8 @@ const Header = () => {
     axios.post(`${BaseUrl}/users/logout`, {
       name,
     });
-    localStorage.setItem('user', JSON.stringify({}));
-    localStorage.removeItem('authToken');
+    sessionStorage.setItem('user', JSON.stringify({}));
+    sessionStorage.removeItem('authToken');
     navigate('/login');
   };
 
@@ -126,21 +141,21 @@ const Header = () => {
     <div className='h-[80px] sticky top-0 right-0 pt-[10px] bg-[white] z-50 shadow-lg'>
       <div className='flex justify-between mt-3 px-3'>
         <div className=''>
-          <div className='flex gap-3'>
-            <p className='text-xl'>{`${locales.header.hello} ${name}`}</p>
+          <div className='flex gap-2 min-[768px]:gap-3'>
+            <p className='text-sm min-[768px]:text-xl min-[640px]:text-lg'>{`${locales.header.hello} ${name}`}</p>
             <p className=' text-2xl text-yellow-700'><PiHandWaving /> </p>
           </div>
           <div>
-            <p className='text-xs text-gray-400'>{greetingKey}</p>
+            <p className='text-[10px] text-gray-400 min-[768px]:text-xs'>{greetingKey}</p>
           </div>
         </div>
-        <div className='w-80 text-[24px] font-bold font-mono text-gray-500  '>
+        <div className='w-80 text-[18px] font-bold font-mono text-gray-500 min-[768px]:text-[24px] '>
           <marquee behavior="scroll" direction="left">{locales.sidemenu.project_name}</marquee>
 
         </div>
 
         <div className='flex mr-3 justify-normal'>
-          {role !== "lab_Incharge" && role !== "teacher" && role !=="admin"  && role !== "technician" &&
+          {role !== "lab_Incharge" && role !== "teacher" && role !== "admin" && role !== "technician" &&
             <div onClick={() => navigate('/demandsList')}>
               <Tooltip title="Notifications">
                 <p className='text-2xl mr-1 p-2 cursor-pointer '><IoNotificationsOutline />
@@ -163,11 +178,14 @@ const Header = () => {
               ) : null}
             </div>
           }
-          <p className='text-5xl'>{
+          <div>
+
+          </div>
+          <p className='text-5xl hover:cursor-pointer' onClick={handleProfile} >{
             Photo ? <img src={`${BaseUrl}/${Photo}`} alt="pic" style={{ width: 50, height: 50, borderRadius: 25, marginRight: 6 }} /> : <CgProfile />
           }
           </p>
-          <div className='flex flex-col mt-2'>
+          <div className='flex flex-col mt-2 hover:cursor-pointer' onClick={handleProfile}>
             <p className='text-sm'>{name}</p>
             <p className='text-xs text-gray-400'>{formated_Role}</p>
           </div>

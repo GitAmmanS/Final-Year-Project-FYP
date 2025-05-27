@@ -9,8 +9,8 @@ import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 let locales;
-const language = localStorage.getItem('language');
-if (language === 'english') {
+const language = sessionStorage.getItem('language');
+if (language === 'english' || language==null) {
   import('../locales/en.json').then((module) => {
     locales = module.default;
   });
@@ -187,7 +187,8 @@ const Signup = () => {
               {showPassword2 ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
-          <div className="mb-4">
+          <div className="mb-4 ml-4">
+            <label className='text-gray-500 text-sm'>Choose Profile Photo</label>
             <input
               type="file"
               accept="image/*"

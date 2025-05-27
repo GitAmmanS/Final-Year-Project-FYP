@@ -4,8 +4,9 @@ const Demand = new mongoose.Schema({
     requester: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
     number: { type : Number, unique:true },
     description: { type: String },
+    location: { type: String },
     items: [{
-        product_Id: { type: mongoose.Schema.Types.ObjectId, ref: "products" },
+        product_Id: { type: mongoose.Schema.Types.ObjectId, ref: "store" },
         quantityDemanded: { type: Number, required: true },
         quantityReceived: { type: Number, default: 0 },
         status: { type: String,enum:["pending","rejected","resolved","partially resolved"] ,default:"pending"}

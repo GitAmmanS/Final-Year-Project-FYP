@@ -6,8 +6,8 @@ import { axiosInstance } from '../utils/AxiosInstance';
 import Loading from 'react-loading'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -20,7 +20,7 @@ if (language === "english") {
 const ViewComplains = () => {
   const [complains, setcomplains] = useState([]);
   const [filteredcomplains, setFilteredcomplains] = useState([]);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const Role = user?.role;
   const UserID = user?._id;
   const [buttonClick, setButtonClick] = useState("All complain");
@@ -32,10 +32,15 @@ const ViewComplains = () => {
       setLoader(true);
       try {
         let response ,complaints;
-        if (Role === "admin" || Role ==="lab_Incharge" || Role ==="technician") {
+        if (Role === "admin" ) {
           response = await axiosInstance.get(`${BaseUrl}/complain`);
-          console.log(response.data.message.length);
           complaints = response.data.message;
+        } 
+        else if ( Role ==="lab_Incharge" || Role ==="technician") {
+          response = await axiosInstance.get(`${BaseUrl}/complain`);
+          
+          complaints = response.data.message?.filter?.((complain)=>complain.assigned_to._id === user._id);
+          console.log(response.data.message);
         } else {
           response = await axiosInstance.get(`${BaseUrl}/complain/post/${UserID}`);
           console.log(response.data.data);
@@ -129,8 +134,9 @@ const ViewComplains = () => {
                       key={index}
                       className="mb-4  bg-white rounded-lg shadow-lg border border-gray-200"
                     >
-                      <li className="font-bold ml-4 mt-4 text-lg">{`Number: ${filteredcomplains._id}`}</li>
+                      <li className="font-bold ml-4 mt-4 text-lg">{`Number: ${filteredcomplains.number}`}</li>
                       <li className="text-xs ml-4 text-gray-600">{`From: ${filteredcomplains.generated_by.name}`}</li>
+                      <li className="text-xs ml-4 text-gray-600">{`Location: ${filteredcomplains.location}`}</li>
                       <li className="text-xs ml-4 text-gray-600">{`Date: ${new Date(
                         filteredcomplains.created_At
                       ).toLocaleDateString()}`}</li>
@@ -146,7 +152,7 @@ const ViewComplains = () => {
                         {`Status: ${filteredcomplains.status.toUpperCase()}`}
                       </li>
                       <div className='flex '>
-                        <li className=' hover:text-green-900 ml-4 mb-4 font-bold'><button onClick={() => navigate('/actioncomplain', { state: { complainNumber: filteredcomplains._id } })}>{Role==="teacher"|| Role ==="admin"?'View':'Action'}</button></li>
+                        <li className=' hover:text-green-900 ml-4 mb-4 font-bold'><button onClick={() => navigate('/actioncomplain', { state: { complainNumber: filteredcomplains.number } })}>{Role==="teacher"|| Role ==="admin"?'View':'Action'}</button></li>
                       </div>
                     </ul>
                   ))
@@ -156,8 +162,9 @@ const ViewComplains = () => {
                       key={index}
                       className="mb-4 p-4 bg-white rounded-lg shadow-lg border border-gray-200"
                     >
-                      <li className="font-bold text-lg">{`Number: ${complains._id}`}</li>
+                      <li className="font-bold text-lg">{`Number: ${complains.number}`}</li>
                       <li className="text-xs text-gray-600">{`From: ${complains.generated_by.name}`}</li>
+                      <li className="text-xs text-gray-600">{`Location: ${complains.location}`}</li>
                       <li className="text-xs text-gray-600">{`Date: ${new Date(
                         complains.created_At
                       ).toLocaleDateString()}`}</li>
@@ -173,7 +180,7 @@ const ViewComplains = () => {
                         {`Status: ${complains.status.toUpperCase()}`}
                       </li>
                       <div className='flex '>
-                        <li className=' hover:text-green-900 font-bold'><button onClick={() => navigate('/actioncomplain', { state: { complainNumber: complains._id } })}>{Role==="teacher" || Role ==="admin"?'View':'Action'}</button></li>
+                        <li className=' hover:text-green-900 font-bold'><button onClick={() => navigate('/actioncomplain', { state: { complainNumber: complains.number } })}>{Role==="teacher" || Role ==="admin"?'View':'Action'}</button></li>
                       </div>
                     </ul>
                   ))
@@ -186,8 +193,15 @@ const ViewComplains = () => {
           </div> :
           <div className="loading-container flex justify-center items-center pt-20 min-h-50 min-w-60">
             <Loading type="spin" color="#2C6B38" />
-          </div>
+          </div> 
       }
+      {
+        
+        complains.length<=0 && filteredcomplains.length<=0 && buttonClick==='All complain' && loader &&(
+          <div className='text-center mt-4 text-gray-500 font-semibold'>No Complaints found</div>
+        )
+      }
+
     </div>
   )
 }

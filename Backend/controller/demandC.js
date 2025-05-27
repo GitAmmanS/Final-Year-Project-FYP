@@ -8,7 +8,7 @@ const lab = require('../models/lab');
 exports.postDemand = async (req, res) => {
 
     try {
-        const { description, userName, quantities } = req.body;
+        const { description, userName, quantities,Location } = req.body;
         const maxDemand = await Demand.findOne().sort({ number: -1 }).select('number');
         const maxNumber = maxDemand ? maxDemand.number : 3999;
         const generatedNumber = maxNumber + 1;
@@ -22,6 +22,7 @@ exports.postDemand = async (req, res) => {
             requester: findUser._id,
             number: generatedNumber,
             description: description,
+            location: Location,
             items: ids.map((productId, index) => ({
                 product_Id: productId,
                 quantityDemanded: quantity[index],
@@ -40,57 +41,66 @@ exports.postDemand = async (req, res) => {
 }
 exports.updateDemand = async (req, res) => {
     try {
-        const { StoreQuantity, editId, demandId } = req.body;
-        const existingDemand = await Demand.findOne({
-            _id: demandId,
-            "items.product_Id": editId
-        });
+        const { StoreQuantity, editId, demandId ,Location } = req.body;
+        const existingDemand = await Demand.findOne({ _id: demandId })
+            .populate({
+                path: 'items.product_Id',
+                select: 'product_ID'
+            });
+
         if (!existingDemand) {
-            return res.status(404).json({ success: false, message: "Demand or item not found" });
+            return res.status(404).json({ success: false, message: "Demand not found" });
+        }
+        const matchedItem = existingDemand.items.find(item => 
+            item.product_Id && 
+            item.product_Id.product_ID && 
+            item.product_Id.product_ID._id.toString() === editId.toString()
+        );
+
+        if (!matchedItem) {
+            return res.status(404).json({ success: false, message: "Product not found in demand items" });
         }
         const storeItem = await Store.findOne({ product_ID: editId });
         if (!storeItem) {
             return res.status(404).json({ success: false, message: "Store item not found" });
         }
-
-        const matchedItem = existingDemand.items.find(item => item.product_Id._id.toString() === editId._id);
-        if (!matchedItem) {
-            return res.status(404).json({ success: false, message: "Product not found in demand items" });
-        }
-
         if (StoreQuantity < 1 || StoreQuantity > storeItem.quantity) {
             return res.status(400).json({ success: false, message: "Invalid Store Quantity" });
         }
-        let totalRecievedQuantity = parseInt(StoreQuantity);
+
+        let totalReceivedQuantity = parseInt(StoreQuantity);
         if (matchedItem.status === "partially resolved") {
-            totalRecievedQuantity += matchedItem.quantityReceived;
+            totalReceivedQuantity += matchedItem.quantityReceived;
         }
 
         let itemStatus;
-        if (matchedItem.quantityDemanded === totalRecievedQuantity) {
+        if (matchedItem.quantityDemanded === totalReceivedQuantity) {
             itemStatus = "resolved";
-        } else if (totalRecievedQuantity > 0 && totalRecievedQuantity < matchedItem.quantityDemanded.toString()) {
+        } else if (totalReceivedQuantity > 0 && totalReceivedQuantity < matchedItem.quantityDemanded) {
             itemStatus = "partially resolved";
         } else {
             return res.status(400).json({ success: false, message: "Quantity exceeds demand or is invalid" });
         }
-        
         const updatedDemand = await Demand.findOneAndUpdate(
-            { _id: demandId, "items.product_Id": editId },
+            { 
+                _id: demandId, 
+                "items.product_Id": matchedItem.product_Id._id 
+            },
             {
                 $set: {
-                    "items.$.quantityReceived": totalRecievedQuantity,
-                    "items.$.status": itemStatus
+                    "items.$.quantityReceived": totalReceivedQuantity,
+                    "items.$.status": itemStatus,
                 }
             },
             { new: true }
         );
-
-        const partiallyResolvedItems = updatedDemand.items.filter(item => item.status === "partially resolved" || item.status === "pending");
+        const partiallyResolvedItems = updatedDemand.items.filter(item => 
+            item.status === "partially resolved" || item.status === "pending"
+        );
         const demandStatus = partiallyResolvedItems.length > 0 ? "partially resolved" : "resolved";
 
-        const updateData = await Demand.findOneAndUpdate(
-            { _id: demandId },
+        await Demand.findByIdAndUpdate(
+            demandId,
             { $set: { demandStatus: demandStatus } }
         );
 
@@ -99,18 +109,20 @@ exports.updateDemand = async (req, res) => {
             { product_ID: editId },
             { $set: { quantity: newQuantity } }
         );
-        if(updateStoreQuantity){
-            const user= existingDemand.requester;
-            postToProductStore(storeItem,StoreQuantity,user);
-        }
-        if (!updateStoreQuantity) {
+
+        if (updateStoreQuantity) {
+            const user = existingDemand.requester;
+            postToProductStore(storeItem, StoreQuantity, user,Location);
+        } else {
             return res.status(500).json({ success: false, message: "Failed to update store quantity" });
         }
 
         return res.status(200).json({
             success: true,
             message: "Demand updated successfully",
-            updatedDemand: updateData,
+            updatedDemand: await Demand.findById(demandId)
+                .populate('requester')
+                .populate('items.product_Id')
         });
     } catch (err) {
         console.error("Error:", err.message);
@@ -119,7 +131,13 @@ exports.updateDemand = async (req, res) => {
 };
 exports.getDemand = async (req, res) => {
     try {
-        const data = await Demand.find().populate('requester').populate('items.product_Id');
+        const data = await Demand.find().populate('requester').populate({
+            path: 'items.product_Id',
+            populate: {
+                path: 'product_ID',
+                model: 'products'
+            }
+        });
         if (data) {
             res.status(200).send({
                 success: true,
@@ -139,7 +157,13 @@ exports.getDemand = async (req, res) => {
 exports.getDemandByStatus = async (req, res) => {
     try {
 
-        const data = await Demand.find({ demandStatus: "pending" }).populate('requester').populate('items.product_Id');
+        const data = await Demand.find({ demandStatus: "pending" }).populate('requester').populate({
+            path: 'items.product_Id',
+            populate: {
+                path: 'product_ID',
+                model: 'products'
+            }
+        });
         if (data) {
             res.status(200).send({
                 success: true,
@@ -160,33 +184,37 @@ exports.getDemandById = async (req, res) => {
     try {
         const number = req.params;
         const data = await Demand.findOne(number).populate('requester')
+            .populate('requester')
             .populate({
                 path: 'items.product_Id',
-                populate: [
-                    { path: 'category_ID' },
-                    { path: 'company_ID' },
-                    {
-                        path: 'specs',
-                        populate: [
-                            { path: 'cpu' },
-                            { path: 'os' },
-                            {
-                                path: 'ram',
-                                populate: [
-                                    { path: 'capacity' },
-                                    { path: 'type' },
-                                ]
-                            },
-                            {
-                                path: 'hdd',
-                                populate: [
-                                    { path: 'capacity' },
-                                    { path: 'type' }]
-                            },
-                        ],
-                    },
-                ],
+                populate: {
+                    path: 'product_ID',
+                    model: 'products',
+                    populate: [
+                        { path: 'category_ID', model: 'category' },
+                        { path: 'company_ID', model: 'company' },
+                        { path: 'specs.cpu', model: 'cpu' },
+                        { path: 'specs.os', model: 'os' },
+                        {
+                            path: 'specs.ram',
+                            model: 'ram',
+                            populate: [
+                                { path: 'capacity' },
+                                { path: 'type' }
+                            ]
+                        },
+                        {
+                            path: 'specs.hdd',
+                            model: 'hdd',
+                            populate: [
+                                { path: 'capacity' },
+                                { path: 'type' }
+                            ]
+                        }
+                    ]
+                }
             });
+        console.log(data);
         if (data) {
             res.status(200).send({
                 success: true,
@@ -214,30 +242,32 @@ exports.getDemandByName = async (req, res) => {
         const data = await Demand.find({ requester: requester_ID }).populate('requester')
             .populate({
                 path: 'items.product_Id',
-                populate: [
-                    { path: 'category_ID' },
-                    { path: 'company_ID' },
-                    {
-                        path: 'specs',
-                        populate: [
-                            { path: 'cpu' },
-                            { path: 'os' },
-                            {
-                                path: 'ram',
-                                populate: [
-                                    { path: 'capacity' },
-                                    { path: 'type' },
-                                ]
-                            },
-                            {
-                                path: 'hdd',
-                                populate: [
-                                    { path: 'capacity' },
-                                    { path: 'type' }]
-                            },
-                        ],
-                    },
-                ],
+                populate: {
+                    path: 'product_ID',
+                    model: 'products',
+                    populate: [
+                        { path: 'category_ID', model: 'category' },
+                        { path: 'company_ID', model: 'company' },
+                        { path: 'specs.cpu', model: 'cpu' },
+                        { path: 'specs.os', model: 'os' },
+                        {
+                            path: 'specs.ram',
+                            model: 'ram',
+                            populate: [
+                                { path: 'capacity' },
+                                { path: 'type' }
+                            ]
+                        },
+                        {
+                            path: 'specs.hdd',
+                            model: 'hdd',
+                            populate: [
+                                { path: 'capacity' },
+                                { path: 'type' }
+                            ]
+                        }
+                    ]
+                }
             });
         if (data) {
             res.status(200).send({
@@ -266,30 +296,32 @@ exports.getDemandByUserID = async (req, res) => {
         const data = await Demand.find({ requester: requester_ID }).populate('requester')
             .populate({
                 path: 'items.product_Id',
-                populate: [
-                    { path: 'category_ID' },
-                    { path: 'company_ID' },
-                    {
-                        path: 'specs',
-                        populate: [
-                            { path: 'cpu' },
-                            { path: 'os' },
-                            {
-                                path: 'ram',
-                                populate: [
-                                    { path: 'capacity' },
-                                    { path: 'type' },
-                                ]
-                            },
-                            {
-                                path: 'hdd',
-                                populate: [
-                                    { path: 'capacity' },
-                                    { path: 'type' }]
-                            },
-                        ],
-                    },
-                ],
+                populate: {
+                    path: 'product_ID',
+                    model: 'products',
+                    populate: [
+                        { path: 'category_ID', model: 'category' },
+                        { path: 'company_ID', model: 'company' },
+                        { path: 'specs.cpu', model: 'cpu' },
+                        { path: 'specs.os', model: 'os' },
+                        {
+                            path: 'specs.ram',
+                            model: 'ram',
+                            populate: [
+                                { path: 'capacity' },
+                                { path: 'type' }
+                            ]
+                        },
+                        {
+                            path: 'specs.hdd',
+                            model: 'hdd',
+                            populate: [
+                                { path: 'capacity' },
+                                { path: 'type' }
+                            ]
+                        }
+                    ]
+                }
             });
         if (data) {
             res.status(200).send({
@@ -307,31 +339,31 @@ exports.getDemandByUserID = async (req, res) => {
         res.status(500).send('Not found demand ' + err.message);
     }
 }
-async function postToProductStore (storeItem,quantityReceived,user){
+async function postToProductStore(storeItem, quantityReceived, user ,Location) {
     try {
-            //    console.log(user);
-               const searchLabs = await lab.findOne({incharge:user});
-               const getUser = searchLabs._id;
-               const data = new ProductStore({
-                store_ID:storeItem._id,
-                lab_ID:getUser,
-                quantity:quantityReceived,
-                items:[]
-            });
-           for (let i=0;i<quantityReceived;i++){
+        //    console.log(user);
+        const searchLabs = await lab.findOne({ incharge: user , number:Location });
+        const getUser = searchLabs._id;
+        const data = new ProductStore({
+            store_ID: storeItem._id,
+            lab_ID: getUser,
+            quantity: quantityReceived,
+            items: []
+        });
+        for (let i = 0; i < quantityReceived; i++) {
             var generateSerialNumber = generator.generate(14);
             var qrCodeData = await QRCode.toDataURL(generateSerialNumber);
 
-              data.items.push({
-                product_ID:storeItem.product_ID,
+            data.items.push({
+                product_ID: storeItem.product_ID,
                 serialNumber: generateSerialNumber,
-                qrCode:qrCodeData
-              });
-            generateSerialNumber=0;
-            qrCodeData='';
-           }
-            await data.save();
-        } catch (err) {
-            console.error("Error :", err);  
+                qrCode: qrCodeData
+            });
+            generateSerialNumber = 0;
+            qrCodeData = '';
         }
+        await data.save();
+    } catch (err) {
+        console.error("Error :", err);
+    }
 }

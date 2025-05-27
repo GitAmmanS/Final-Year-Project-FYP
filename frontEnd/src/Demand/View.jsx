@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import Loading from 'react-loading'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });
@@ -22,7 +22,7 @@ const View = () => {
   const [demandNumber, setDemandNumber] = useState();
   const [buttonClick, setButtonClick] = useState("All Demand");
   const [displayAllDemands, setDisplayAllDemands] = useState(true);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const Role = user?.role;
 
   const [loader, setLoader] = useState(false);
@@ -130,7 +130,7 @@ const View = () => {
                         {`Status: ${filteredDemands.demandStatus.toUpperCase()}`}
                       </li>
                       <div className='flex '>
-                        <li className=' hover:text-green-900 ml-4 mb-4 font-bold'><button onClick={() => navigate('/demandDetails', { state: { demandNumber: filteredDemands.number } })}>{Role ==="admin"?'View':'Action'}</button></li>
+                        <li className=' hover:text-green-900 ml-4 mb-4 font-bold'><button onClick={() => navigate('/actionDemand', { state: { demandNumber: filteredDemands.number } })}>{Role ==="admin"?'View':'Action'}</button></li>
                       </div>
                     </ul>
                   ))

@@ -48,50 +48,7 @@ exports.getProductStoreByLabId = async (req,res)=>{
     }
 exports.getAllProductStores = async (req, res) => {
     try {
-        const data = await ProductStore.find().populate({
-            path: 'items.product_ID',
-            populate: [
-                { path: 'category_ID' },
-                { path: 'company_ID' },
-                {
-                    path: 'specs',
-                    populate: [
-                        { path: 'cpu' },
-                        { path: 'os' },
-                        {
-                            path: 'ram',
-                            populate: [
-                                { path: 'capacity' },
-                                { path: 'type' },
-                            ]
-                        },
-                        {
-                            path: 'hdd',
-                            populate: [
-                                { path: 'capacity' },
-                                { path: 'type' },
-                            ]
-                        },
-                    ],
-                },
-            ],
-        });
-
-        res.status(200).json({
-            success: true,
-            data: data
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
-exports.getAllProductStores = async (req, res) => {
-    try {
-        const data = await ProductStore.find().populate({
+        const data = await ProductStore.find().populate('lab_ID').populate({
             path: 'items.product_ID',
             populate: [
                 { path: 'category_ID' },

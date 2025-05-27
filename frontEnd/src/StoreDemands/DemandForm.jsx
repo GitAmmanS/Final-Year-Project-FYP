@@ -4,8 +4,8 @@ import { BaseUrl } from '../utils/BaseUrl';
 import axios from 'axios';
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english"|| language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });

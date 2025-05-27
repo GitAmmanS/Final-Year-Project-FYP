@@ -8,8 +8,8 @@ import { BaseUrl } from '../utils/BaseUrl';
 import Swal from 'sweetalert2'
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
     import("../locales/en.json").then((module) => {
         locales = module.default;
     });
@@ -20,7 +20,6 @@ if (language === "english") {
 }
 
 const AddProductDialog = ({ open, onClose, product }) => {
-    console.log('items', product)
     const [categoryName, setCategoryName] = useState([]);
     const [companyName, setCompanyName] = useState([]);
     const [osName, setOsName] = useState([]);

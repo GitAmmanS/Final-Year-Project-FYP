@@ -27,6 +27,8 @@ import Card from './Resource/Card';
 import LabInventory from './LabInventory/LabInventory';
 import UserProfile from './User/UserProfile';
 import ActionView from './Complains/ActionView';
+import ResolveComplaint from './Complains/IssueComplaint';
+import IssueComplaint from './Complains/IssueComplaint';
 function App() {
   return (
     <Router>
@@ -43,7 +45,7 @@ function App() {
             <Route path='/setting' element={<Setting />} />
           </Route>
 
-          <Route element={<ProtectedRouting allowedRoles={["admin", "lab_Incharge","store_Incharge"]} />} >
+          <Route element={<ProtectedRouting allowedRoles={["admin", "lab_Incharge","store_Incharge","teacher"]} />} >
             <Route path='/viewDemands' element={<ViewDemand />} />
             <Route path='/userDemandDetail' element={<UserDemandDetails />} />
           </Route>
@@ -67,7 +69,7 @@ function App() {
             <Route path='/user' element={<User />} />
           </Route>
 
-          <Route element={<ProtectedRouting allowedRoles={["lab_Incharge"]} />} >
+          <Route element={<ProtectedRouting allowedRoles={["lab_Incharge","teacher"]} />} >
             <Route path='/issueItem' element={<IssueItems />} />
             <Route path='/labInventory' element={<LabInventory />} />
           </Route>
@@ -79,6 +81,7 @@ function App() {
           </Route>
           <Route element={<ProtectedRouting allowedRoles={["admin", "lab_Incharge", "teacher" ,"technician"]} />} >
             <Route path='/complains' element={<ViewComplains />} />
+            <Route path='/Issue_Complaint' element={<IssueComplaint />} />
             <Route path='/actionComplain' element={<ActionView />} />
           </Route>
         </Routes>

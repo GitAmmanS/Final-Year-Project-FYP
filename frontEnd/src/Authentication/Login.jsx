@@ -9,8 +9,8 @@ import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english"|| language==null) {
     import("../locales/en.json").then((module) => {
         locales = module.default;
     });
@@ -46,8 +46,8 @@ const Login = () => {
             console.log(response);
             if (response.status === 200) {
                 const { token, user } = response.data;
-                localStorage.setItem("authToken", token);
-                localStorage.setItem("user", JSON.stringify(user));
+                sessionStorage.setItem("authToken", token);
+                sessionStorage.setItem("user", JSON.stringify(user));
                 navigate("/");
                 let text = `Good to see you again, ${user.name}! Let's get started.`;
                 const voice = new SpeechSynthesisUtterance(text);

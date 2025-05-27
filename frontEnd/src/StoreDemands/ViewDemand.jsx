@@ -10,7 +10,7 @@ const ViewDemand = () => {
   const [buttonClick, setButtonClick] = useState("All demand");
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const name = user?.name;
   const statusButtons = [
     { label: "All", value: "" },

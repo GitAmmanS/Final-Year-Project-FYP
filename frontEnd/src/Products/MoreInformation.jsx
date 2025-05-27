@@ -4,8 +4,8 @@ import { FaCircleArrowLeft } from "react-icons/fa6";
 import { BaseUrl } from '../utils/BaseUrl';
 
 let locales;
-const language = localStorage.getItem("language");
-if (language === "english") {
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
   import("../locales/en.json").then((module) => {
     locales = module.default;
   });

@@ -80,7 +80,7 @@ const Header = () => {
             console.log(Array.isArray(resp.data.message));
           }
           else {
-            Data = Array.isArray(resp.data.message) ? resp.data.message.length : '';
+            Data = Array.isArray(resp.data.message) ? resp.data.message?.filter?.((complain) =>complain.status === 'pending' ).length : '';
             console.log(Data);
           }
 

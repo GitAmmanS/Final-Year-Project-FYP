@@ -117,7 +117,7 @@ exports.postComplain = async (req, resp) => {
         const findUser = await User.findOne({ name: userName });
         const ids = Object.keys(quantities);
 
-        const currentDay = moment().format('dddd');
+        const currentDay = moment().subtract(10, 'days').calendar();
         let activeUsers = await User.find({
             role: 'technician',
             is_active: currentDay

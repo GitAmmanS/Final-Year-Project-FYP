@@ -52,7 +52,7 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(403).json({ message: "Something Went Wrong.Not Verified" });
         }
 
-        user.is_active = moment().format('dddd');
+        user.is_active = moment().subtract(10, 'days').calendar();
         await user.save();
 
         const { password: hashedPassword, ...userWithoutPassword } = user._doc;

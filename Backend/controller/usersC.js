@@ -52,7 +52,7 @@ exports.userspostAuthentication = async (req, resp) => {
             return resp.status(403).json({ message: "Something Went Wrong.Not Verified" });
         }
 
-        user.is_active = moment().subtract(10, 'days').calendar();
+        user.is_active = moment().format('L');
         await user.save();
 
         const { password: hashedPassword, ...userWithoutPassword } = user._doc;
@@ -125,14 +125,62 @@ const sendVerifyMail = async (name, email, user_id) => {
     }
 }
 exports.verifyMail = async (req, res) => {
-    try {
-        const updateVerify = await users.updateOne({ _id: req.query.id }, { $set: { is_verified: true } });
-        console.log("updated res", updateVerify);
-        res.status(200).send("Email Verified. Go to Login");
-    } catch (error) {
-        res.send("not ok");
-    }
-}
+  try {
+    const updateVerify = await users.updateOne(
+      { _id: req.query.id },
+      { $set: { is_verified: true } }
+    );
+    console.log("updated res", updateVerify);
+
+    res.status(200).send(`
+      <div style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f3f4f6;
+        font-family: Arial, sans-serif;
+      ">
+        <h1 style="color: #22C55E; margin-bottom: 20px;">Email Verified Successfully!</h1>
+        <p style="font-size: 18px; margin-bottom: 30px;">Your account has been activated. You can now log in.</p>
+        <a href="http://localhost:3000/login" style="
+          padding: 10px 20px;
+          background-color: #22C55E;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 8px;
+          font-size: 16px;
+        ">Go to Login</a>
+      </div>
+    `);
+  } catch (error) {
+    console.error("Email Verification Error:", error);
+    res.status(500).send(`
+      <div style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #fef2f2;
+        font-family: Arial, sans-serif;
+      ">
+        <h1 style="color: #ef4444; margin-bottom: 20px;">Verification Failed!</h1>
+        <p style="font-size: 18px; margin-bottom: 30px;">Something went wrong while verifying your email.</p>
+        <a href="http://localhost:3000/signup" style="
+          padding: 10px 20px;
+          background-color: #ef4444;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 8px;
+          font-size: 16px;
+        ">Back to SignUp</a>
+      </div>
+    `);
+  }
+};
+
 exports.usersRoleupdate = async (req, resp) => {
     try {
         const data = await users.findOneAndUpdate({ _id: req.params.id }, {

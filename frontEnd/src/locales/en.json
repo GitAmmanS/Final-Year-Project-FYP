@@ -37,6 +37,7 @@
       "model":"Model",
       "qrcode" : "QR Code",
       "convert":"Convert Text",
+      "voice":"Voice Command",
       "quantityDemanded":"Quantity Demanded"
     },
     "messages": {

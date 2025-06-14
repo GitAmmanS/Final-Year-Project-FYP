@@ -103,21 +103,23 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center h-screen w-screen">
+       <div className="flex w-[90%] h-[85%] shadow-2xl rounded-2xl overflow-hidden">
       <div className="w-[60%]">
         <img
           src={uniBg}
           alt="University"
-          className="h-screen bg-no-repeat rounded-r-3xl"
+          className="h-full w-full object-cover"
         />
       </div>
-      <div className="w-[40%] flex justify-center">
+      <div className="w-[40%] flex justify-center flex-col mt-0">
+        <h2 className="text-2xl font-bold text-gray-800 text-center">
+            Sign Up
+          </h2>
         <form
           onSubmit={submitHandler}
           className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg relative"
         >
-          <h2 className="text-2xl font-bold text-gray-600 text-center mb-8">
-            Sign Up
-          </h2>
+          
 
           <div className="mb-4">
             <input
@@ -126,7 +128,7 @@ const Signup = () => {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 
@@ -137,7 +139,7 @@ const Signup = () => {
               required
               value={initialEmail}
               onChange={(e) => setInitialEmail(e.target.value)}
-              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 
@@ -148,7 +150,7 @@ const Signup = () => {
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 
@@ -159,7 +161,7 @@ const Signup = () => {
               required
               value={initialPassword}
               onChange={(e) => setInitialPassword(e.target.value)}
-              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button
               type="button"
@@ -177,7 +179,7 @@ const Signup = () => {
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button
               type="button"
@@ -204,7 +206,7 @@ const Signup = () => {
           <div className="flex justify-between px-5 mt-4">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white rounded-md w-24 h-10"
+              className="bg-green-700 hover:bg-green-900 text-white rounded-md w-24 h-10"
             >
               Submit
             </button>
@@ -218,6 +220,7 @@ const Signup = () => {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };

@@ -19,6 +19,8 @@ const MoreInformation = () => {
   const location = useLocation();
   const { item } = location.state;
   const navigate = useNavigate();
+  const pattern = /\b(pc|personal computer)\b/i;
+  const isPC = pattern.test(item.name);
 
   return (
     <>
@@ -51,8 +53,11 @@ const MoreInformation = () => {
             <p>
               <span className="font-bold">Model:</span> {item.model || 'N/A'}
             </p>
-
-            <h2 className="text-lg font-bold mt-4">Specifications:</h2>
+     <p>
+                <span className="font-bold">{item.name} Specs:</span> {item.specs?.otherspecs || 'N/A'}
+              </p>
+            {isPC && (
+            <><h2 className="text-lg font-bold mt-4">Specifications:</h2>
             <div className="ml-4 space-y-2">
               <p>
                 <span className="font-medium">CPU:</span> {item.specs?.cpu?.name || 'N/A'}
@@ -60,9 +65,7 @@ const MoreInformation = () => {
               <p>
                 <span className="font-medium">Operating System:</span> {item.specs?.os?.name || 'N/A'}
               </p>
-              <p>
-                <span className="font-medium">Other Specs:</span> {item.specs?.otherspecs || 'N/A'}
-              </p>
+             
 
               <h3 className="text-md font-semibold mt-2">RAM Details:</h3>
               <ul className="ml-4 list-disc">
@@ -86,6 +89,8 @@ const MoreInformation = () => {
                 </li>
               </ul>
             </div>
+            </>
+            )}
           </div>
         </div>
       </div>

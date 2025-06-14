@@ -29,9 +29,9 @@ import UserProfile from './User/UserProfile';
 import ActionView from './Complains/ActionView';
 import ResolveComplaint from './Complains/IssueComplaint';
 import IssueComplaint from './Complains/IssueComplaint';
+
 function App() {
   return (
-    <Router>
       <Layout>
         <ShowSomeTimes>
           <Header />
@@ -86,7 +86,6 @@ function App() {
           </Route>
         </Routes>
       </Layout>
-    </Router>
 
   );
 }

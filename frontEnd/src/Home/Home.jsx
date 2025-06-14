@@ -180,13 +180,11 @@ const Home = () => {
             axiosInstance.get(`${BaseUrl}/complain`).catch(() => ({ data: { message: [] } })),
             axios.get(`${BaseUrl}/productstore/getByUserId/${user._id}`).catch(() => ({ data: { data: [] } })),
           ]);
-          console.log(inventory.data.data);
           setLabData({
             demands: demandsRes?.data.data,
             complaints: complains?.data.message,
             labProducts: inventory?.data?.data?.reduce?.((sum, item) => sum + item.quantity, 0),
           });
-          console.log(labProducts);
           setColumns([
             { accessorKey: 'Number', header: 'Number' },
             { accessorKey: 'Complaint Date', header: 'Complaint Date' },

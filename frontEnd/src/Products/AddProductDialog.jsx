@@ -166,13 +166,21 @@ const AddProductDialog = ({ open, onClose, product }) => {
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>{product ? "Edit Product" : "Add Product"}</DialogTitle>
-            <DialogContent>
-                <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleChange} margin="dense"
+            <DialogContent> 
+                <TextField  fullWidth  label={
+    <>
+      Name <span style={{ color: 'red' }}>*</span>
+    </>
+  } name="name" value={formData.name} onChange={handleChange} margin="dense"
                 />
-                <TextField fullWidth label="Model" name="model" value={formData.model} onChange={handleChange} margin="dense"
+                <TextField fullWidth  label={
+    <>
+      Model <span style={{ color: 'red' }}>*</span>
+    </>
+  } name="model" value={formData.model} onChange={handleChange} margin="dense"
                 />
                 <FormControl fullWidth margin="dense">
-                    <InputLabel>Category</InputLabel>
+                    <InputLabel>Category<span className='text-red-500'>*</span></InputLabel>
                     <Select name="category_ID" value={formData.category_ID} onChange={handleChange}
                     >
                         {categoryName.map((category) => (
@@ -184,7 +192,7 @@ const AddProductDialog = ({ open, onClose, product }) => {
                 </FormControl>
 
                 <FormControl fullWidth margin="dense">
-                    <InputLabel>Company</InputLabel>
+                    <InputLabel>Company<span className='text-red-500'>*</span></InputLabel>
                     <Select name="company_ID" value={formData.company_ID} onChange={handleChange}
                     >
                         {companyName.map((company) => (

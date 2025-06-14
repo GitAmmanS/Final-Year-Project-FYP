@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useContext } from 'react'
 import { BaseUrl } from '../utils/BaseUrl'
 import axios from 'axios'
 import Loading from 'react-loading'
@@ -13,6 +13,9 @@ import { IoIosInformationCircle } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import Tooltip from '@mui/material/Tooltip';
+import { ProductContext } from '../Context/ProductContext';
+
+
 let locales;
 const language = sessionStorage.getItem("language");
 if (language === "english" || language==null) {
@@ -26,8 +29,9 @@ if (language === "english" || language==null) {
 }
 
 const Product = () => {
+    
+    const {productData} = useContext(ProductContext);
     const navigate = useNavigate();
-    const [productData, getProductData] = useState([]);
     const [loader, setLoader] = useState(false);
     const [open, setOpen] = useState(false);
     const [isCategory, setIsCategory] = useState(false);
@@ -46,19 +50,13 @@ const Product = () => {
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
-    useEffect(() => {
-        const getProduct = async () => {
-            axios.get(`${BaseUrl}/product`).then((response) => {
-                getProductData(response.data.data);
-            })
-        }
-        getProduct();
-    },[productData])
+
     useEffect(() => {
         if (productData.length > 0) {
             setLoader(true);
         }
     }, [productData]);
+
     const handleMoreInfo = (item) => {
         navigate('/product/moreInfo', { state: { item } });
     };
@@ -194,7 +192,11 @@ const Product = () => {
                     <TextField
                         margin="dense"
                         name="categoryOrCompanyName"
-                        label='Name'
+                        label={
+                            <>
+                             Name <span style={{ color: 'red' }}>*</span>
+                            </>
+                        }
                         value={categoryOrCompanyName}
                         onChange={(e) => setCategoryOrCompanyName(e.target.value)}
                         fullWidth

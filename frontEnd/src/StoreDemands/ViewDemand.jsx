@@ -59,9 +59,9 @@ const ViewDemand = () => {
 
   return (
     <div className=''>
-      <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 flex'>
+      <div className='title text-xl text-gray-900 font-bold mt-5 ml-3  flex'>
         My Requests
-        <div className=' items-center space-x-6 ml-[440px] flex'>
+        <div className=' items-center space-x-6 ml-[440px] flex w-[80%]'>
           {statusButtons.map((btn, index) => (
             <button
               key={index}
@@ -79,12 +79,12 @@ const ViewDemand = () => {
       </div>
 
       {!loader ? (
-        <div className="mt-4 w-[90%] mx-auto bg-green-50 p-4 rounded-2xl text-gray-800">
+        <div className="mt-4 w-[90%] ml-4 bg-green-50  rounded-2xl text-gray-800">
           {filteredDemands.length > 0 ? (
             [...filteredDemands].reverse().map((demand, index) => (
               <ul
                 key={index}
-                className="mb-4 p-4 bg-white rounded-lg shadow-lg border border-gray-200"
+                className="mb-4 bg-white rounded-lg shadow-lg border border-gray-200"
               >
                 <li className="font-bold text-lg">{`Number: ${demand.number}`}</li>
                 <li className="text-xs text-gray-600 font-thin">{`From: ${demand.requester.name}`}</li>

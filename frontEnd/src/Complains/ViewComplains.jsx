@@ -125,7 +125,7 @@ const ViewComplains = () => {
 
       {
         !loader ?
-          <div className="card flex justify-center items-center flex-col">
+          <div className="card flex  flex-col">
             <div className='mt-4 w-[90%] h-[50%] '>
               <div className="w-full  bg-green-50 p-4 rounded-2xl text-gray-800">
                 {filteredcomplains.length > 0 ? (

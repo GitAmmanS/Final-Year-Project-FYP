@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useContext } from 'react';
 import PrintRecieving from '../Prints/PrintRecieving';
 import {
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 import jsPDF from 'jspdf';
 import { MdOutlineManageHistory } from "react-icons/md";
 import Tooltip from '@mui/material/Tooltip';
+import { ProductContext } from '../Context/ProductContext';
 let locales;
 const language = sessionStorage.getItem("language");
 if (language === "english"|| language==null) {
@@ -27,25 +28,11 @@ if (language === "english"|| language==null) {
 }
 
 const Store = () => {
+    const {storeData} = useContext(ProductContext);
     const [Loader, setLoader] = useState(false);
-    const [storeData, setStoreData] = useState([]);
-    const [StoreQuantity, setStoreQuantity] = useState('');
-    const [openEdit, setOpenEdit] = useState(false);
-    const [editId, setEditId] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const storeResponse = await axios.get(`${BaseUrl}/store`);
-                setStoreData(storeResponse.data.data);
-            } catch (err) {
-                console.error(locales.messages.errorMessage, err);
-            }
-        };
-
-        fetchData();
-    }, [storeData]);
+   
     useEffect(() => {
         if (storeData.length > 0) {
             setLoader(true);

@@ -109,7 +109,7 @@ const sendVerifyMail = async (name, email, user_id) => {
             subject: 'For Verification ',
             html: `
                 <p>Hi ${name},</p>
-                <p>Click here to <a href="http://localhost:2000/users/verify?id=${user_id}"><b>Verify</b></a> your email.</p>
+                <p>Click here to <a href="https://final-year-project-fyp-dwji.onrender.com/users/verify?id=${user_id}"><b>Verify</b></a> your email.</p>
             `
         }
         transporter.sendMail(mailOptions, function (error, info) {
@@ -144,7 +144,7 @@ exports.verifyMail = async (req, res) => {
       ">
         <h1 style="color: #22C55E; margin-bottom: 20px;">Email Verified Successfully!</h1>
         <p style="font-size: 18px; margin-bottom: 30px;">Your account has been activated. You can now log in.</p>
-        <a href="https://final-year-project-fyp-dwji.onrender.com/login" style="
+        <a href="https://final-year-project-fyp-1.onrender.com/login" style="
           padding: 10px 20px;
           background-color: #22C55E;
           color: #fff;
@@ -168,7 +168,7 @@ exports.verifyMail = async (req, res) => {
       ">
         <h1 style="color: #ef4444; margin-bottom: 20px;">Verification Failed!</h1>
         <p style="font-size: 18px; margin-bottom: 30px;">Something went wrong while verifying your email.</p>
-        <a href="https://final-year-project-fyp-dwji.onrender.com/signup" style="
+        <a href="https://final-year-project-fyp-1.onrender.com/signup" style="
           padding: 10px 20px;
           background-color: #ef4444;
           color: #fff;

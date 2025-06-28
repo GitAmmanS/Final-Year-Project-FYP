@@ -357,7 +357,7 @@ const Home = () => {
 
   return (
     <div className="p-5">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">{locales?.sidemenu?.dashboard}</h1>
       {
         !loader ?
           <div>
@@ -411,7 +411,7 @@ const Home = () => {
                 <div className="mt-12 flex flex-row flex-wrap  min-[993px]:justify-between">
 
                   <div className='min-w-full'>
-                    <h3 className="text-2xl font-semibold mb-2">Recent Complaints <span className='text-lg font-semibold text-gray-500'>(Past 7 Days)</span></h3>
+                    <h3 className="text-2xl font-semibold mb-2">{locales?.dashboard?.recent_com} <span className='text-lg font-semibold text-gray-500'>{locales?.sidemenu?.past_7days}</span></h3>
                     <MaterialReactTable table={table} />
                   </div>
                 </div>
@@ -466,7 +466,7 @@ const Home = () => {
                 <div className="mt-12 flex flex-row flex-wrap  min-[993px]:justify-between">
 
                   <div className='min-w-full'>
-                    <h3 className="text-2xl font-semibold mb-2">Recent Complaints <span className='text-lg font-semibold text-gray-500'>(Past 7 Days)</span></h3>
+                    <h3 className="text-2xl font-semibold mb-2">{locales?.dashboard?.recent_com}  <span className='text-lg font-semibold text-gray-500'>{locales?.sidemenu?.past_7days}</span></h3>
                     <MaterialReactTable table={table} />
                   </div>
                 </div>
@@ -523,7 +523,7 @@ const Home = () => {
                 <div className="mt-12 flex flex-row flex-wrap  min-[993px]:justify-between">
 
                   <div className='min-w-full'>
-                    <h3 className="text-2xl font-semibold mb-2">Recent Requests <span className='text-lg font-semibold text-gray-500'>(Past 7 Days)</span></h3>
+                    <h3 className="text-2xl font-semibold mb-2">{locales?.sidemenu?.rec_req}<span className='text-lg font-semibold text-gray-500'>{locales?.sidemenu?.past_7days}</span></h3>
                     <MaterialReactTable table={table} />
                   </div>
                 </div>
@@ -579,7 +579,7 @@ const Home = () => {
                 <div className="mt-12 flex flex-row flex-wrap  min-[993px]:justify-between">
 
                   <div className='min-w-full'>
-                    <h3 className="text-2xl font-semibold mb-2">My Complaints <span className='text-lg font-semibold text-gray-500'>(Past 7 Days)</span></h3>
+                    <h3 className="text-2xl font-semibold mb-2">{locales?.sidemenu?.my_complains} <span className='text-lg font-semibold text-gray-500'>{locales?.sidemenu?.past_7days}</span></h3>
                     <MaterialReactTable table={table} />
                   </div>
                 </div>
@@ -639,7 +639,7 @@ const Home = () => {
                 <div className="mt-12 flex flex-row flex-wrap  min-[993px]:justify-between">
 
                   <div className='max-w-[700px]'>
-                    <h3 className="text-2xl font-semibold mb-2">Recent Complaints <span className='text-lg font-semibold text-gray-500'>(Past 7 Days)</span></h3>
+                    <h3 className="text-2xl font-semibold mb-2">{locales?.dashboard?.recent_com} <span className='text-lg font-semibold text-gray-500'>{locales?.sidemenu?.past_7days}</span></h3>
                     <MaterialReactTable table={table} />
                   </div>
                   <div className='flex flex-col mt-4'>

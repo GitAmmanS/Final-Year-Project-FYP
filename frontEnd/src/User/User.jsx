@@ -16,6 +16,21 @@ import {
 import Swal from "sweetalert2";
 import axios from "axios";
 
+let locales;
+const language = sessionStorage.getItem("language");
+if (language === "english" || language == null
+
+) {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
+
 const User = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
@@ -190,7 +205,7 @@ const User = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-6">User List</h2>
+      <h2 className="text-2xl font-semibold text-gray-700 mb-6">{locales?.sidemenu?.user_list}</h2>
       {
         !loader ?
           <>

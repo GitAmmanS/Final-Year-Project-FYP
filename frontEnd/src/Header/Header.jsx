@@ -206,13 +206,13 @@ const Header = () => {
                   className="px-4 py-2 text-sm cursor-pointer hover:bg-gray-200"
                   onClick={handleProfile}
                 >
-                  Open Profile
+                  {locales.header.open_prof}
                 </li>
                 <li
                   className="px-4 py-2 text-sm cursor-pointer hover:bg-gray-200"
                   onClick={handleLogout}
                 >
-                  Logout
+                  {locales.header.logout}
                 </li>
               </ul>
             </div>

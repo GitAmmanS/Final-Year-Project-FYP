@@ -1,6 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { MdOutlineVideoLabel, MdMeetingRoom, MdStore } from "react-icons/md";
 
+let locales;
+const language = sessionStorage.getItem("language");
+if (language === "english" || language == null
+
+) {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
+
 const Card = () => {
   const navigate = useNavigate();
 
@@ -11,7 +26,7 @@ const Card = () => {
   return (
     <div>
       <div className="text-3xl font-bold  my-8 ml-2 text-gray-800">
-        Resources
+        {locales?.sidemenu?.resource}
       </div>
       <div className="grid grid-cols-1 grid-rows-2 md:grid-cols-2  gap-8 m-5 mt-16 ml-16 ">
         {/* Lab Card */}

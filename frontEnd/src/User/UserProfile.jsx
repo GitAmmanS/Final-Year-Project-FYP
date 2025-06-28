@@ -8,6 +8,18 @@ import { CgProfile } from 'react-icons/cg';
 import { BaseUrl } from '../utils/BaseUrl';
 import { axiosInstance } from '../utils/AxiosInstance';
 
+let locales;
+const language = sessionStorage.getItem("language");
+if (language === "english" || language==null) {
+  import("../locales/en.json").then((module) => {
+    locales = module.default;
+  });
+} else {
+  import("../locales/ur.json").then((module) => {
+    locales = module.default;
+  });
+}
+
 const UserProfile = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -93,8 +105,8 @@ const UserProfile = () => {
             <div className="bg-white shadow-2xl py-6 rounded-xl w-full max-w-4xl p-8 min-h-[450px]">
                 <div className="flex  items-center justify-center py-3 bg-gray-500 mb-16">
                     {
-                        isEditing ? <h2 className="text-3xl font-semibold  text-white">Edit Profile</h2>
-                            : <h2 className="text-3xl font-semibold  text-white">Profile Information</h2>
+                        isEditing ? <h2 className="text-3xl font-semibold  text-white">{locales?.sidemenu?.edit_prof}</h2>
+                            : <h2 className="text-3xl font-semibold  text-white">{locales?.sidemenu?.prof_info}</h2>
                     }
 
                 </div>

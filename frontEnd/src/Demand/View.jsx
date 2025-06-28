@@ -64,7 +64,7 @@ const View = () => {
 
     <div className=''>
       <div className='title text-xl text-gray-900 font-bold mt-5 ml-3 flex '>
-        Demands List
+      {locales?.sidemenu?.demand_list}
         <div className=' justify-center items-center space-x-4 ml-[440px] flex'>
           <button
             className={`text-sm  border border-gray-300 w-28 h-10 text-center p-2 rounded-lg shadow-md  transition-all ${buttonClick === "All Demand" ? "bg-gray-400 border-black" : "bg-gray-100 hover:bg-gray-200"}`}

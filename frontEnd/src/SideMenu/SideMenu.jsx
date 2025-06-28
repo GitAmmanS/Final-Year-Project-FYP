@@ -58,7 +58,7 @@ const SideMenu = () => {
       if (userRole === "admin") return true;
       return labsMatched; // show only if matched
     }
-    else if (item.title === "labInventory") {
+    else if (item.title === "Inventory") {
       return labsMatched;
     }
     return item.roles.includes(userRole);

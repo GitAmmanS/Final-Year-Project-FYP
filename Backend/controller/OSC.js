@@ -1,4 +1,4 @@
-const os = require('../models/os')
+const os = require('../models/OS')
 
 exports.postOs= async (req,res)=>{
     try{

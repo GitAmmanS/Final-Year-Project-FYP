@@ -144,7 +144,7 @@ exports.verifyMail = async (req, res) => {
       ">
         <h1 style="color: #22C55E; margin-bottom: 20px;">Email Verified Successfully!</h1>
         <p style="font-size: 18px; margin-bottom: 30px;">Your account has been activated. You can now log in.</p>
-        <a href="http://localhost:3000/login" style="
+        <a href="https://final-year-project-fyp-dwji.onrender.com/login" style="
           padding: 10px 20px;
           background-color: #22C55E;
           color: #fff;

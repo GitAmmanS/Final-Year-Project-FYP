@@ -168,7 +168,7 @@ exports.verifyMail = async (req, res) => {
       ">
         <h1 style="color: #ef4444; margin-bottom: 20px;">Verification Failed!</h1>
         <p style="font-size: 18px; margin-bottom: 30px;">Something went wrong while verifying your email.</p>
-        <a href="http://localhost:3000/signup" style="
+        <a href="https://final-year-project-fyp-dwji.onrender.com/signup" style="
           padding: 10px 20px;
           background-color: #ef4444;
           color: #fff;

@@ -36,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public', 'users')));
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '../frontEnd/build')));
 app.use(cookieParser());
 
 app.use("/users", usersR);
@@ -62,7 +62,7 @@ app.use('/ramAndHddOptions', ramHddOptions);
 
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontEnd/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../frontEnd/build', 'index.html'));
 });
 
 const port = process.env.PORT || 5000;

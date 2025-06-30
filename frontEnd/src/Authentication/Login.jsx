@@ -83,15 +83,15 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen w-screen bg-gray-100">
-            <div className="flex w-[90%] h-[85%] shadow-2xl rounded-2xl overflow-hidden">
-                <div className="w-[60%]">
+        <div className="flex items-center justify-center min-h-screen w-screen bg-gray-100 p-4">
+            <div className="flex flex-col md:flex-row w-full max-w-6xl h-auto md:min-h-[80vh] shadow-2xl rounded-2xl overflow-hidden">
+                <div className="w-full md:w-[60%] h-48 md:h-auto">
                     <img src={uniBg} alt="University" className="h-full w-full object-cover" />
                 </div>
 
-                <div className="w-[40%] flex flex-col justify-center items-center bg-white p-8">
-                    <h1 className="text-3xl font-extrabold text-green-600 mb-2 text-center">UIIT LabXperts</h1>
-                    <h2 className="text-xl font-bold mb-6 text-gray-700 text-center">Login to your account</h2>
+                <div className="w-full md:w-[40%] flex flex-col justify-center items-center bg-white p-6 md:p-8">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-green-600 mb-2 text-center">UIIT LabXperts</h1>
+                    <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6 text-gray-700 text-center">Login to your account</h2>
 
                     <form onSubmit={submitHandler} className="w-full max-w-sm">
                         <div className="mb-4">
@@ -142,7 +142,7 @@ const Login = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none"
+                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none mt-4"
                         >
                             Login
                         </button>

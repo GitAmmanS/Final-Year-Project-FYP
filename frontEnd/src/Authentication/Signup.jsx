@@ -107,25 +107,23 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen">
-      <div className="flex w-[90%] h-[85%] shadow-2xl rounded-2xl overflow-hidden">
-        <div className="w-[60%]">
+    <div className="flex items-center justify-center min-h-screen w-screen p-4 bg-gray-100">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl h-auto md:h-[85%] shadow-2xl rounded-2xl overflow-hidden">
+        <div className="w-full md:w-[60%] h-48 md:h-auto">
           <img
             src={uniBg}
             alt="University"
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="w-[40%] flex justify-center flex-col mt-0">
-          <h2 className="text-2xl font-bold text-gray-800 text-center">
+        <div className="w-full md:w-[40%] md:h-[80vh] flex justify-center flex-col bg-white p-4 md:p-8">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 text-center mb-4">
             Sign Up
           </h2>
           <form
             onSubmit={submitHandler}
-            className="w-full max-w-md p-6 bg-white shadow-lg rounded-lg relative"
+            className="w-full max-w-md p-4 md:p-6 bg-white rounded-lg"
           >
-
-
             <div className="mb-4">
               <input
                 type="text"
@@ -133,7 +131,7 @@ const Signup = () => {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
 
@@ -144,7 +142,7 @@ const Signup = () => {
                 required
                 value={initialEmail}
                 onChange={(e) => setInitialEmail(e.target.value)}
-                className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
 
@@ -155,7 +153,7 @@ const Signup = () => {
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
 
@@ -166,12 +164,12 @@ const Signup = () => {
                 required
                 value={initialPassword}
                 onChange={(e) => setInitialPassword(e.target.value)}
-                className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword1(!showPassword1)}
-                className="absolute right-4 top-2/4 transform -translate-y-1/2 text-gray-500"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
               >
                 {showPassword1 ? <FaEye /> : <FaEyeSlash />}
               </button>
@@ -184,51 +182,48 @@ const Signup = () => {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full text-sm px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword2(!showPassword2)}
-                className="absolute right-4 top-2/4 transform -translate-y-1/2 text-gray-500"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
               >
                 {showPassword2 ? <FaEye /> : <FaEyeSlash />}
               </button>
             </div>
-            <div className="mb-4 ml-4">
-              <label className='text-gray-500 text-sm'>Choose Profile Photo</label>
+
+            <div className="mb-4">
+              <label className='block text-gray-500 mb-1'>Choose Profile Photo</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
-                className="text-sm"
+                className="w-full text-sm"
               />
             </div>
-            {
-              Loader ?
-                (
-                  <div className="loading-container flex justify-center items-center min-h-20 min-w-20">
-                    <Loading type="bubbles" color="#2C6B38" />
-                  </div>
-                ) :
-                <Stack sx={{ width: '100%' }} spacing={2}>
-                  {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
-                </Stack>
 
-            }
+            {Loader ? (
+              <div className="flex justify-center items-center my-4">
+                <Loading type="bubbles" color="#2C6B38" height={50} width={50} />
+              </div>
+            ) : (
+              <Stack sx={{ width: '100%' }} spacing={2}>
+                {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
+              </Stack>
+            )}
 
-
-
-            <div className="flex justify-between px-5 mt-4">
+            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
               <button
                 type="submit"
-                className="bg-green-700 hover:bg-green-900 text-white rounded-md w-24 h-10"
+                className="bg-green-700 hover:bg-green-900 text-white rounded-md py-2 px-4 flex-1"
               >
                 Submit
               </button>
               <button
                 type="button"
                 onClick={() => navigate('/login')}
-                className="bg-gray-800 hover:bg-gray-700 text-white rounded-md w-24 h-10"
+                className="bg-gray-800 hover:bg-gray-700 text-white rounded-md py-2 px-4 flex-1"
               >
                 Cancel
               </button>

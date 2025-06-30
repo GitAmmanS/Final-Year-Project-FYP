@@ -117,7 +117,7 @@ exports.postComplain = async (req, resp) => {
         const findUser = await User.findOne({ name: userName });
         const ids = Object.keys(quantities);
 
-        const currentDay = moment().subtract(10, 'days').calendar();
+        const currentDay = moment().format('L');
         let activeUsers = await User.find({
             role: 'technician',
             is_active: currentDay
@@ -125,7 +125,7 @@ exports.postComplain = async (req, resp) => {
 
         if (activeUsers.length === 0) {
             activeUsers = await User.find({
-                role: 'lab_incharge',
+                role: 'lab_Incharge',
                 is_active: currentDay
             }).exec();
         }

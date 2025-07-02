@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Loading from 'react-loading';
 
 let locales;
 const language = sessionStorage.getItem("language");
@@ -23,6 +24,7 @@ if (language === "english" || language == null) {
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [Loader, setLoader] = useState(false);
     const [alert, setAlert] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
@@ -40,6 +42,7 @@ const Login = () => {
     const submitHandler = async (event) => {
         event.preventDefault();
         try {
+            setLoader(true);
             const response = await axios.post(`${BaseUrl}/users/authenticate`, {
                 email,
                 password,
@@ -64,6 +67,7 @@ const Login = () => {
                 handleError("An error occurred while logging in.");
             }
         } catch (error) {
+            setLoader(false);
             console.error('Error during login:', error);
             handleError("Invalid Credentials.");
         }
@@ -136,9 +140,15 @@ const Login = () => {
                             </p>
                         </div>
 
-                        <Stack sx={{ width: '100%' }} spacing={2}>
-                            {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
-                        </Stack>
+                        {Loader ? (
+                            <div className="flex justify-center items-center my-4">
+                                <Loading type="bubbles" color="#2C6B38" height={50} width={50} />
+                            </div>
+                        ) : (
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
+                            </Stack>
+                        )}
 
                         <button
                             type="submit"

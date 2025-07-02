@@ -112,3 +112,45 @@ export function HomeSkeleton() {
     </div>
   )
 }
+export function LoginSkeleton() {
+  return (
+    <div className="animate-pulse flex items-center justify-center min-h-screen w-screen bg-gray-100 p-4">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl h-auto md:min-h-[80vh] shadow-2xl rounded-2xl overflow-hidden bg-white">
+        {/* Image placeholder */}
+        <div className="w-full md:w-[60%] h-48 md:h-auto bg-gray-300"></div>
+
+        {/* Form side */}
+        <div className="w-full md:w-[40%] flex flex-col justify-center items-center p-6 md:p-8">
+          {/* Title */}
+          <div className="w-3/4 h-8 bg-gray-300 rounded mb-4"></div>
+          <div className="w-2/3 h-6 bg-gray-300 rounded mb-8"></div>
+
+          {/* Form fields */}
+          <div className="w-full max-w-sm space-y-6">
+            {/* Email field */}
+            <div>
+              <div className="w-1/4 h-4 bg-gray-300 rounded mb-2"></div>
+              <div className="w-full h-10 bg-gray-200 rounded-lg"></div>
+            </div>
+
+            {/* Password field */}
+            <div className="relative">
+              <div className="w-1/4 h-4 bg-gray-300 rounded mb-2"></div>
+              <div className="w-full h-10 bg-gray-200 rounded-lg"></div>
+              <div className="absolute right-3 top-10 w-5 h-5 bg-gray-300 rounded-full"></div>
+            </div>
+
+            {/* Signup link */}
+            <div className="w-3/4 h-3 bg-gray-200 rounded"></div>
+
+            {/* Alert placeholder */}
+            <div className="w-full h-12 bg-gray-200 rounded"></div>
+
+            {/* Login button */}
+            <div className="w-full h-12 bg-gray-300 rounded-lg mt-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

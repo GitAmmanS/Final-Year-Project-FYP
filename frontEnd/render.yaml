@@ -1,8 +1,8 @@
 services:
   - type: web
     name: uiitlabxpert-frontend
-    env: static
-    buildCommand: npm install && npm run build:prod
+    env: static  # ← Must be "static" for React SPAs
+    buildCommand: npm install && npm run build
     staticPublishPath: "./build"
     routes:
       - type: rewrite

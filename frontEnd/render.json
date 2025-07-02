@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@render/static-build", 
+      "use": "@render/static-build",
       "config": {
         "distDir": "build"
       }
@@ -11,11 +11,8 @@
   ],
   "routes": [
     {
-      "src": "/*",  
-      "dest": "/index.html", 
-      "headers": {
-        "Cache-Control": "no-cache" 
-      }
+      "src": "/*",
+      "dest": "/index.html"
     }
   ]
 }
